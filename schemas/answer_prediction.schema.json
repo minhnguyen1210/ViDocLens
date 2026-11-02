@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "answered",
+        "abstained",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "answer_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer Raw"
+    }
+  },
+  "required": [
+    "qid",
+    "status"
+  ],
+  "title": "AnswerPrediction",
+  "type": "object"
+}

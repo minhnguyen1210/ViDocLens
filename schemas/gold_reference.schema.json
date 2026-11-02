@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "description": "Explicit evaluator/training gold; serialization is privileged, not redacted.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "answers": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Answers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "qid",
+    "document_id",
+    "answers"
+  ],
+  "title": "GoldReference",
+  "type": "object"
+}

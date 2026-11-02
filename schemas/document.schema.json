@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "Split": {
+      "enum": [
+        "train",
+        "dev",
+        "test",
+        "ood",
+        "quarantine"
+      ],
+      "title": "Split",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "source": {
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "source_id": {
+      "minLength": 1,
+      "title": "Source Id",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "duplicate_group_id": {
+      "minLength": 1,
+      "title": "Duplicate Group Id",
+      "type": "string"
+    },
+    "split": {
+      "$ref": "#/$defs/Split"
+    },
+    "image_path": {
+      "description": "Local dataset path; never an API input",
+      "minLength": 1,
+      "title": "Image Path",
+      "type": "string"
+    },
+    "width": {
+      "exclusiveMinimum": 0,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "exclusiveMinimum": 0,
+      "title": "Height",
+      "type": "integer"
+    },
+    "rights_status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "approved",
+        "restricted"
+      ],
+      "title": "Rights Status",
+      "type": "string"
+    },
+    "redacted": {
+      "default": false,
+      "title": "Redacted",
+      "type": "boolean"
+    },
+    "external_processing_allowed": {
+      "default": false,
+      "title": "External Processing Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "document_id",
+    "source",
+    "source_id",
+    "image_sha256",
+    "duplicate_group_id",
+    "split",
+    "image_path",
+    "width",
+    "height"
+  ],
+  "title": "Document",
+  "type": "object"
+}

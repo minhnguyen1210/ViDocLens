@@ -1,0 +1,7 @@
+# Candidate roots; proven versions and transitive hashes go in the generated lock.
+torch==2.8.0+cu126
+torchvision==0.23.0+cu126
+transformers==4.57.1
+peft==0.17.1
+accelerate==1.10.1
+bitsandbytes==0.48.1

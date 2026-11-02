@@ -1,0 +1,167 @@
+{
+  "$defs": {
+    "AnswerPart": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "description": "One ordered part of a complete answer, not an alias",
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "AnswerPart",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "span_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Span Ids",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "support": {
+          "default": "not_checked",
+          "enum": [
+            "exact",
+            "fuzzy",
+            "none",
+            "not_checked"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "verification_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Reason"
+        }
+      },
+      "title": "Evidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "question": {
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+    },
+    "answers": {
+      "description": "Alternative FULL reference answers, not individual answer parts. Preserve each source serialization, including the ReceiptVQA separator ¡sep¿ and its whitespace.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Answers",
+      "type": "array"
+    },
+    "answer_parts": {
+      "description": "Optional parsed view parallel to answers: one ordered part list per full alternative, with evidence for every part. Empty means not parsed. Never flatten alternatives or overwrite raw serialization; source-specific parsing is not implemented yet.",
+      "items": {
+        "items": {
+          "$ref": "#/$defs/AnswerPart"
+        },
+        "type": "array"
+      },
+      "title": "Answer Parts",
+      "type": "array"
+    },
+    "label_source": {
+      "enum": [
+        "gold",
+        "silver",
+        "unlabeled"
+      ],
+      "title": "Label Source",
+      "type": "string"
+    },
+    "question_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Question Type"
+    },
+    "answer_type": {
+      "default": "unknown",
+      "enum": [
+        "numeric",
+        "non_numeric",
+        "hybrid",
+        "unknown"
+      ],
+      "title": "Answer Type",
+      "type": "string"
+    },
+    "teacher_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Teacher Run Id"
+    }
+  },
+  "required": [
+    "qid",
+    "document_id",
+    "question",
+    "label_source"
+  ],
+  "title": "QARecord",
+  "type": "object"
+}

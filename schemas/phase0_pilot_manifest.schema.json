@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "PilotReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "minLength": 1,
+          "title": "Document Id",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "question_raw": {
+          "minLength": 1,
+          "title": "Question Raw",
+          "type": "string"
+        },
+        "image_path": {
+          "minLength": 1,
+          "title": "Image Path",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "mode": {
+          "title": "Mode",
+          "type": "string"
+        },
+        "duplicate_group_image_ids": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Duplicate Group Image Ids",
+          "type": "array"
+        },
+        "exclude_from_future_audit_holdout": {
+          "const": true,
+          "title": "Exclude From Future Audit Holdout",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "document_id",
+        "qid",
+        "question_raw",
+        "image_path",
+        "image_sha256",
+        "width",
+        "height",
+        "mode",
+        "duplicate_group_image_ids",
+        "exclude_from_future_audit_holdout"
+      ],
+      "title": "PilotReceipt",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "selection": {
+      "title": "Selection",
+      "type": "string"
+    },
+    "pilot": {
+      "items": {
+        "$ref": "#/$defs/PilotReceipt"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Pilot",
+      "type": "array"
+    }
+  },
+  "required": [
+    "selection",
+    "pilot"
+  ],
+  "title": "Phase0PilotManifest",
+  "type": "object"
+}

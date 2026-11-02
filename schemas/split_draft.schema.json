@@ -1,0 +1,142 @@
+{
+  "$defs": {
+    "DraftAssignment": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_image_id": {
+          "minimum": 0,
+          "title": "Source Image Id",
+          "type": "integer"
+        },
+        "source_split": {
+          "enum": [
+            "train",
+            "dev",
+            "test"
+          ],
+          "title": "Source Split",
+          "type": "string"
+        },
+        "duplicate_group_id": {
+          "title": "Duplicate Group Id",
+          "type": "string"
+        },
+        "partition": {
+          "enum": [
+            "train_fit",
+            "audit_holdout",
+            "dev_select",
+            "dev_calibrate",
+            "test",
+            "quarantine"
+          ],
+          "title": "Partition",
+          "type": "string"
+        },
+        "quarantine_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "train_overlaps_dev_or_test",
+                "dev_overlaps_test"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quarantine Reason"
+        },
+        "pilot_exposed": {
+          "title": "Pilot Exposed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_image_id",
+        "source_split",
+        "duplicate_group_id",
+        "partition",
+        "pilot_exposed"
+      ],
+      "title": "DraftAssignment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "const": "draft",
+      "default": "draft",
+      "title": "Status",
+      "type": "string"
+    },
+    "training_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Training Allowed",
+      "type": "boolean"
+    },
+    "near_duplicate_review_complete": {
+      "const": false,
+      "default": false,
+      "title": "Near Duplicate Review Complete",
+      "type": "boolean"
+    },
+    "annotation_archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Annotation Archive Sha256",
+      "type": "string"
+    },
+    "image_inventory_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Inventory Sha256",
+      "type": "string"
+    },
+    "seed": {
+      "default": 42,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "assignments": {
+      "items": {
+        "$ref": "#/$defs/DraftAssignment"
+      },
+      "minItems": 1,
+      "title": "Assignments",
+      "type": "array"
+    },
+    "gold_group_sets": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Gold Group Sets",
+      "type": "object"
+    }
+  },
+  "required": [
+    "annotation_archive_sha256",
+    "image_inventory_sha256",
+    "assignments",
+    "gold_group_sets"
+  ],
+  "title": "SplitDraft",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+schema_version: '1.0'
+experiment_family: grounded_distillation
+status: planned
+gold_fraction: 0.10
+seeds: [17, 42, 2026]
+systems: [L2, P1-full, P1-size, P2, P3-check, P3-snap, P4]
+match_training_updates: true
+hidden_gold_visible_to_training: false
+test_frozen: false
+required_before_run:
+  - data_rights_verified
+  - model_revision_pinned
+  - environment_locked
+  - duplicate_audit_passed
+  - teacher_rights_verified
+  - budget_authorized

@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "strict_nfc_em": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Em",
+      "type": "number"
+    },
+    "strict_nfc_token_f1": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Token F1",
+      "type": "number"
+    },
+    "strict_nfc_anls": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Anls",
+      "type": "number"
+    }
+  },
+  "required": [
+    "strict_nfc_em",
+    "strict_nfc_token_f1",
+    "strict_nfc_anls"
+  ],
+  "title": "AnswerScores",
+  "type": "object"
+}

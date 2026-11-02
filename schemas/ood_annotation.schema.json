@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "rights_evidence_id": {
+      "minLength": 1,
+      "title": "Rights Evidence Id",
+      "type": "string"
+    },
+    "source_domain": {
+      "minLength": 1,
+      "title": "Source Domain",
+      "type": "string"
+    },
+    "shift_axes": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Shift Axes",
+      "type": "array"
+    },
+    "question": {
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+    },
+    "question_type": {
+      "minLength": 1,
+      "title": "Question Type",
+      "type": "string"
+    },
+    "answerable": {
+      "title": "Answerable",
+      "type": "boolean"
+    },
+    "full_answers": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Full Answers",
+      "type": "array"
+    },
+    "evidence_boxes": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Box"
+      },
+      "title": "Evidence Boxes",
+      "type": "array"
+    },
+    "annotator_type": {
+      "enum": [
+        "human",
+        "ai"
+      ],
+      "title": "Annotator Type",
+      "type": "string"
+    },
+    "annotator": {
+      "minLength": 1,
+      "title": "Annotator",
+      "type": "string"
+    },
+    "second_review": {
+      "enum": [
+        "pending",
+        "independent_human",
+        "delayed_blind_same_human",
+        "ai_only"
+      ],
+      "title": "Second Review",
+      "type": "string"
+    },
+    "external_processing_allowed": {
+      "const": false,
+      "default": false,
+      "title": "External Processing Allowed",
+      "type": "boolean"
+    },
+    "eligible_as_human_gold": {
+      "default": false,
+      "title": "Eligible As Human Gold",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "document_id",
+    "image_sha256",
+    "rights_evidence_id",
+    "source_domain",
+    "shift_axes",
+    "question",
+    "question_type",
+    "answerable",
+    "annotator_type",
+    "annotator",
+    "second_review"
+  ],
+  "title": "OODAnnotation",
+  "type": "object"
+}

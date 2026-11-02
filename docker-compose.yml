@@ -1,0 +1,31 @@
+# Local CPU scaffold only. Readiness intentionally returns 503 until inference exists.
+services:
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      VIDOCLENS_EXTERNAL_ENABLED: "false"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: "no"
+  demo:
+    profiles: [demo]
+    build:
+      context: .
+      args:
+        INSTALL_EXTRAS: serve,demo
+    command: ["python", "app/demo.py"]
+    ports:
+      - "127.0.0.1:7860:7860"
+    environment:
+      VIDOCLENS_API_BASE_URL: http://api:8000
+      GRADIO_SERVER_NAME: 0.0.0.0
+      GRADIO_ANALYTICS_ENABLED: "False"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: "no"

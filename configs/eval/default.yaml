@@ -1,0 +1,16 @@
+schema_version: '1.0'
+normalization: NFC
+metric_protocols: [strict_nfc_v1, ligt_5b4376b_anls_0_0_2_v1]
+official_metric_implementation_verified: true
+official_historical_dependency_version_known: false
+upstream_parity_cases: 260
+primary_metric: strict_nfc_em
+secondary_metrics: [anls, token_f1, numeric_em, ocr_support_rate]
+anls_threshold: 0.5
+bootstrap_unit: receipt_or_conservative_leakage_component
+bootstrap_resamples: 2000
+confidence_level: 0.95
+seed: 42
+missing_prediction: error_and_zero_credit
+evaluation_split: dev
+test_manifest_sha256: null

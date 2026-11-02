@@ -1,0 +1,83 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_image_id": {
+      "minimum": 0,
+      "title": "Source Image Id",
+      "type": "integer"
+    },
+    "raw_image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Raw Image Sha256",
+      "type": "string"
+    },
+    "phash_rotations": {
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "pattern": "^[a-f0-9]{16}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{16}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{16}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{16}$",
+          "type": "string"
+        }
+      ],
+      "title": "Phash Rotations",
+      "type": "array"
+    },
+    "crop60_phash": {
+      "pattern": "^[a-f0-9]{16}$",
+      "title": "Crop60 Phash",
+      "type": "string"
+    },
+    "gradient_rotations": {
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "pattern": "^[a-f0-9]{32}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{32}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{32}$",
+          "type": "string"
+        },
+        {
+          "pattern": "^[a-f0-9]{32}$",
+          "type": "string"
+        }
+      ],
+      "title": "Gradient Rotations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "source_image_id",
+    "raw_image_sha256",
+    "phash_rotations",
+    "crop60_phash",
+    "gradient_rotations"
+  ],
+  "title": "FeatureFingerprint",
+  "type": "object"
+}

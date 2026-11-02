@@ -1,0 +1,22 @@
+schema_version: '1.0'
+model_id: Qwen/Qwen3-VL-2B-Instruct
+revision: 89644892e4d85e24eaac8bacfd4f463576704203
+status: inference_smoke_passed_training_unvalidated
+trust_remote_code: false
+quantization: nf4
+double_quantization: true
+compute_dtype: bfloat16
+micro_batch_size: 1
+gradient_accumulation_steps: 16
+gradient_checkpointing: true
+vision_encoder_trainable: false
+lora_rank: 8
+lora_alpha: 16
+lora_dropout: 0.05
+learning_rate: 0.0001
+max_sequence_length: 2048
+max_image_pixels: 262144
+epochs: 2
+# NF4/BF16 inference smoke passed on RTX 3060; see docs/PHASE0_ENVIRONMENT.md.
+# Training settings below remain candidates: target modules, loss mask, memory,
+# backward and adapter save/reload still require the Phase 3 training smoke.

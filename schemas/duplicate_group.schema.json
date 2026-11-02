@@ -1,0 +1,58 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "duplicate_group_id": {
+      "title": "Duplicate Group Id",
+      "type": "string"
+    },
+    "source_image_ids": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "minItems": 1,
+      "title": "Source Image Ids",
+      "type": "array"
+    },
+    "source_splits": {
+      "items": {
+        "enum": [
+          "train",
+          "dev",
+          "test"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Source Splits",
+      "type": "array"
+    },
+    "grouping_evidence": {
+      "default": "exact_byte_or_canonical_pixel",
+      "enum": [
+        "exact_byte_or_canonical_pixel",
+        "conservative_candidate_component"
+      ],
+      "title": "Grouping Evidence",
+      "type": "string"
+    },
+    "pilot_exposed": {
+      "title": "Pilot Exposed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "duplicate_group_id",
+    "source_image_ids",
+    "source_splits",
+    "pilot_exposed"
+  ],
+  "title": "DuplicateGroup",
+  "type": "object"
+}

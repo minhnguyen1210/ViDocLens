@@ -1,0 +1,68 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "left_image_id": {
+      "minimum": 0,
+      "title": "Left Image Id",
+      "type": "integer"
+    },
+    "right_image_id": {
+      "minimum": 0,
+      "title": "Right Image Id",
+      "type": "integer"
+    },
+    "left_group_id": {
+      "title": "Left Group Id",
+      "type": "string"
+    },
+    "right_group_id": {
+      "title": "Right Group Id",
+      "type": "string"
+    },
+    "full_phash_distance": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Full Phash Distance",
+      "type": "integer"
+    },
+    "crop_phash_distance": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Crop Phash Distance",
+      "type": "integer"
+    },
+    "crosses_official_splits": {
+      "title": "Crosses Official Splits",
+      "type": "boolean"
+    },
+    "review_status": {
+      "const": "pending",
+      "default": "pending",
+      "title": "Review Status",
+      "type": "string"
+    },
+    "auto_merge_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Auto Merge Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "left_image_id",
+    "right_image_id",
+    "left_group_id",
+    "right_group_id",
+    "full_phash_distance",
+    "crop_phash_distance",
+    "crosses_official_splits"
+  ],
+  "title": "NearDuplicateCandidate",
+  "type": "object"
+}

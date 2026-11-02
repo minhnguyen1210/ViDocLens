@@ -1,0 +1,14 @@
+schema_version: '1.0'
+project: vidoclens
+stage: foundation
+seed: 42
+paths:
+  raw: data/raw
+  processed: data/processed
+  manifests: data/manifests
+  ocr_cache: data/ocr_cache
+  teacher_cache: cache/teacher
+  runs: artifacts/runs
+  models: artifacts/models
+  reports: reports
+# These are planning defaults. No research pipeline consumes this file yet.

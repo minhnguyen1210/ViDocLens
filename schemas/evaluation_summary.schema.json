@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "strict_nfc_em": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Em",
+      "type": "number"
+    },
+    "strict_nfc_token_f1": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Token F1",
+      "type": "number"
+    },
+    "strict_nfc_anls": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Strict Nfc Anls",
+      "type": "number"
+    },
+    "protocol": {
+      "const": "strict_nfc_v1",
+      "default": "strict_nfc_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "official_compatible": {
+      "const": false,
+      "default": false,
+      "title": "Official Compatible",
+      "type": "boolean"
+    },
+    "n_questions": {
+      "exclusiveMinimum": 0,
+      "title": "N Questions",
+      "type": "integer"
+    },
+    "n_answered": {
+      "minimum": 0,
+      "title": "N Answered",
+      "type": "integer"
+    },
+    "n_abstained": {
+      "minimum": 0,
+      "title": "N Abstained",
+      "type": "integer"
+    },
+    "n_error": {
+      "minimum": 0,
+      "title": "N Error",
+      "type": "integer"
+    },
+    "n_missing": {
+      "minimum": 0,
+      "title": "N Missing",
+      "type": "integer"
+    },
+    "coverage": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Coverage",
+      "type": "number"
+    },
+    "selective_em": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Selective Em"
+    }
+  },
+  "required": [
+    "strict_nfc_em",
+    "strict_nfc_token_f1",
+    "strict_nfc_anls",
+    "n_questions",
+    "n_answered",
+    "n_abstained",
+    "n_error",
+    "n_missing",
+    "coverage",
+    "selective_em"
+  ],
+  "title": "EvaluationSummary",
+  "type": "object"
+}

@@ -1,0 +1,183 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "annotation_archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Annotation Archive Sha256",
+      "type": "string"
+    },
+    "image_archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Archive Sha256",
+      "type": "string"
+    },
+    "source_image_id": {
+      "minimum": 0,
+      "title": "Source Image Id",
+      "type": "integer"
+    },
+    "source_split": {
+      "enum": [
+        "train",
+        "dev",
+        "test"
+      ],
+      "title": "Source Split",
+      "type": "string"
+    },
+    "annotation_filename": {
+      "title": "Annotation Filename",
+      "type": "string"
+    },
+    "archive_member": {
+      "title": "Archive Member",
+      "type": "string"
+    },
+    "filename_match": {
+      "enum": [
+        "exact",
+        "unique_stem_extension_alias"
+      ],
+      "title": "Filename Match",
+      "type": "string"
+    },
+    "qa_count": {
+      "exclusiveMinimum": 0,
+      "title": "Qa Count",
+      "type": "integer"
+    },
+    "raw_image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Raw Image Sha256",
+      "type": "string"
+    },
+    "canonical_pixel_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Canonical Pixel Sha256",
+      "type": "string"
+    },
+    "raw_bytes": {
+      "exclusiveMinimum": 0,
+      "title": "Raw Bytes",
+      "type": "integer"
+    },
+    "raw_width": {
+      "exclusiveMinimum": 0,
+      "title": "Raw Width",
+      "type": "integer"
+    },
+    "raw_height": {
+      "exclusiveMinimum": 0,
+      "title": "Raw Height",
+      "type": "integer"
+    },
+    "width": {
+      "exclusiveMinimum": 0,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "exclusiveMinimum": 0,
+      "title": "Height",
+      "type": "integer"
+    },
+    "source_format": {
+      "enum": [
+        "JPEG",
+        "PNG"
+      ],
+      "title": "Source Format",
+      "type": "string"
+    },
+    "source_mode": {
+      "title": "Source Mode",
+      "type": "string"
+    },
+    "exif_orientation": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Exif Orientation"
+    },
+    "canonical_mode": {
+      "const": "RGB",
+      "default": "RGB",
+      "title": "Canonical Mode",
+      "type": "string"
+    },
+    "canonical_file_materialized": {
+      "const": false,
+      "default": false,
+      "title": "Canonical File Materialized",
+      "type": "boolean"
+    },
+    "transform_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Transform Sha256",
+      "type": "string"
+    },
+    "phash64": {
+      "pattern": "^[a-f0-9]{16}$",
+      "title": "Phash64",
+      "type": "string"
+    },
+    "center_crop_phash64": {
+      "pattern": "^[a-f0-9]{16}$",
+      "title": "Center Crop Phash64",
+      "type": "string"
+    },
+    "external_processing_allowed": {
+      "const": false,
+      "default": false,
+      "title": "External Processing Allowed",
+      "type": "boolean"
+    },
+    "redistribution_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Redistribution Allowed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "document_id",
+    "annotation_archive_sha256",
+    "image_archive_sha256",
+    "source_image_id",
+    "source_split",
+    "annotation_filename",
+    "archive_member",
+    "filename_match",
+    "qa_count",
+    "raw_image_sha256",
+    "canonical_pixel_sha256",
+    "raw_bytes",
+    "raw_width",
+    "raw_height",
+    "width",
+    "height",
+    "source_format",
+    "source_mode",
+    "exif_orientation",
+    "transform_sha256",
+    "phash64",
+    "center_crop_phash64"
+  ],
+  "title": "CorpusImage",
+  "type": "object"
+}

@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "minLength": 1,
+      "title": "Task Id",
+      "type": "string"
+    },
+    "input_image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Input Image Sha256",
+      "type": "string"
+    },
+    "raw_text": {
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "generated_tokens": {
+      "minimum": 0,
+      "title": "Generated Tokens",
+      "type": "integer"
+    },
+    "truncated": {
+      "title": "Truncated",
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "empty",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "seconds": {
+      "minimum": 0,
+      "title": "Seconds",
+      "type": "number"
+    },
+    "peak_allocated_bytes": {
+      "minimum": 0,
+      "title": "Peak Allocated Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "task_id",
+    "input_image_sha256",
+    "raw_text",
+    "generated_tokens",
+    "truncated",
+    "status",
+    "seconds",
+    "peak_allocated_bytes"
+  ],
+  "title": "AIReviewOutput",
+  "type": "object"
+}

@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "No answer, reference, draft-label or OCR fields are accepted.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "minLength": 1,
+      "title": "Task Id",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "image_path": {
+      "minLength": 1,
+      "title": "Image Path",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "ocr_transcription",
+        "ood_annotation_check"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "question": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+    },
+    "crop": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Box"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "task_id",
+    "document_id",
+    "image_path",
+    "image_sha256",
+    "kind",
+    "question"
+  ],
+  "title": "AIReviewTask",
+  "type": "object"
+}

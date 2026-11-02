@@ -1,0 +1,177 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "page_id": {
+      "exclusiveMinimum": 0,
+      "title": "Page Id",
+      "type": "integer"
+    },
+    "page_revision": {
+      "exclusiveMinimum": 0,
+      "title": "Page Revision",
+      "type": "integer"
+    },
+    "source_url": {
+      "pattern": "^https://commons\\.wikimedia\\.org/",
+      "title": "Source Url",
+      "type": "string"
+    },
+    "original_url": {
+      "pattern": "^https://upload\\.wikimedia\\.org/",
+      "title": "Original Url",
+      "type": "string"
+    },
+    "author_credit": {
+      "minLength": 1,
+      "title": "Author Credit",
+      "type": "string"
+    },
+    "license_id": {
+      "enum": [
+        "CC0",
+        "CC BY 2.0",
+        "CC BY-SA 4.0"
+      ],
+      "title": "License Id",
+      "type": "string"
+    },
+    "license_url": {
+      "pattern": "^https?://creativecommons\\.org/",
+      "title": "License Url",
+      "type": "string"
+    },
+    "rights_evidence_id": {
+      "minLength": 1,
+      "title": "Rights Evidence Id",
+      "type": "string"
+    },
+    "metadata_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Metadata Sha256",
+      "type": "string"
+    },
+    "metadata_path": {
+      "minLength": 1,
+      "title": "Metadata Path",
+      "type": "string"
+    },
+    "raw_path": {
+      "minLength": 1,
+      "title": "Raw Path",
+      "type": "string"
+    },
+    "image_path": {
+      "minLength": 1,
+      "title": "Image Path",
+      "type": "string"
+    },
+    "raw_image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Raw Image Sha256",
+      "type": "string"
+    },
+    "processed_image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Processed Image Sha256",
+      "type": "string"
+    },
+    "canonical_pixel_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Canonical Pixel Sha256",
+      "type": "string"
+    },
+    "width": {
+      "exclusiveMinimum": 0,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "exclusiveMinimum": 0,
+      "title": "Height",
+      "type": "integer"
+    },
+    "document_kind": {
+      "minLength": 1,
+      "title": "Document Kind",
+      "type": "string"
+    },
+    "shift_axes": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Shift Axes",
+      "type": "array"
+    },
+    "source_caveats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Caveats",
+      "type": "array"
+    },
+    "partition": {
+      "enum": [
+        "ood_seed",
+        "quarantine"
+      ],
+      "title": "Partition",
+      "type": "string"
+    },
+    "local_research_allowed": {
+      "const": true,
+      "default": true,
+      "title": "Local Research Allowed",
+      "type": "boolean"
+    },
+    "external_processing_allowed": {
+      "const": false,
+      "default": false,
+      "title": "External Processing Allowed",
+      "type": "boolean"
+    },
+    "publication_approved": {
+      "const": false,
+      "default": false,
+      "title": "Publication Approved",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "document_id",
+    "page_id",
+    "page_revision",
+    "source_url",
+    "original_url",
+    "author_credit",
+    "license_id",
+    "license_url",
+    "rights_evidence_id",
+    "metadata_sha256",
+    "metadata_path",
+    "raw_path",
+    "image_path",
+    "raw_image_sha256",
+    "processed_image_sha256",
+    "canonical_pixel_sha256",
+    "width",
+    "height",
+    "document_kind",
+    "shift_axes",
+    "source_caveats",
+    "partition"
+  ],
+  "title": "OODSeedDocument",
+  "type": "object"
+}

@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "ReceiptAssignment": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_image_id": {
+          "minimum": 0,
+          "title": "Source Image Id",
+          "type": "integer"
+        },
+        "source_split": {
+          "enum": [
+            "train",
+            "dev",
+            "test"
+          ],
+          "title": "Source Split",
+          "type": "string"
+        },
+        "duplicate_group_id": {
+          "minLength": 1,
+          "title": "Duplicate Group Id",
+          "type": "string"
+        },
+        "partition": {
+          "enum": [
+            "train_fit",
+            "audit_holdout",
+            "dev_select",
+            "dev_calibrate",
+            "test",
+            "quarantine"
+          ],
+          "title": "Partition",
+          "type": "string"
+        },
+        "gold_for_training": {
+          "default": false,
+          "title": "Gold For Training",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_image_id",
+        "source_split",
+        "duplicate_group_id",
+        "partition"
+      ],
+      "title": "ReceiptAssignment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Caller-provided partition manifest, not an automatic split or proof of dedup.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Archive Sha256",
+      "type": "string"
+    },
+    "grouping_status": {
+      "enum": [
+        "receipt_only",
+        "image_dedup_verified",
+        "conservative_candidate_graph"
+      ],
+      "title": "Grouping Status",
+      "type": "string"
+    },
+    "image_inventory_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Image Inventory Sha256"
+    },
+    "candidate_graph_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidate Graph Sha256"
+    },
+    "assignments": {
+      "items": {
+        "$ref": "#/$defs/ReceiptAssignment"
+      },
+      "minItems": 1,
+      "title": "Assignments",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archive_sha256",
+    "grouping_status",
+    "assignments"
+  ],
+  "title": "ReceiptAccessPlan",
+  "type": "object"
+}

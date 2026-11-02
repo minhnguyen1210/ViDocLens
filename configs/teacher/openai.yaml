@@ -1,0 +1,16 @@
+schema_version: '1.0'
+provider: openai
+enabled: false
+model: null
+model_snapshot: null
+endpoint: responses
+store: false
+prompt_version: teacher_vqa_v1
+max_output_tokens: 1024
+timeout_seconds: 60
+max_retries: 3
+budget_usd: 0
+price_card_path: null
+distillation_rights_verified: false
+# Select and pin a vision + Structured Outputs model in Phase 0/2.
+# Zero budget and missing model must block real calls when client is implemented.

@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "left_image_id": {
+      "minimum": 0,
+      "title": "Left Image Id",
+      "type": "integer"
+    },
+    "right_image_id": {
+      "minimum": 0,
+      "title": "Right Image Id",
+      "type": "integer"
+    },
+    "rotation_phash_distance": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Rotation Phash Distance",
+      "type": "integer"
+    },
+    "crop_phash_distance": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Crop Phash Distance",
+      "type": "integer"
+    },
+    "gradient_distance": {
+      "maximum": 128,
+      "minimum": 0,
+      "title": "Gradient Distance",
+      "type": "integer"
+    },
+    "review_status": {
+      "const": "uncertain",
+      "default": "uncertain",
+      "title": "Review Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "left_image_id",
+    "right_image_id",
+    "rotation_phash_distance",
+    "crop_phash_distance",
+    "gradient_distance"
+  ],
+  "title": "FeatureCandidate",
+  "type": "object"
+}

@@ -1,0 +1,4 @@
+# CPU-only Paddle; keep PaddleX on the same release series as PaddleOCR.
+paddlepaddle==3.2.0
+paddleocr==3.2.0
+paddlex[ocr]==3.2.0

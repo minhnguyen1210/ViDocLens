@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "TranscriptionLine": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "line_id": {
+          "minLength": 1,
+          "title": "Line Id",
+          "type": "string"
+        },
+        "reference": {
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        },
+        "legibility": {
+          "enum": [
+            "readable",
+            "uncertain"
+          ],
+          "title": "Legibility",
+          "type": "string"
+        }
+      },
+      "required": [
+        "line_id",
+        "reference",
+        "legibility"
+      ],
+      "title": "TranscriptionLine",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "ocr_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Ocr Sha256",
+      "type": "string"
+    },
+    "reviewer": {
+      "minLength": 1,
+      "title": "Reviewer",
+      "type": "string"
+    },
+    "reviewer_type": {
+      "enum": [
+        "human",
+        "ai"
+      ],
+      "title": "Reviewer Type",
+      "type": "string"
+    },
+    "reference_origin": {
+      "const": "image_transcription",
+      "title": "Reference Origin",
+      "type": "string"
+    },
+    "blind_to_ocr_during_transcription": {
+      "title": "Blind To Ocr During Transcription",
+      "type": "boolean"
+    },
+    "human_verified": {
+      "title": "Human Verified",
+      "type": "boolean"
+    },
+    "coverage": {
+      "enum": [
+        "selected_lines",
+        "full_image"
+      ],
+      "title": "Coverage",
+      "type": "string"
+    },
+    "lines": {
+      "items": {
+        "$ref": "#/$defs/TranscriptionLine"
+      },
+      "minItems": 1,
+      "title": "Lines",
+      "type": "array"
+    }
+  },
+  "required": [
+    "document_id",
+    "image_sha256",
+    "ocr_sha256",
+    "reviewer",
+    "reviewer_type",
+    "reference_origin",
+    "blind_to_ocr_during_transcription",
+    "human_verified",
+    "coverage",
+    "lines"
+  ],
+  "title": "TranscriptionReview",
+  "type": "object"
+}

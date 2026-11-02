@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "TeacherQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "qid",
+        "question"
+      ],
+      "title": "TeacherQuestion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Label-free handoff; adapters must construct this instead of serializing QARecord.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "minLength": 1,
+      "title": "Document Id",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/TeacherQuestion"
+      },
+      "minItems": 1,
+      "title": "Questions",
+      "type": "array"
+    },
+    "ocr_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ocr Text"
+    }
+  },
+  "required": [
+    "document_id",
+    "image_sha256",
+    "questions"
+  ],
+  "title": "TeacherInput",
+  "type": "object"
+}

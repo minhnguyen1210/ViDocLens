@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    },
+    "OCRSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "span_id": {
+          "minLength": 1,
+          "title": "Span Id",
+          "type": "string"
+        },
+        "text_raw": {
+          "title": "Text Raw",
+          "type": "string"
+        },
+        "text_nfc": {
+          "title": "Text Nfc",
+          "type": "string"
+        },
+        "box": {
+          "$ref": "#/$defs/Box"
+        },
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "reading_order": {
+          "minimum": 0,
+          "title": "Reading Order",
+          "type": "integer"
+        },
+        "engine_score": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Engine Score"
+        }
+      },
+      "required": [
+        "span_id",
+        "text_raw",
+        "text_nfc",
+        "box",
+        "line_id",
+        "reading_order"
+      ],
+      "title": "OCRSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "engine": {
+      "title": "Engine",
+      "type": "string"
+    },
+    "engine_revision": {
+      "title": "Engine Revision",
+      "type": "string"
+    },
+    "preprocessing_hash": {
+      "title": "Preprocessing Hash",
+      "type": "string"
+    },
+    "image_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Image Sha256",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "empty",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "spans": {
+      "items": {
+        "$ref": "#/$defs/OCRSpan"
+      },
+      "title": "Spans",
+      "type": "array"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    }
+  },
+  "required": [
+    "document_id",
+    "engine",
+    "engine_revision",
+    "preprocessing_hash",
+    "image_sha256",
+    "status"
+  ],
+  "title": "OCRResult",
+  "type": "object"
+}

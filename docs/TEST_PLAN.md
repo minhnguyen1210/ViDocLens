@@ -1,0 +1,46 @@
+# Kế hoạch kiểm thử và gate
+
+**Tài liệu mô tả kiểm thử cần có xuyên dự án.** Một test được liệt kê không có nghĩa đã được cài đặt hoặc đã pass. Kết quả thực tế đi trong run/CI artifact và [STATUS.md](STATUS.md).
+
+| Gate | Kiểm tra có ý nghĩa | Bằng chứng chấp nhận |
+|---|---|---|
+| Nền móng | Import package; liveness; readiness fail khi chưa load model; inference scaffold trả lỗi tường minh | CI log + HTTP contract, không trả đáp án giả |
+| Dữ liệu | Corrupt image; duplicate xuyên nguồn/split; QA cùng document; quyền unknown; hidden-label access | Fixture tái hiện lỗi bị chặn trước teacher/training |
+| Metric | NFC; giữ dấu tiếng Việt; ANLS sát ngưỡng; multi-reference; empty/abstention; denominator; numeric ambiguity | Expected outputs tính tay + đối chiếu official scorer khi có |
+| OCR | Rotation, tọa độ sau resize, cache invalidation khi đổi weights/preprocess, OCR failure | Fixture ảnh synthetic hoặc có quyền công bố; provenance đủ |
+| Teacher | Missing/duplicate qid, refusal, truncated JSON, invalid evidence, retry, timeout, cost reserve/reconcile | Mock provider không gọi trả phí; không mất/nhân record |
+| Training | Loss chỉ trên assistant answer, image tokens không bị mask sai, gradient adapter, save/resume | Smoke trên mẫu nhỏ + adapter load roundtrip |
+| Filtering | Chuỗi đúng chữ nhưng sai trường; số khác một chữ số; duplicate candidates; OCR không nhận ra đáp án đúng | Filter decisions + reason codes khớp ý nghĩa thiết kế |
+| Verifier/router | Sửa sai thành đúng và đúng thành sai; no external consent; exhausted budget; teacher fail | Trả lời/từ chối đúng policy; không fallback âm thầm |
+| API/Track B | File bytes và MIME, oversized/decompression input, question length, null field, raw/normalized/evidence | Contract + integration fixture, không suy diễn trường thiếu |
+| Deployment | Model readiness, bounded concurrency, GPU OOM, timeout, restart, auth/rate limit, rollback | Smoke/load/rollback log trên host đích |
+
+## Các trường hợp bắt buộc
+
+**Metric:** `125.000` và `125.001` phải bị phát hiện là sai số; không bỏ mọi dấu chấm/phẩy rồi kết luận đúng khi format mơ hồ. Scorer official và scorer normalized bổ sung được báo cáo tách biệt. Câu từ chối không được bỏ khỏi mẫu số all-question accuracy.
+
+**Grounding:** ảnh có `Tổng cộng: 125.000` và `Khách đưa: 200.000`; trả `200.000` cho câu hỏi tổng tiền phải thể hiện sai trường dù OCR support là thật. Fuzzy matching không được âm thầm thay chữ số hoặc chọn giữa nhiều evidence tương đương.
+
+**Chi phí:** hai worker/request đồng thời không vượt budget qua race condition; retries và Batch partial results không double count; cache key đổi khi image, question/order, model, prompt, OCR hoặc sampling thay đổi. Cache của external request không được làm mất kiểm tra quyền hiện tại.
+
+**Privacy:** local mode và `allow_external=false` có test chứng minh không gọi provider, kể cả khi OCR/student lỗi. Log có kiểm tra không lộ API key/base64/PII. Không cho client truyền path máy chủ hoặc URL tùy ý.
+
+**Track B:** thiếu ngày/giờ/tiền tệ cho `null` hoặc trạng thái thiếu phù hợp schema. Không tự bổ sung timezone/ngày/đơn vị từ giả định. Field precision/recall/EM và record completeness được đo riêng với Track A.
+
+## Kiểm thử nghiên cứu
+
+P1/P2 dùng cùng teacher pool, gold split, student initialization và seed. Có so sánh matched-size và matched-compute; log số mẫu bị lọc và số update. Primary comparison dùng `k=10%` trong `train_fit`; audit holdout không tham gia fit/tuning. Kiểm tra bootstrap resample theo document/duplicate cluster và ghép cặp cùng đơn vị giữa hệ thống.
+
+Trước final test, khóa toàn bộ candidate configurations, thresholds và bảng so sánh dự kiến. Một chiến dịch final test có thể chạy mọi hệ thống/seeds đã đăng ký; không cần hiểu “một lần” là chỉ một model được chạy. Sửa lỗi scorer sau freeze phải ghi protocol amendment và tái chạy đồng đều mọi hệ thống liên quan.
+
+## Phân tầng và vận hành CI
+
+PR chạy kiểm tra nhanh không cần GPU/API key: lint, import, unit, schema/contract và fixture dữ liệu nhỏ. Integration GPU/paid API là job riêng với artifact, budget và data permission; chưa có phần cứng thì ghi `not run`, không đổi thành pass. Release gate thêm image build, scan dependencies/secrets, smoke host đích, tải giới hạn và rollback rehearsal.
+
+Chỉ thêm test khi bảo vệ một hợp đồng, rủi ro thực hoặc regression; không tạo test chỉ để xác nhận một placeholder trả hằng số ngoài yêu cầu scaffold trung thực.
+
+## Phần đã hiện thực cho annotations/metric CPU
+
+[test_receiptvqa_loader.py](../tests/unit/test_receiptvqa_loader.py) kiểm tra output không gold, default-safe view, raw newlines/NFC, namespace ID, selected gold theo toàn receipt, group không vượt partition/gold selection, hash/coverage manifest, test bị khóa trước đọc, selected reader không mở test CSV, malformed input/CRC và CLI không lộ payload.
+
+[test_metrics.py](../tests/unit/test_metrics.py) dùng expected values tính tay cho NFC, dấu/case/số/whitespace, multiset F1, ANLS tại ngưỡng, multi-reference/full multipart, missing/abstain/error denominator và report consistency. Đây là strict protocol. Phase 1 bổ sung [test_phase1.py](../tests/unit/test_phase1.py) cho containment/quarantine, cache identity/corruption/concurrent publication, grouped bootstrap, bounded oracle, CER và AI/human boundary. Upstream parity chạy riêng bằng [script](../scripts/check_metric_parity.py), 260 cases trên nguồn/wheel SHA-pinned. Kết quả thực và giới hạn human/OOD ở [Phase 1 report](PHASE1_RESULTS.md); G0 đã đạt.

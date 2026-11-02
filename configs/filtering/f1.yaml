@@ -1,0 +1,12 @@
+schema_version: '1.0'
+filter: F1
+status: pilot_defaults_not_calibrated
+text_max_normalized_edit_distance: 0.10
+require_unique_candidate: true
+allow_digit_edits: false
+require_numeric_token_boundaries: true
+use_question_field_compatibility: false
+# Primary F1 tests lexical OCR support. Enforcing semantic field compatibility
+# is a separately named ablation; log semantic diagnostics without changing F1.
+keep_raw_answer: true
+fallback_on_ocr_failure: reject_with_reason

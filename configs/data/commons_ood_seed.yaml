@@ -1,0 +1,13 @@
+schema_version: '1.0'
+dataset: commons_ood_seed_v1
+manifest: data/manifests/commons_ood_seed_v1/documents.jsonl
+manifest_sha256: 07cd41b3d3524469945d406d92aad9667f49d04c13faa22b1d1bca39f5c451bf
+annotations: artifacts/phase1/ai_review_final_v1/ood_annotations.jsonl
+gate_report: artifacts/phase1/g1_ai_gate_v2.json
+annotation_tier: ai_reference
+partition: ood_seed
+eligible_for_training: false
+eligible_for_confirmatory_evaluation: false
+external_processing_allowed: false
+publication_approved: false
+protocol: g1_ai_review_v1

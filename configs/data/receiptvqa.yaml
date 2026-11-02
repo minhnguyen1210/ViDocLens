@@ -1,0 +1,19 @@
+schema_version: '1.0'
+dataset: receiptvqa
+revision: rotated_731bc35c_annotations_226f7dcc
+rights_verified: true
+rights_scope: research_local_only_CC_BY_NC_SA_4_0
+manifest_sha256: 3b591e74d2c7c8515724641351017bb63b0247d940c30f5e068479cc2f30a4d9
+frozen_split_directory: data/splits/receiptvqa_containment_v1
+split_policy: official_then_conservative_candidate_containment_v1
+semantic_duplicate_review_complete: false
+train_fit_fraction: 0.90
+audit_holdout_fraction: 0.10
+dev_select_fraction: 0.70
+dev_calibrate_fraction: 0.30
+gold_fractions: [0.05, 0.10, 0.25, 1.0]
+primary_gold_fraction: 0.10
+gold_sampling_unit: conservative_leakage_component
+normalization: NFC
+test_access: frozen_final_evaluation_only
+external_processing_allowed: false

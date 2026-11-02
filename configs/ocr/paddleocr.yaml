@@ -1,0 +1,17 @@
+schema_version: '1.0'
+engine: paddleocr
+status: pilot_100_measured_human_review_pending
+language: vi
+recognizer_candidate: latin_PP-OCRv5_mobile_rec
+engine_version: 3.2.0
+detector_candidate: PP-OCRv5_server_det
+detector_revision: ca867c897ecbca8873081573a802ad70d499cb94
+recognizer_revision: ab2cd5cc5fa6309be2e5acdfe66eca2c2c127d57
+device: cpu
+separate_environment: true
+cache_requires: [document_id, raw_image_sha256, canonical_pixel_sha256, preprocessing, language, engine, detector, recognizer, package_lock_sha256]
+quality_profile: artifacts/phase1/ocr_quality_v1/profile.json
+quality_report: artifacts/phase1/r1_oracle_v1/report.json
+human_review_complete: false
+# Actual CPU pilot: 100 images, 4587 spans. Orientation is disabled; sideways
+# receipts and Vietnamese diacritics remain known limitations. Not a release gate.

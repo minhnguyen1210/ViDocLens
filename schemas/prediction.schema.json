@@ -1,0 +1,237 @@
+{
+  "$defs": {
+    "AnswerPart": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "description": "One ordered part of a complete answer, not an alias",
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "AnswerPart",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "span_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Span Ids",
+          "type": "array"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "support": {
+          "default": "not_checked",
+          "enum": [
+            "exact",
+            "fuzzy",
+            "none",
+            "not_checked"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "verification_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Reason"
+        }
+      },
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "qid": {
+          "title": "Qid",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_revision": {
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "prompt_hash": {
+          "title": "Prompt Hash",
+          "type": "string"
+        },
+        "config_hash": {
+          "title": "Config Hash",
+          "type": "string"
+        },
+        "ocr_cache_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ocr Cache Key"
+        }
+      },
+      "required": [
+        "run_id",
+        "document_id",
+        "qid",
+        "question",
+        "model_id",
+        "model_revision",
+        "prompt_hash",
+        "config_hash"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "answered",
+        "abstained",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "answer_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Complete raw prediction; preserve separator ¡sep¿ for multipart answers",
+      "title": "Answer Raw"
+    },
+    "answer_normalized": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer Normalized"
+    },
+    "answer_parts": {
+      "description": "Ordered parts of this ONE prediction with evidence per part; not alternative answers. Raw serialization is authoritative until the source evaluator/parser is verified.",
+      "items": {
+        "$ref": "#/$defs/AnswerPart"
+      },
+      "title": "Answer Parts",
+      "type": "array"
+    },
+    "evidence": {
+      "$ref": "#/$defs/Evidence"
+    },
+    "backend": {
+      "enum": [
+        "local",
+        "openai",
+        "cascade"
+      ],
+      "title": "Backend",
+      "type": "string"
+    },
+    "external_used": {
+      "default": false,
+      "title": "External Used",
+      "type": "boolean"
+    },
+    "calibrated_confidence": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Calibrated Confidence"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    }
+  },
+  "required": [
+    "status",
+    "backend",
+    "provenance"
+  ],
+  "title": "Prediction",
+  "type": "object"
+}
