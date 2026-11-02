@@ -26,12 +26,12 @@ Owner của các phase: chủ dự án. Thời gian dự kiến ở SOT §22 là
 | ID | Việc | State | Owner / phụ thuộc | Tiêu chí nghiệm thu |
 |---|---|---|---|---|
 | REPO-001 | Chuẩn hóa workflow và tiến độ | done | Assistant chuẩn bị local theo yêu cầu | STATUS/history, commit guide, templates, kiểm tra repo/schema và tests có kết quả |
-| REPO-002 | Review và commit/push đầu tiên | planned | **Chủ dự án tự thao tác** | Review staged diff, commit/remote thật, push thủ công và kiểm GitHub CI |
+| REPO-002 | Review và commit/push đầu tiên | done | **Chủ dự án đã tự push** | Local/remote main cùng 03ac245; CI Python 3.11/3.12 đạt |
 | P2-001 | Chốt contract/role/policy teacher | planned | G1; không cần gọi API | Thiết kế input không gold, output/error states, role/budget; ADR nếu đổi SOT |
 | P2-002 | Provider adapter, cache và ledger | planned | P2-001 | Tests offline: cache key, budget reservation, retry, missing/refusal/truncate |
 | P2-003 | Pilot teacher và baseline dev | planned | P2-002 + quyền external/budget/model snapshot | Evidence pilot 50 ảnh/dev metrics/cost theo SOT, không dùng test/OOD tuning |
 
-REPO-002 và P2-* là việc kế tiếp, chưa tự thực thi. Khi task lớn cần chi tiết, dùng [mẫu task](templates/TASK.md) hoặc GitHub Issue; STATUS chỉ giữ dòng tổng quan và link, không sao chép toàn bộ checklist sang nhiều nơi.
+REPO-002 đã hoàn tất; P2-* chưa triển khai. Khi task lớn cần chi tiết, dùng [mẫu task](templates/TASK.md) hoặc GitHub Issue; STATUS chỉ giữ dòng tổng quan và link.
 
 ## Ràng buộc và blocker cụ thể
 
@@ -41,7 +41,7 @@ REPO-002 và P2-* là việc kế tiếp, chưa tự thực thi. Khi task lớn 
 | Quyền teacher output | Chưa chốt quyền distillation qua API; local 4B mới là candidate | Kiểm [access register](DATA_ACCESS_REGISTER.md), pilot nhánh có quyền trước sinh silver |
 | AI references | Không human gold; OOD seed không dùng confirmatory evaluation | Full OOD/human validation ở Phase 5; không sửa flag để đóng gate |
 | API runtime/deploy | `inference_ready=false`, model backend chưa tích hợp | Phase 6; không coi health/live hoặc CI CPU là inference/deploy thành công |
-| GitHub | Đã thấy local `origin` trỏ `minhnguyen1210/ViDocLens`; chưa xác minh remote access/push/CI | Người dùng tự thực hiện REPO-002; assistant không publish/sync code |
+| GitHub | Repo private, local/remote main khớp; CI đã đạt | Chủ dự án tiếp tục tự commit/push; assistant không publish/sync code |
 
 Các ràng buộc trên không chặn viết code/tests offline của Phase 2. Giữ driver hiện tại; không tự reboot, public hosting hoặc mở test gold.
 
@@ -70,17 +70,25 @@ Các link artifacts/data là evidence **local, Git ignored**; người clone rep
 | Schema drift | **27 schemas match**, chế độ `--check` không ghi file |
 | File policy / YAML | Đạt với 179 candidates tại lúc kiểm; không phải secret/content/license scan |
 | Staged diff | Đã chạy checker, báo chưa có staged files; chưa đủ điều kiện kiểm nội dung commit, người dùng chạy lại sau khi tự stage |
-| GitHub CI | **Chưa chạy/xác minh**; workflow đã sửa ở local |
+| GitHub CI | **Đạt** trên Python 3.11 và 3.12 tại commit 03ac245; [run 41479278954](https://github.com/minhnguyen1210/ViDocLens/actions/runs/41479278954) |
 | Docker/GPU | Không chạy thêm trong lượt workflow; GPU evidence trước đó thuộc G0/G1 |
 
 18 tests mới kiểm file policy, index khác worktree và schema drift thiếu/sai/dư mà không sửa file. Có warning Starlette/httpx đã biết; chưa đổi dependency để xử lý warning này.
 
-## Bàn giao mới nhất
+## Bàn giao nâng cấp workflow — trước push
 
 - Đã làm: tách hiện trạng khỏi history, quy ước task/branch/commit, mẫu Issue/PR, CHANGELOG; thêm read-only checks và CI permissions read-only.
 - Tài liệu điều hành: SOT v1.8/ADR-022; không thay scientific gates hoặc sửa kết quả Phase 0–1.
 - Git local tại lúc kiểm: `main`, chưa có commit/staged files; đã thấy `origin` là `https://github.com/minhnguyen1210/ViDocLens.git`. Assistant chỉ đọc cấu hình này, không tạo/sửa remote, stage/commit hoặc push.
 - Commit đầu tiên đề xuất: `feat: add ViDocLens foundation and phase 1 pipeline`.
 - Việc tiếp theo của chủ dự án: [review/stage/commit/push thủ công](../CONTRIBUTING.md). Việc kỹ thuật sau đó: P2-001; Phase 2 chưa bắt đầu.
+
+## Bàn giao mới nhất — xác minh push ngày 02/11/2026
+
+- Chủ dự án đã push `03ac245e6d31ef05af5fdc174dfbbbf5bca565b3`, tiêu đề `feat: add ViDocLens foundation and phase 1 pipeline`; `git ls-remote` xác nhận remote main khớp HEAD local.
+- Repo `minhnguyen1210/ViDocLens` là private, default branch main. CI run 41479278954 completed/success, cả Python 3.11/3.12 đạt. Docker Compose config đạt không đồng nghĩa container/GPU deployment đã chạy.
+- Git sạch trước kiểm tra. Tracked data/artifacts/cache/reports chỉ có README/.gitkeep; env chỉ có `.env.example`; file policy đạt. Không coi đây là secret/content scan.
+- Assistant chỉ đọc Git/GitHub và cập nhật STATUS local; không stage/commit/push hoặc thay remote. Bản cập nhật tài liệu này chưa thuộc commit/CI vừa xác minh.
+- Bước tiếp theo: P2-001; Phase 2 chưa bắt đầu, API cap vẫn 0.
 
 Mỗi lần bàn giao cập nhật bảng kiểm tra và mục này với kết quả thật. Khi nhật ký dài, chuyển các mốc cũ vào STATUS_HISTORY, giữ link evidence và mốc thời gian. Không sửa artifact cũ để khớp hiện trạng mới.
