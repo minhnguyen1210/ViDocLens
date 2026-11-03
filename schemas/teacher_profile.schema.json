@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "provider": {
+      "const": "openai",
+      "default": "openai",
+      "title": "Provider",
+      "type": "string"
+    },
+    "endpoint": {
+      "const": "/v1/responses",
+      "default": "/v1/responses",
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "model_snapshot": {
+      "pattern": "^gpt-[a-z0-9.\\-]+-\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Model Snapshot",
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "benchmark_teacher",
+        "label_teacher",
+        "fallback_teacher"
+      ],
+      "title": "Role",
+      "type": "string"
+    },
+    "modality": {
+      "enum": [
+        "ocr_text",
+        "image",
+        "image_ocr"
+      ],
+      "title": "Modality",
+      "type": "string"
+    },
+    "prompt_version": {
+      "const": "teacher_vqa_v2",
+      "default": "teacher_vqa_v2",
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "image_detail": {
+      "default": "high",
+      "enum": [
+        "high",
+        "low"
+      ],
+      "title": "Image Detail",
+      "type": "string"
+    },
+    "max_output_tokens": {
+      "default": 4096,
+      "exclusiveMinimum": 0,
+      "title": "Max Output Tokens",
+      "type": "integer"
+    },
+    "reasoning_effort": {
+      "const": "none",
+      "default": "none",
+      "title": "Reasoning Effort",
+      "type": "string"
+    },
+    "store": {
+      "const": false,
+      "default": false,
+      "title": "Store",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "model_snapshot",
+    "role",
+    "modality"
+  ],
+  "title": "TeacherProfile",
+  "type": "object"
+}

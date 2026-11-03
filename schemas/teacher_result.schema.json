@@ -1,0 +1,189 @@
+{
+  "$defs": {
+    "TeacherAnswer": {
+      "additionalProperties": false,
+      "description": "All fields required, including nulls, for the provider's strict JSON schema.",
+      "properties": {
+        "qid": {
+          "title": "Qid",
+          "type": "string"
+        },
+        "answer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Answer"
+        },
+        "evidence_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Evidence Text"
+        },
+        "answerable": {
+          "title": "Answerable",
+          "type": "boolean"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason Code"
+        }
+      },
+      "required": [
+        "qid",
+        "answer",
+        "evidence_text",
+        "answerable",
+        "reason_code"
+      ],
+      "title": "TeacherAnswer",
+      "type": "object"
+    },
+    "TeacherUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "input_tokens": {
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "cached_input_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cached Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "input_tokens",
+        "output_tokens",
+        "total_tokens"
+      ],
+      "title": "TeacherUsage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "request_key": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Request Key",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "refused",
+        "incomplete",
+        "schema_error",
+        "qid_error",
+        "provider_error",
+        "transport_error",
+        "model_mismatch",
+        "usage_error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "labels": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TeacherAnswer"
+      },
+      "title": "Labels",
+      "type": "array"
+    },
+    "usage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TeacherUsage"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "provider_response_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Response Id"
+    },
+    "resolved_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolved Model"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    }
+  },
+  "required": [
+    "request_key",
+    "status"
+  ],
+  "title": "TeacherResult",
+  "type": "object"
+}

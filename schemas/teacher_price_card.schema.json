@@ -1,0 +1,92 @@
+{
+  "additionalProperties": false,
+  "description": "Integer nano-USD/token; full input limit is a conservative reservation bound.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "model_snapshot": {
+      "title": "Model Snapshot",
+      "type": "string"
+    },
+    "checked_at": {
+      "title": "Checked At",
+      "type": "string"
+    },
+    "source_url": {
+      "title": "Source Url",
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "input_nano_usd": {
+      "exclusiveMinimum": 0,
+      "title": "Input Nano Usd",
+      "type": "integer"
+    },
+    "cached_input_nano_usd": {
+      "exclusiveMinimum": 0,
+      "title": "Cached Input Nano Usd",
+      "type": "integer"
+    },
+    "output_nano_usd": {
+      "exclusiveMinimum": 0,
+      "title": "Output Nano Usd",
+      "type": "integer"
+    },
+    "max_input_tokens": {
+      "exclusiveMinimum": 0,
+      "title": "Max Input Tokens",
+      "type": "integer"
+    },
+    "max_output_tokens": {
+      "exclusiveMinimum": 0,
+      "title": "Max Output Tokens",
+      "type": "integer"
+    },
+    "long_context_threshold": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Long Context Threshold"
+    },
+    "long_input_multiplier": {
+      "default": 1,
+      "exclusiveMinimum": 0,
+      "title": "Long Input Multiplier",
+      "type": "integer"
+    },
+    "long_output_multiplier_milli": {
+      "default": 1000,
+      "exclusiveMinimum": 0,
+      "title": "Long Output Multiplier Milli",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "model_snapshot",
+    "checked_at",
+    "source_url",
+    "source_sha256",
+    "input_nano_usd",
+    "cached_input_nano_usd",
+    "output_nano_usd",
+    "max_input_tokens",
+    "max_output_tokens"
+  ],
+  "title": "TeacherPriceCard",
+  "type": "object"
+}

@@ -1,6 +1,6 @@
 # ViDocLens — Source of Truth
 
-> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.8**, ngày **02/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0 và G1 đạt; Phase 1 hoàn tất theo phương án AI do chủ dự án yêu cầu (ADR-021)**. ADR-022 chuẩn hóa quản lý repo và tiến độ, không đổi scientific gates. Kết quả mới nhất xem STATUS.
+> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.10**, ngày **03/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0, G1 và G2 đạt**. Phase 1 theo phương án AI (ADR-021); Phase 2 có pilot, baseline API, metrics, cache replay và role freeze thực tế (ADR-023–025). Phase 3–7 chưa hoàn tất. Kết quả mới nhất xem STATUS.
 >
 > Ý tưởng gốc được giữ nguyên trong [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md). Từ phiên bản này, mọi quyết định thực thi phải theo tài liệu này. Những câu tự nhận “source of truth” trong bản ý tưởng là bối cảnh lịch sử. Tiến độ thực tế ở [docs/STATUS.md](docs/STATUS.md); quyết định thay đổi ở [docs/DECISIONS.md](docs/DECISIONS.md).
 
@@ -66,7 +66,7 @@ Việc dựng khung repo hoặc `/health/live` trả 200 **không** đáp ứng 
 | D03 | JSONL làm bản ghi chuẩn; Parquet cho phân tích; SQLite cho cache/ledger | Dễ kiểm tra và tái lập, không cần DB server trong v1 |
 | D04 | OCR CPU hoặc môi trường riêng; GPU dành cho student | Tránh tranh VRAM và xung đột Paddle/PyTorch |
 | D05 | `Qwen/Qwen3-VL-2B-Instruct` là ứng viên student đầu tiên | Cỡ nhỏ; phải qua kiểm tra license, revision và train smoke trên 12 GB |
-| D06 | Teacher là adapter thay thế được; tên model chưa khóa | Phụ thuộc quyền tài khoản, chi phí, chất lượng và quyền dùng output |
+| D06 | Teacher là adapter thay thế được; benchmark/fallback tạm khóa theo ADR-025 | Label teacher đi nhánh local có điều kiện; quyền train và serving xét riêng |
 | D07 | Local là mặc định; external bị tắt; ngân sách API khởi tạo bằng 0 | Không phát sinh truyền dữ liệu/chi phí khi chỉ cài scaffold |
 | D08 | Official test chỉ đánh giá sau khi chốt toàn bộ cấu hình | Tránh dùng test làm tín hiệu thiết kế ở các phase sớm |
 | D09 | Evidence OCR và tính đúng ngữ nghĩa là hai thuộc tính khác nhau | Chuỗi xuất hiện trong ảnh vẫn có thể là nhầm trường |
@@ -333,6 +333,14 @@ Không dùng khóa chỉ có ảnh và model: cùng ảnh nhưng câu hỏi khá
 - Batch dùng `custom_id` ổn định để reconcile kết quả không theo thứ tự, xử lý expired/partial/error; chỉ resubmit phần thiếu sau đối soát.
 - Theo tài liệu đã kiểm tra, Batch có mức giảm chi phí 50% và cửa sổ xử lý 24h; phải kiểm tra lại eligibility, model và limits tại lúc chạy. Payload ảnh base64 làm file lớn nên shard theo byte/tokens, không chỉ số request. [Batch API](https://developers.openai.com/api/docs/guides/batch).
 - Một ledger transaction lưu `reserved`, `spent`, `released`, `uncertain`; kiểm tra tổng đang chạy trước khi gửi batch. Dừng theo hard cap, không chỉ cảnh báo sau khi đã tiêu.
+
+**Quyền Phase2 ngày02/11/2026:** chủ dự án đã duyệt cap20 USD và xác nhận quyền dữ liệu/terms/retention để benchmark đúng150 ảnh/511 request keys trong manifest `api_plan_v1`; grant local riêng, training export/Batch upload false. Đây là owner attestation, không phải assistant đã kiểm hợp đồng tài khoản. Inventory lịch sử giữ nguyên; grant mới bind archive/split và exact request keys. Runtime chưa có key tại lần thử đầu, không gọi API.
+
+**Chi tiết triển khai ADR-023:** Phase 2 dùng Responses REST qua dependency `teacher` riêng, SQLite transactional ledger/cache và prompt `teacher_vqa_v2`. Reservation dùng **toàn bộ input limit của model ở tier giá cao nhất + output cap**, không dùng ước lượng tokenizer/ảnh để bảo đảm budget. Đây là bound rất bảo thủ, không phải dự báo hóa đơn; usage thật mới settle, unknown charge vẫn giữ chỗ. Hai candidate ban đầu là GPT-5.4 snapshot 2026-03-05 và GPT-5.4 mini snapshot 2026-03-17, giá kiểm ngày 02/11/2026; account access đã xác minh qua live runs. 50 ảnh integration dùng lại G10 train pilot không đọc gold; 100 dev_select chọn component seed42 trước output, A1/A2/A3/A5 cùng receipt/questions. A5 dùng cùng prompt image+OCR đã định trước với A3. Role freeze thực tế ở ADR-025. [Protocol và runbook](docs/PHASE2_WORKFLOW.md). Không đổi tiêu chí G2, không cấp quyền external/training từ việc viết code.
+
+**ADR-024:** teacher CLI nạp key cục bộ bằng `--env-file .env` sau permission gates. Quy tắc role freeze trước dev metrics ở `configs/teacher/selection_v1.json`: primary strict_nfc_em, tie ANLS rồi measured cost; fallback cheap chỉ khi giảm≤2pp so strong image-capable và rẻ hơn. Tối đa2 experiment processes đồng thời dùng chung ledger, ghi overlap; không đổi cap/scope hoặc dùng test/OOD để chọn.
+
+**ADR-025 — role freeze ngày 03/11/2026:** benchmark và fallback chọn **A3, `gpt-5.4-2026-03-05`, image+OCR, `teacher_vqa_v2`, detail high, reasoning none, output cap 4096, store false**. Trên 100 dev components/666 QA, strict EM A3=76,28%, A2=73,72%, A5=70,27%; A5 rẻ hơn nhưng giảm 6,01pp, vượt ngưỡng fallback 2pp đã khóa. Đây là lựa chọn dev tạm, không phải kết quả final test hoặc quyền gọi cascade trên dữ liệu mới. Fallback serving vẫn disabled. Label strategy chọn nhánh local open-weight ADR-014; model 4B chưa được chứng nhận, API training export vẫn false và pilot local phải đạt trước Phase 4. [Báo cáo/CI/cost](docs/PHASE2_RESULTS.md), [role freeze local](artifacts/phase2/final_v1/role_freeze.json).
 
 ### 10.4 Điều kiện dùng output làm dữ liệu huấn luyện
 
@@ -868,6 +876,8 @@ Theo chỉ dẫn mới của chủ dự án, phần OCR reference/OOD khởi đ�
 
 **G2:** chạy lại cache không phát sinh gọi mới ngoài policy; budget chặn được submit vượt trần; output missing/invalid/refusal được ghi đúng; chưa nhìn test để chọn prompt. Nếu quyền label-export chưa rõ, chuyển nhánh teacher có quyền trước Phase 4.
 
+**Đã đạt ngày 03/11/2026:** 59 pilot + 4×113 baseline groups hoàn tất; 511 cache replays không thêm API calls/spend; ledger 6,080008/20 USD, reserved/uncertain đều 0; budget/retry/Batch fixtures đạt. Một A5 schema error tương ứng 6 QA giữ trong denominator, không sửa output hoặc gọi lại để tăng điểm. [Gate report local](artifacts/phase2/final_v1/report.json) và ADR-025 khóa lựa chọn theo policy định trước. G2 không thay thế G3–G7 hoặc gate label teacher local.
+
 ### Phase 3 — Student và gold-only baseline
 
 **Phụ thuộc:** G1, stack GPU lock; G2 không chặn việc thử local.
@@ -1004,15 +1014,16 @@ Trên Linux đổi interpreter thành `.venv/bin/python`. Chỉ tạo venv nếu
 
 Xuất schema: `python scripts/export_schemas.py`. Demo status tùy chọn: cài `.[demo]`, chạy API ở terminal khác rồi `python app/demo.py`. Docker CPU scaffold: `docker compose up --build`; thêm demo bằng `docker compose --profile demo up --build`. Docker phải được cài trên host; scaffold không tự cài Docker hoặc GPU driver.
 
-### 24.2 CLI đích sẽ triển khai theo phase
+### 24.2 Teacher CLI đã triển khai và CLI đích
 
-Các lệnh sau là **spec**, chưa tồn tại, không được quảng bá như lệnh chạy được:
+Phase2 đã có `vidoclens teacher plan / estimate / run / evaluate / reconcile / batch-prepare / batch-submit / batch-reconcile`; `run`, `batch-prepare`, `batch-submit` có `--dry-run`. [Runbook](docs/PHASE2_WORKFLOW.md) ghi các đối số thật, approval record và lỗi runtime. Estimate/dry-run không gọi API hoặc đọc key; live cần grant đúng request, budget và credential.
+
+Các lệnh sau còn là **spec**, không quảng bá như lệnh chạy được (Phase1 hiện dùng các module Python trong runbook):
 
 ```text
 vidoclens data ingest / audit / split         # Phase 1
 vidoclens ocr run                            # Phase 1
 vidoclens evaluate                          # Phase 1
-vidoclens teacher estimate / run / reconcile # Phase 2
 vidoclens student infer / train / export     # Phase 3
 vidoclens silver filter / audit              # Phase 4
 vidoclens cascade calibrate                  # Phase 5
@@ -1032,7 +1043,7 @@ Mọi command đích nhận config path, run ID và output root; mặc định k
 | OCR kém khiến filter loại nhãn đúng | Chủ dự án, G1/G4 | Đo oracle recall, audit false reject, giảm coverage claim, thử OCR candidate |
 | Filter giữ nhầm trường/confirmation bias | Chủ dự án, G4/G5 | Semantic checks, A2/A3 ablation, human audit; không gọi OCR agreement là truth |
 | P2 không hơn P1 | Chủ dự án, G4 | Báo kết quả âm, CI, retention/difficulty; không thử test nhiều lần đến khi thắng |
-| Budget/model snapshot chưa chốt | Chủ dự án, trước G2 external pilot | Cấu hình external disabled/budget=0; estimate trước run |
+| Quyền/giá/model thay đổi ở campaign mới | Chủ dự án, trước external run mới | Phase 2 đã có grant riêng và role freeze; template clone vẫn deny/cap0, kiểm scope/price trước run |
 | Pretraining contamination không biết hết | Chủ dự án, mọi bảng benchmark | Nhóm known/unknown overlap, OOD mới; không hứa test hoàn toàn unseen |
 | Trễ lịch học/thi | Chủ dự án, review hằng tuần | Cắt extensions, dùng 2 tuần buffer, giữ trạng thái incomplete trung thực |
 | Host/domain triển khai chưa chọn | Chủ dự án, trước Phase 6 | Local private demo trước; public deploy chỉ khi có host và release gates |

@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "question": {
+      "minLength": 1,
+      "title": "Question",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qid",
+    "question"
+  ],
+  "title": "TeacherQuery",
+  "type": "object"
+}

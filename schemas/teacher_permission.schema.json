@@ -1,0 +1,122 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "provider": {
+      "const": "openai",
+      "default": "openai",
+      "title": "Provider",
+      "type": "string"
+    },
+    "archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Archive Sha256",
+      "type": "string"
+    },
+    "split_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Split Sha256",
+      "type": "string"
+    },
+    "external_processing_allowed": {
+      "default": false,
+      "title": "External Processing Allowed",
+      "type": "boolean"
+    },
+    "account_terms_reviewed": {
+      "default": false,
+      "title": "Account Terms Reviewed",
+      "type": "boolean"
+    },
+    "retention_reviewed": {
+      "default": false,
+      "title": "Retention Reviewed",
+      "type": "boolean"
+    },
+    "batch_files_allowed": {
+      "default": false,
+      "title": "Batch Files Allowed",
+      "type": "boolean"
+    },
+    "training_export_allowed": {
+      "default": false,
+      "title": "Training Export Allowed",
+      "type": "boolean"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "approved_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved At"
+    },
+    "evidence": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence"
+    },
+    "budget_micro_usd": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Budget Micro Usd",
+      "type": "integer"
+    },
+    "price_snapshot_approved": {
+      "default": false,
+      "title": "Price Snapshot Approved",
+      "type": "boolean"
+    },
+    "allowed_models": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Models",
+      "type": "array"
+    },
+    "allowed_request_keys": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "title": "Allowed Request Keys",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archive_sha256",
+    "split_sha256"
+  ],
+  "title": "TeacherPermission",
+  "type": "object"
+}

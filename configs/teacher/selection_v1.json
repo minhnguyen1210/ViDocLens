@@ -1,0 +1,38 @@
+{
+  "protocol": "phase2_role_selection_v1",
+  "primary_metric": "strict_nfc_em",
+  "benchmark_candidates": [
+    "A1",
+    "A2",
+    "A3",
+    "A5"
+  ],
+  "benchmark_tie_breakers": [
+    "strict_nfc_anls_desc",
+    "measured_cost_per_question_asc",
+    "experiment_id_asc"
+  ],
+  "fallback_strong_candidates": [
+    "A2",
+    "A3"
+  ],
+  "fallback_cheap_candidate": "A5",
+  "fallback_max_em_drop": 0.02,
+  "fallback_requires_lower_measured_cost": true,
+  "label_strategy": "local_open_weight_candidate_pending_pre_phase4_pilot",
+  "training_export_allowed": false,
+  "bootstrap_resamples": 2000,
+  "bootstrap_seed": 42,
+  "paired_comparisons": [
+    [
+      "A3",
+      "A2"
+    ],
+    [
+      "A5",
+      "A3"
+    ]
+  ],
+  "test_or_ood_selection_allowed": false,
+  "frozen_before_dev_predictions_and_metrics": true
+}

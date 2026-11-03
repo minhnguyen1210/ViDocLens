@@ -36,6 +36,17 @@ from vidoclens.contracts.models import (
 )
 from vidoclens.contracts.pilot import Phase0PilotManifest
 from vidoclens.contracts.review import OODAnnotation, TranscriptionReview
+from vidoclens.contracts.teacher import (
+    TeacherAnswer,
+    TeacherOutput,
+    TeacherPermission,
+    TeacherPriceCard,
+    TeacherProfile,
+    TeacherQuery,
+    TeacherRequest,
+    TeacherResult,
+    TeacherUsage,
+)
 
 MODELS = {
     "document": Document,
@@ -65,6 +76,15 @@ MODELS = {
     "ai_review_task": AIReviewTask,
     "ai_review_output": AIReviewOutput,
     "ai_adjudication": AIAdjudication,
+    "teacher_query": TeacherQuery,
+    "teacher_profile": TeacherProfile,
+    "teacher_request": TeacherRequest,
+    "teacher_answer": TeacherAnswer,
+    "teacher_output": TeacherOutput,
+    "teacher_result": TeacherResult,
+    "teacher_usage": TeacherUsage,
+    "teacher_permission": TeacherPermission,
+    "teacher_price_card": TeacherPriceCard,
 }
 
 

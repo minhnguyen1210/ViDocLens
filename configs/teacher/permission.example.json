@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "provider": "openai",
+  "archive_sha256": "226f7dcc6421115da254b2809dc9ebfd138be0c2f175a9c1c12f7a46ae6127ea",
+  "split_sha256": "3b591e74d2c7c8515724641351017bb63b0247d940c30f5e068479cc2f30a4d9",
+  "external_processing_allowed": false,
+  "account_terms_reviewed": false,
+  "retention_reviewed": false,
+  "batch_files_allowed": false,
+  "training_export_allowed": false,
+  "approved_by": null,
+  "approved_at": null,
+  "evidence": null,
+  "budget_micro_usd": 0,
+  "price_snapshot_approved": false,
+  "allowed_models": [],
+  "allowed_request_keys": []
+}

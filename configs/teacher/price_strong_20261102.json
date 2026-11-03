@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "model_snapshot": "gpt-5.4-2026-03-05",
+  "checked_at": "2026-11-02",
+  "source_url": "https://developers.openai.com/api/docs/models/gpt-5.4",
+  "source_sha256": "8912cd2f9c517765174dd16d79eec1e63636f37ae765e293a6350fdec9f010a3",
+  "input_nano_usd": 2500,
+  "cached_input_nano_usd": 250,
+  "output_nano_usd": 15000,
+  "max_input_tokens": 1050000,
+  "max_output_tokens": 128000,
+  "long_context_threshold": 272000,
+  "long_input_multiplier": 2,
+  "long_output_multiplier_milli": 1500
+}

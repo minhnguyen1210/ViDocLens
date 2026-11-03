@@ -19,17 +19,19 @@ from vidoclens.ocr.cache import cache_key, load_cache, store_cache
 from vidoclens.ocr.smoke import verify_model
 
 
-def select_pilot(images, plan, count=100):
+def select_pilot(images, plan, count=100, partition="train_fit"):
+    if partition not in {"train_fit", "dev_select"} or count < 1:
+        raise ValueError("OCR pilot permits only train_fit/dev_select and a positive count")
     inventory = {r.source_image_id: r for r in images}
     selected = {}
     for row in sorted(plan.assignments, key=lambda r: r.source_image_id):
-        if row.partition == "train_fit" and row.gold_for_training:
+        if row.partition == partition and (partition == "dev_select" or row.gold_for_training):
             selected.setdefault(row.duplicate_group_id, inventory[row.source_image_id])
     ranked = sorted(
         selected, key=lambda g: hashlib.sha256(("42:ocr-quality:" + g).encode()).hexdigest()
     )
     if len(ranked) < count:
-        raise ValueError("not enough distinct G10 train components for requested OCR pilot")
+        raise ValueError("not enough distinct permitted components for requested OCR pilot")
     return [selected[g] for g in ranked[:count]]
 
 
@@ -59,7 +61,15 @@ def render_review(output: Path, items):
     (output / "review.html").write_text(page, encoding="utf-8")
 
 
-def run(root: Path, split_dir: Path, inventory_dir: Path, archive: Path, output: Path):
+def run(
+    root: Path,
+    split_dir: Path,
+    inventory_dir: Path,
+    archive: Path,
+    output: Path,
+    partition: str = "train_fit",
+    count: int = 100,
+):
     os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
     import numpy as np
     import paddle
@@ -74,7 +84,7 @@ def run(root: Path, split_dir: Path, inventory_dir: Path, archive: Path, output:
     images = [
         CorpusImage.model_validate_json(line) for line in inventory_file.read_text().splitlines()
     ]
-    selected = select_pilot(images, plan)
+    selected = select_pilot(images, plan, count=count, partition=partition)
     if {r.image_archive_sha256 for r in selected} != {sha256(archive)}:
         raise ValueError("image archive changed")
     models = root / "artifacts/models/paddleocr"
@@ -108,7 +118,8 @@ def run(root: Path, split_dir: Path, inventory_dir: Path, archive: Path, output:
     write_json(
         output / "selection.json",
         {
-            "policy": "100 distinct frozen G10 train_fit components, seed42",
+            "policy": f"{count} distinct frozen {partition} components, seed42:ocr-quality",
+            "partition": partition,
             "split_summary_sha256": sha256(split_dir / "summary.json"),
             "gold_budget": 10,
             "images": [r.model_dump() for r in selected],
@@ -235,7 +246,7 @@ def run(root: Path, split_dir: Path, inventory_dir: Path, archive: Path, output:
             }
             write_json(output / f"sample_{row.source_image_id}.json", item)
             results.append(item)
-            print(f"OCR {i + 1}/100 {result.status}", flush=True)
+            print(f"OCR {i + 1}/{len(selected)} {result.status}", flush=True)
     render_review(output, results)
     times = [r["inference_seconds"] for r in results if r["inference_seconds"] is not None]
     report = {
@@ -260,6 +271,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("root", "split-dir", "inventory-dir", "archive", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--partition", choices=("train_fit", "dev_select"), default="train_fit")
+    parser.add_argument("--count", type=int, default=100)
     run(**vars(parser.parse_args()))
 
 

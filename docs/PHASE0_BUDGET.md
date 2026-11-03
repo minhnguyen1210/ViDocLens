@@ -1,6 +1,8 @@
 # Dự toán compute và chi phí Phase 0
 
-Ngày lập/cập nhật: **02/11/2026**. Đây là **mô hình ước tính**, không phải bill, benchmark hoặc budget trả phí được duyệt. Budget API hiện tại **0 USD**, external disabled. Đã được phép cài/tải và đã chạy pilot local; không gọi dịch vụ trả phí hoặc thuê GPU. Số đo feasibility dưới đây không phải accuracy benchmark.
+Ngày lập Phase 0: **02/11/2026**; bổ sung kết quả Phase 2 ngày **03/11/2026**. Phần Phase 0 bên dưới là **mô hình ước tính và số đo pilot local**, không phải bill hoặc budget trả phí được duyệt. Tại mốc Phase 0, API cap là 0 USD/external disabled; không gọi dịch vụ trả phí hoặc thuê GPU. Số đo feasibility không phải accuracy benchmark.
+
+**Phase 2 đã hoàn tất:** grant riêng cap 20 USD cho 150 ảnh/511 keys; spent **6,080008 USD**, remaining 13,919992 USD, reserved/uncertain=0. Pilot/A1/A2/A3/A5 lần lượt 0,916010 / 1,214753 / 1,677962 / 1,750404 / 0,520879 USD. Đây là usage thực × price cards đã khóa, chưa đối soát invoice. Replay toàn bộ không thêm calls/spend. [Báo cáo](PHASE2_RESULTS.md), [protocol/price cards](PHASE2_WORKFLOW.md). Số dư không cấp quyền chi ngoài scope; mô hình giả định Phase 0 bên dưới không là reservation policy hiện hành.
 
 ## 1. Những số đã biết và chưa biết
 
@@ -8,7 +10,7 @@ Ngày lập/cập nhật: **02/11/2026**. Đây là **mô hình ước tính**, 
 - ZIP annotations 1.516.419 bytes, 64.812 QA tham chiếu 9.500 ảnh. Số QA không bằng số API requests: SOT nhóm câu hỏi theo ảnh.
 - Đã tải rotated_images.zip **4.071.333.203 bytes**, không tải raw 15,59 GB. Student files **4.266.647.442 bytes**, OCR files **96.570.324 bytes**; hashes/revisions ở STATUS.
 - Kế hoạch môi trường dành dự trù 20–40 GiB cho distro/venvs/caches, cộng ảnh/weights/artifacts riêng và giữ 50 GiB trống. Đây là giả định vận hành.
-- Đã có tokens/grid và tốc độ từng mẫu student/OCR trong pilot local; chưa có giây/update, retention, teacher snapshot/price card, watts toàn máy hoặc giá điện áp dụng.
+- Đã có tokens/grid và tốc độ từng mẫu student/OCR trong pilot local; Phase 2 đã bổ sung teacher snapshots/price cards/usage thật. Giây/update, retention, watts toàn máy và giá điện áp dụng vẫn chưa đo.
 
 ### Số đo local sau dựng lại môi trường
 
@@ -35,7 +37,7 @@ Bảng nhạy cảm dùng **giả định minh họa** 1.200 input và 256 outpu
 | 10.000 | `12*p_in + 2.56*p_out` | Nhân 1,2 |
 | 50.000 | `60*p_in + 12.8*p_out` | Nhân 1,2 |
 
-Ví dụ thuần số với **đơn giá giả định** `p_in=1`, `p_out=5`: tương ứng 0,1488 / 29,76 / 148,80 USD có reserve. Đây **không phải báo giá của OpenAI hay provider nào** và không phải đề xuất tự chi số tiền đó. Nhóm nhiều QA có thể vượt 256 output tokens; pilot phải đo lại p50/p95 và worst-case cap 1.024 đang có trong config. Đếm prompt variants, seeds nếu phát sinh calls, repair/retry và teacher-all comparison riêng.
+Ví dụ thuần số với **đơn giá giả định** `p_in=1`, `p_out=5`: tương ứng 0,1488 / 29,76 / 148,80 USD có reserve. Đây **không phải báo giá của OpenAI hay provider nào** và không phải đề xuất tự chi số tiền đó. Nhóm nhiều QA có thể vượt 256 output tokens; pilot phải đo lại p50/p95 và worst-case cap1.024 của scaffold cũ (Phase2 hiện dùng cap4096 theo ADR-023). Đếm prompt variants, seeds nếu phát sinh calls, repair/retry và teacher-all comparison riêng.
 
 Khi bắt đầu Phase 2: kiểm tra nguồn giá chính thức và quyền tài khoản, chọn snapshot; estimate 50 ảnh trước gửi, xin budget cụ thể từ chủ dự án; đo usage và cập nhật estimate toàn run. Không đọc API key để làm bước dự toán này.
 

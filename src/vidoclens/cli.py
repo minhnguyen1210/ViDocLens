@@ -9,8 +9,11 @@ from pathlib import Path
 import typer
 
 from vidoclens import __version__
+from vidoclens.teacher import batch_cli as _batch_cli  # noqa: F401 - registers Batch commands
+from vidoclens.teacher.cli import app as teacher_app
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
+app.add_typer(teacher_app, name="teacher")
 
 
 @app.callback()
