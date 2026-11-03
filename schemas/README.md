@@ -12,7 +12,8 @@ ReceiptVQA `¡sep¿` serialization until official parser/evaluator parity is ver
 the scaffold does not implement that parser. `TeacherInput` deliberately has no
 answer fields and rejects extra keys, including nested answer keys. Do not serialize
 a gold `QARecord` directly into a teacher prompt. `TeacherLabel` matches the draft
-prompt's five canonical fields; provider strict-schema integration remains pending.
+prompt's five canonical fields; Phase 2 uses separate strict `TeacherAnswer` and
+`TeacherOutput` provider contracts.
 
 `Phase0PilotManifest` is a label-free feasibility input. It rejects unknown fields,
 duplicate document/qid/image hashes and requires exclusion from future audit holdout.
@@ -30,4 +31,12 @@ assignments cannot expose training gold. Frozen readers verify graph/plan hashes
 `FeatureFingerprint`/`FeatureCandidate` validate rotation/crop/gradient artifacts.
 `TranscriptionReview`/`OODAnnotation` distinguish AI review from human gold, preserve
 evidence provenance and reject AI records claiming human verification. There are
-22 exported root schemas; stored corpus/PII/model payloads remain Git ignored.
+46 exported root schemas after Phase 4 offline; stored corpus/PII/model payloads
+remain Git ignored.
+
+Phase 4 adds `SilverSample`, `SilverPool`, `SilverLabel`, `SilverBatch`,
+`FilterConfig`, `PartSupport`, `FilterDecision`, `FilterRun`, `SilverApproval` and
+`SilverExperiment`. These keep local teacher results, raw targets, OCR evidence,
+scope/permission hashes and fixture provenance separate from training execution.
+They do not certify G3/G4 or grant access to API evaluation caches. See the
+[offline workflow](../docs/PHASE4_OFFLINE_WORKFLOW.md) and PC handoff.

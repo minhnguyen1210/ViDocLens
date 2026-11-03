@@ -71,6 +71,18 @@ Bằng chứng ADR-022: Linux **223 passed**, Windows **216 passed/7 skipped**, 
 - **Thay đổi:** cấu hình role, SOT §10/22, STATUS/results/workflow/access register/budget/CHANGELOG khớp report SHA `7c0462bce5ffc7b888b4293376b06573c1e1926f72f080438217ef2116347e21`. Snapshot plan/prompt/policy và artifacts cũ giữ nguyên; không mở test/OOD/dev_calibrate/audit để chọn teacher.
 - **Tiếp theo:** Phase 3 student training smoke/save/reload/resume và gold-only baselines. Model/giá/prompt/dữ liệu thay đổi phải lập campaign/ADR mới theo ảnh hưởng, không sửa lịch sử hoặc tự tái dùng grant.
 
+## ADR-P4-001 — Chuẩn bị Phase 4 CPU song song với Phase 3 trên PC (03/11/2026)
+
+- **Trạng thái:** chấp nhận theo yêu cầu chủ dự án. Nhánh tên tường minh `phase4-offline`, base `d13360e`; ID ADR riêng để tránh trùng số với thay đổi chưa thấy trên PC.
+- **Bối cảnh:** Phase 3 đang dở trên PC và chưa push; laptop chỉ có mốc Phase 2. Không suy đoán trainer/collator/checkpoint interface hoặc đánh dấu G3 đạt.
+- **Quyết định:** thêm silver contracts, frozen question-only pool builder, local-result import format, F0/F1 và immutable replay bundle; privileged audit evaluator; nine matched experiment selections. CLI riêng dưới `vidoclens.filtering`, không sửa student/core CLI/ML locks. SOT v1.11 §11.4 ghi protocol và các defaults còn uncalibrated.
+- **Boundary:** local open-weight result exchange không là model runner. API evaluation caches/export grants giữ nguyên. G10 gold chỉ qua loader riêng của Phase 3; filter không nhận gold. Audit holdout chỉ sau dev freeze; test/OOD/calibration không mở. Fixture provenance truyền qua freeze và selections, không tự trở thành run thật.
+- **Protocol:** NFC/whitespace evidence normalization, raw target bất biến, numeric/hybrid exact, bounded contiguous spans, text minimum-length/margin, multipart literal chỉ khi khai báo. `semantic_check=unknown` do semantic checker chưa có. Không nhận OCR agreement là semantic correctness.
+- **So sánh:** P1-size deterministic hash-rank trong strata question heuristic/answer type để match F1; cùng G10/seeds/profile/update budget, ratio 1:1 và equal weights. Phase 3 consumer phải xác minh profile/G3, thực hiện sampler/resume và ghi exposure; opaque profile hash không là training certification.
+- **Đánh đổi:** giảm conflict và có tests CPU trước khi dùng GPU; vẫn cần review interface/diff PC và real-data calibration. Exact matching bảo thủ có thể giảm recall; chưa chọn threshold từ dữ liệu thật. Contracts/additional schemas có thể cần adapter sau merge nhưng không sửa lịch sử runs.
+- **Gates giữ nguyên:** local teacher pilot/quyền, G3, silver thật, holdout audit/human error review và core training ba seed trước G4. Không API call, không tải weights/dataset, không public hosting. Chủ dự án tự commit/push; không thêm author/co-author.
+- **Bàn giao:** [workflow](PHASE4_OFFLINE_WORKFLOW.md), [PC integration](PHASE4_OFFLINE_HANDOFF.md), [STATUS](STATUS.md). Kết quả tests không là metric nghiên cứu.
+
 ## Mẫu ADR tiếp theo
 
 ```text

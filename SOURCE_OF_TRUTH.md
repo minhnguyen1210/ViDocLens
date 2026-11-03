@@ -1,6 +1,6 @@
 # ViDocLens — Source of Truth
 
-> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.10**, ngày **03/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0, G1 và G2 đạt**. Phase 1 theo phương án AI (ADR-021); Phase 2 có pilot, baseline API, metrics, cache replay và role freeze thực tế (ADR-023–025). Phase 3–7 chưa hoàn tất. Kết quả mới nhất xem STATUS.
+> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.11**, ngày **03/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0, G1 và G2 đạt**. Phase 1 theo phương án AI (ADR-021); Phase 2 có pilot, baseline API, metrics, cache replay và role freeze thực tế (ADR-023–025). Chủ dự án đang làm Phase 3 trên PC; nhánh laptop chuẩn bị Phase 4 offline theo ADR-P4-001, chưa đóng G3/G4. Phase 3–7 chưa hoàn tất. Kết quả mới nhất xem STATUS.
 >
 > Ý tưởng gốc được giữ nguyên trong [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md). Từ phiên bản này, mọi quyết định thực thi phải theo tài liệu này. Những câu tự nhận “source of truth” trong bản ý tưởng là bối cảnh lịch sử. Tiến độ thực tế ở [docs/STATUS.md](docs/STATUS.md); quyết định thay đổi ở [docs/DECISIONS.md](docs/DECISIONS.md).
 
@@ -398,6 +398,16 @@ Sau khi khóa rule trên dev_select, chạy trên `audit_holdout`. Gold chỉ d�
 - Denominator bằng 0 → `null` và nêu số mẫu, không tự cho 0 hoặc 1.
 
 Tính correctness bằng gold theo evaluator đã định nghĩa; audit người thêm trên mẫu lọc đúng/loại đúng/giữ sai/loại sai để tìm trường hợp gold/OCR bất đồng. Fuzzy match làm tăng retention nhưng có thể tăng noise; không tối ưu chỉ retention.
+
+### 11.4 Implementation offline và boundary với Phase 3 — ADR-P4-001
+
+Theo yêu cầu chủ dự án ngày 03/11/2026, có thể triển khai/test phần CPU Phase 4 trên nhánh `phase4-offline` từ mốc Phase 2 trong khi Phase 3 chưa push trên PC. Đây là chuẩn bị implementation, không bỏ dependency G3 hoặc công nhận G4. Contracts mới ở `contracts/silver.py`; CLI riêng `python -m vidoclens.filtering` tránh thay trainer/CLI đang làm trên PC.
+
+`SilverPool` được dựng từ frozen G10 access plan/inventory/archive: train_fit ngoài G10 cho silver, dev_select cho chọn rule, audit_holdout chỉ audit sau freeze. G10 membership không chứa answers. Adapter local teacher về sau xuất `SilverBatch` có pool/model/prompt/generation/environment hashes, raw response hash và fixture flag; adapter thực chưa có. Không nhận trực tiếp OpenAI evaluation cache, không cấp quyền training export mới.
+
+F0/F1 giữ raw targets, decisions cho mọi qid và occurrence OCR có span IDs/token offsets. F1 v1 dùng contiguous windows 4 spans/24 tokens, cap 4096 OCR tokens/1024 answer characters; fuzzy text minimum 6 ký tự và candidate margin 0,05 là **defaults chưa calibrated**. Chặn số/hybrid khác digit, dấu/đơn vị đã đăng ký, repeated/overlapping evidence; không thêm currency equivalence. Whole-answer là default; chỉ tách literal `¡sep¿` khi batch khai báo, không suy multipart từ newline. Semantic checker chưa triển khai nên ghi `unknown`, không nhận correctness. Các giới hạn recall/đơn vị lạ phải audit trên dev, không gọi filter đã tối ưu.
+
+Freeze config bind dev report, access-plan hash và fixture provenance; synthetic freeze không dùng cho real batch. Bundle immutable lưu input/result/checksums và replay kiểm quyết định. Gold quality chỉ ở `eval.silver`; denominator 0 là null, OCR quality bins chỉ có khi cung cấp annotation độc lập. Chọn P1-size theo hash rank seed/qid, stratify heuristic question type và answer type để match F1; không đổi group split/gold budget. Chín selections dùng seeds 17/42/2026, cùng G10/profile hash/update budget và ratio 1:1. Profile là artifact opaque: **consumer Phase 3 phải kiểm G3, enforce sampler/budget, log exposure và chặn fixtures**. Chưa tự nối sampler/collator hoặc train. Xem [workflow](docs/PHASE4_OFFLINE_WORKFLOW.md), [bàn giao/merge](docs/PHASE4_OFFLINE_HANDOFF.md).
 
 ## 12. Student và quy trình huấn luyện trên 12 GB
 
@@ -891,6 +901,8 @@ Theo chỉ dẫn mới của chủ dự án, phần OCR reference/OOD khởi đ�
 ### Phase 4 — Chưng cất có kiểm chứng
 
 **Phụ thuộc:** G2, G3 và quyền dùng training labels.
+
+Chuẩn bị code CPU độc lập được phép theo ADR-P4-001; chạy thí nghiệm và đóng G4 vẫn cần đầy đủ các phụ thuộc trên. Local label teacher 4B, silver thật, calibration/audit và P1/P2 training chưa được chứng nhận bằng offline fixtures.
 
 **Công việc:** tạo teacher input không gold cho `train_fit \ G10`; sinh silver có provenance; F0/F1; audit noise trên holdout sau rule freeze; train P1-full/P1-size/P2 cùng ngân sách và ba seed; ablation F2/F3/k khác nếu đủ.
 

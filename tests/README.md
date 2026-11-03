@@ -9,8 +9,11 @@ split/duplicate containment, OCR cache integrity/concurrency, grouped bootstrap,
 gold visibility, AI provenance, OOD rights/identity binding and review coverage.
 SHA-pinned upstream parity runs separately against local fixtures/artifacts.
 
-Later suites: budget reservation/retry accounting, filter numerical evidence and
-snap ambiguity, deterministic training resume, cascade refusal, and GPU load tests.
+Phase 2 covers budget reservation/retry accounting and provider/Batch fixtures.
+Phase 4 offline covers F0/F1 numeric/text/multipart evidence, fail-closed scope,
+hash/replay integrity, filter audit denominators and matched experiment selections.
+Synthetic archive-to-CLI tests do not run a model or certify real data quality.
+Later suites include snap ambiguity, deterministic training resume, cascade and GPU load.
 No ML benchmark, accuracy claim or GPU compatibility follows from these smoke tests.
 
 Repository workflow tests use synthetic fixtures and an isolated temporary Git

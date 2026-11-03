@@ -1,0 +1,97 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "text_raw": {
+      "minLength": 1,
+      "title": "Text Raw",
+      "type": "string"
+    },
+    "text_normalized": {
+      "minLength": 1,
+      "title": "Text Normalized",
+      "type": "string"
+    },
+    "support": {
+      "enum": [
+        "exact",
+        "fuzzy",
+        "none"
+      ],
+      "title": "Support",
+      "type": "string"
+    },
+    "reason": {
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+    },
+    "span_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Span Ids",
+      "type": "array"
+    },
+    "token_start": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Token Start"
+    },
+    "token_end": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Token End"
+    },
+    "distance": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Distance"
+    },
+    "candidate_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Candidate Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "text_raw",
+    "text_normalized",
+    "support",
+    "reason"
+  ],
+  "title": "PartSupport",
+  "type": "object"
+}

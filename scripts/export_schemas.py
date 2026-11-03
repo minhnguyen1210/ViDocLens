@@ -36,6 +36,18 @@ from vidoclens.contracts.models import (
 )
 from vidoclens.contracts.pilot import Phase0PilotManifest
 from vidoclens.contracts.review import OODAnnotation, TranscriptionReview
+from vidoclens.contracts.silver import (
+    FilterConfig,
+    FilterDecision,
+    FilterRun,
+    PartSupport,
+    SilverApproval,
+    SilverBatch,
+    SilverExperiment,
+    SilverLabel,
+    SilverPool,
+    SilverSample,
+)
 from vidoclens.contracts.teacher import (
     TeacherAnswer,
     TeacherOutput,
@@ -49,6 +61,16 @@ from vidoclens.contracts.teacher import (
 )
 
 MODELS = {
+    "silver_sample": SilverSample,
+    "silver_pool": SilverPool,
+    "silver_label": SilverLabel,
+    "silver_batch": SilverBatch,
+    "filter_config": FilterConfig,
+    "part_support": PartSupport,
+    "filter_decision": FilterDecision,
+    "filter_run": FilterRun,
+    "silver_approval": SilverApproval,
+    "silver_experiment": SilverExperiment,
     "document": Document,
     "qa_record": QARecord,
     "ocr_result": OCRResult,

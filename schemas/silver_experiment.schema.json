@@ -1,0 +1,124 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "silver_experiment_selection_v1",
+      "default": "silver_experiment_selection_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "arm": {
+      "enum": [
+        "P1-full",
+        "P1-size",
+        "P2"
+      ],
+      "title": "Arm",
+      "type": "string"
+    },
+    "seed": {
+      "enum": [
+        17,
+        42,
+        2026
+      ],
+      "title": "Seed",
+      "type": "integer"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "batch_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Batch Sha256",
+      "type": "string"
+    },
+    "filter_run_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Filter Run Sha256",
+      "type": "string"
+    },
+    "approval_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Approval Sha256",
+      "type": "string"
+    },
+    "training_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Training Profile Sha256",
+      "type": "string"
+    },
+    "optimizer_updates": {
+      "exclusiveMinimum": 0,
+      "title": "Optimizer Updates",
+      "type": "integer"
+    },
+    "gold_qids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Gold Qids",
+      "type": "array"
+    },
+    "silver_qids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Silver Qids",
+      "type": "array"
+    },
+    "gold_silver_ratio": {
+      "const": "1:1",
+      "default": "1:1",
+      "title": "Gold Silver Ratio",
+      "type": "string"
+    },
+    "equal_loss_weights": {
+      "const": true,
+      "default": true,
+      "title": "Equal Loss Weights",
+      "type": "boolean"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "training_executed": {
+      "const": false,
+      "default": false,
+      "title": "Training Executed",
+      "type": "boolean"
+    },
+    "requires_g3_validation": {
+      "const": true,
+      "default": true,
+      "title": "Requires G3 Validation",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "arm",
+    "seed",
+    "pool_sha256",
+    "batch_sha256",
+    "filter_run_sha256",
+    "approval_sha256",
+    "training_profile_sha256",
+    "optimizer_updates",
+    "gold_qids",
+    "silver_qids",
+    "fixture_only"
+  ],
+  "title": "SilverExperiment",
+  "type": "object"
+}

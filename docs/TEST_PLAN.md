@@ -43,7 +43,7 @@ Chỉ thêm test khi bảo vệ một hợp đồng, rủi ro thực hoặc regr
 
 [test_receiptvqa_loader.py](../tests/unit/test_receiptvqa_loader.py) kiểm tra output không gold, default-safe view, raw newlines/NFC, namespace ID, selected gold theo toàn receipt, group không vượt partition/gold selection, hash/coverage manifest, test bị khóa trước đọc, selected reader không mở test CSV, malformed input/CRC và CLI không lộ payload.
 
-[test_metrics.py](../tests/unit/test_metrics.py) dùng expected values tính tay cho NFC, dấu/case/số/whitespace, multiset F1, ANLS tại ngưỡng, multi-reference/full multipart, missing/abstain/error denominator và report consistency. Đây là strict protocol. Phase 1 bổ sung [test_phase1.py](../tests/unit/test_phase1.py) cho containment/quarantine, cache identity/corruption/concurrent publication, grouped bootstrap, bounded oracle, CER và AI/human boundary. Upstream parity chạy riêng bằng [script](../scripts/check_metric_parity.py), 261 cases trên nguồn/wheel SHA-pinned. Kết quả thực và giới hạn human/OOD ở [Phase 1 report](PHASE1_RESULTS.md); G0 đã đạt.
+[test_metrics.py](../tests/unit/test_metrics.py) dùng expected values tính tay cho NFC, dấu/case/số/whitespace, multiset F1, ANLS tại ngưỡng, multi-reference/full multipart, missing/abstain/error denominator và report consistency. Đây là strict protocol. Phase 1 bổ sung [test_phase1.py](../tests/unit/test_phase1.py) cho containment/quarantine, cache identity/corruption/concurrent publication, grouped bootstrap, bounded oracle, CER và AI/human boundary. Upstream parity chạy riêng bằng [script](../scripts/check_metric_parity.py), 260 cases trên nguồn/wheel SHA-pinned. Kết quả thực và giới hạn human/OOD ở [Phase 1 report](PHASE1_RESULTS.md); G0 đã đạt.
 
 
 ## Phase2 đã hiện thực
@@ -52,4 +52,13 @@ Chỉ thêm test khi bảo vệ một hợp đồng, rủi ro thực hoặc regr
 
 OCR 100 dev, frozen 511-request plan, hash rerun và payload validation có evidence ở [PHASE2_RESULTS](PHASE2_RESULTS.md). Live pilot và bốn baselines đã hoàn tất; 511 cache replays không phát sinh calls/spend; metric/CI/role freeze/G2 report từ dữ liệu thật. Batch upload chưa chạy vì grant không bao gồm Batch; offline edge cases không chứng nhận live Batch.
 
-[test_teacher_credentials.py](../tests/unit/test_teacher_credentials.py) có 8 cases về nạp `.env` tường minh, malformed/duplicate/missing values, không eval hoặc log secret; chỉ dùng fake keys. [test_phase2_finalization.py](../tests/unit/test_phase2_finalization.py) có 4 cases về chất lượng/cost tie-break, biên fallback 2pp và từ chối run chưa hoàn tất. Full suite mới nhất: Windows 289 passed/7 skipped, WSL 296 passed; logs/check hashes được dẫn trong STATUS. G2 đạt không chứng nhận training, cascade hoặc serving readiness.
+[test_teacher_credentials.py](../tests/unit/test_teacher_credentials.py) có 8 cases về nạp `.env` tường minh, malformed/duplicate/missing values, không eval hoặc log secret; chỉ dùng fake keys. [test_phase2_finalization.py](../tests/unit/test_phase2_finalization.py) có 4 cases về chất lượng/cost tie-break, biên fallback 2pp và từ chối run chưa hoàn tất. Full suite tại mốc Phase 2: Windows 289 passed/7 skipped, WSL 296 passed; logs/check hashes được dẫn trong STATUS. G2 đạt không chứng nhận training, cascade hoặc serving readiness.
+
+
+## Phase 4 offline đã hiện thực
+
+[test_silver.py](../tests/unit/test_silver.py) và [test_silver_workflow.py](../tests/unit/test_silver_workflow.py) thêm **58 cases**: raw/NFC, numeric substring/sign/unit/Unicode guards, fuzzy minimum/margin và biên float, literal multipart/newline, repeated/reused evidence, missing/error denominators, scope/hash/gold separation, immutable checksum/replay, exact-batch approvals, matched-size strata, synthetic freeze không mở real run và freeze không chuyển sang split khác.
+
+Workflow test tạo ZIP/manifest/OCR/teacher fixtures trong thư mục tạm rồi chạy prepare → filter → dev audit → freeze → train selection qua CLI; không dùng ảnh/nhãn thật, API hoặc GPU. Full suite laptop **354 passed**, Ruff check/format đạt, **46 schemas match**; evidence trong STATUS. Các checks chỉ xác nhận CPU code, không chứng nhận quality teacher/filter/student, G3/G4, human audit, pipeline training hoặc deployment.
+
+Sau merge PC: kiểm contracts/schema cả hai nhánh; chạy lại CPU suite; validate profile/G3 và gold/silver adapter; GPU train smoke/save/reload/resume; chỉ sau local label pilot và dev rule freeze mới chạy silver/core P1/P2. Không chạy test/OOD để chọn rule.
