@@ -1,0 +1,115 @@
+{
+  "$defs": {
+    "Phase3EvidenceFile": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "Phase3EvidenceFile",
+      "type": "object"
+    },
+    "Phase3RunEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "directory": {
+          "title": "Directory",
+          "type": "string"
+        },
+        "files": {
+          "additionalProperties": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "minProperties": 2,
+          "title": "Files",
+          "type": "object"
+        }
+      },
+      "required": [
+        "directory",
+        "files"
+      ],
+      "title": "Phase3RunEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "phase3_continuation_v1",
+      "default": "phase3_continuation_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "plan_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Plan Sha256",
+      "type": "string"
+    },
+    "parent_campaign": {
+      "$ref": "#/$defs/Phase3EvidenceFile"
+    },
+    "pause_event": {
+      "$ref": "#/$defs/Phase3EvidenceFile"
+    },
+    "execution": {
+      "$ref": "#/$defs/Phase3EvidenceFile"
+    },
+    "runs": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Phase3RunEvidence"
+      },
+      "minProperties": 1,
+      "title": "Runs",
+      "type": "object"
+    },
+    "replaced_incomplete_runs": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Phase3RunEvidence"
+      },
+      "minProperties": 1,
+      "title": "Replaced Incomplete Runs",
+      "type": "object"
+    }
+  },
+  "required": [
+    "plan_sha256",
+    "parent_campaign",
+    "pause_event",
+    "execution",
+    "runs",
+    "replaced_incomplete_runs"
+  ],
+  "title": "Phase3Continuation",
+  "type": "object"
+}

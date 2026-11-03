@@ -10,7 +10,7 @@ Ngày lập Phase 0: **02/11/2026**; bổ sung kết quả Phase 2 ngày **03/11
 - ZIP annotations 1.516.419 bytes, 64.812 QA tham chiếu 9.500 ảnh. Số QA không bằng số API requests: SOT nhóm câu hỏi theo ảnh.
 - Đã tải rotated_images.zip **4.071.333.203 bytes**, không tải raw 15,59 GB. Student files **4.266.647.442 bytes**, OCR files **96.570.324 bytes**; hashes/revisions ở STATUS.
 - Kế hoạch môi trường dành dự trù 20–40 GiB cho distro/venvs/caches, cộng ảnh/weights/artifacts riêng và giữ 50 GiB trống. Đây là giả định vận hành.
-- Đã có tokens/grid và tốc độ từng mẫu student/OCR trong pilot local; Phase 2 đã bổ sung teacher snapshots/price cards/usage thật. Giây/update, retention, watts toàn máy và giá điện áp dụng vẫn chưa đo.
+- Đã có tokens/grid và tốc độ từng mẫu student/OCR trong pilot local; Phase 2 đã bổ sung teacher snapshots/price cards/usage thật. Giây/update đã đo trong Phase 3 (xem bên dưới); retention, watts toàn máy và giá điện áp dụng vẫn chưa đo.
 
 ### Số đo local sau dựng lại môi trường
 
@@ -70,3 +70,15 @@ OCR toàn corpus: `9.500 * measured_seconds_per_image / 3600`; teacher local tí
 2. G3: train smoke 50–100 optimizer updates, loss finite, adapter save/reload; đo steady-state sau warm-up và cập nhật dự toán. Full training chưa cần chạy để hoàn thành Phase 0.
 3. Trước mỗi lượt trả phí: budget được duyệt + price snapshot + quyền dữ liệu + ledger reservation. Nếu thiếu, dừng external; local development vẫn tiếp tục.
 4. Đã có **hash locks ML/OCR**, hai venv mới được dựng và smoke pass trên cùng host. Xem [runbook](PHASE0_ENVIRONMENT.md). Train feasibility và estimate từ giây/update thật vẫn thuộc G3.
+
+## Cập nhật Phase 3 — số đo training thật (03/11/2026)
+
+Cả ba seed17/42/2026 đã train đầy đủ G10: mỗi seed3.053 QA,191 optimizer updates, một epoch, batch1/accumulation16 (batch cuối13). Tổng thời gian các updates **6.485,93s = 108,10 phút**. Thời gian update gồm collator/forward/backward/clip/optimizer/scheduler/CUDA synchronization, không gồm cold load/checkpoint I/O; vì vậy không đồng nghĩa wall time toàn campaign.
+
+| Seed | Training updates (s) | p50 update sau warmup6 (s) | p95 update sau warmup6 (s) |
+|---|---:|---:|---:|
+| 17 | 2176.76 | 11.381 | 12.072 |
+| 42 | 2149.10 | 11.269 | 11.973 |
+| 2026 | 2160.07 | 11.325 | 11.859 |
+
+Ngoại suy **12 runs match cùng191 updates và token/pixel profile này: khoảng7,21 GPU-hours training**. Đây là dự toán phần updates từ phép đo, không phải thời gian toàn core hoặc cam kết chi phí. P1/P2 có độ dài silver khác phải đo lại; chưa gồm OCR/local teacher/evaluation/load/save/retry. Chưa đo điện năng/giá điện nên không quy thành tiền. Không phát sinh API spend ở Phase 3. [Evidence local](../artifacts/phase3/training_compute_v1.json); G3 chỉ đóng khi đủ evaluation/audit trong STATUS.

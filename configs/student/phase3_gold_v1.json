@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol": "phase3_gold_v1",
+  "model_id": "Qwen/Qwen3-VL-2B-Instruct",
+  "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+  "weights_sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+  "max_image_pixels": 262144,
+  "min_image_pixels": 4096,
+  "max_sequence_length": 2048,
+  "max_new_tokens": 128,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.05,
+  "learning_rate": 0.0001,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.03,
+  "gradient_accumulation": 16,
+  "epochs": 1,
+  "seeds": [
+    17,
+    42,
+    2026
+  ],
+  "prompt_path": "prompts/student_vqa_v1.txt",
+  "environment_lock": "infra/requirements/phase0-ml-linux-py311.lock",
+  "checkpoint_rule": "dev_em_numeric_em_latency_earlier"
+}

@@ -28,6 +28,9 @@ artifacts/**
 !artifacts/**/README.md
 # Downloaded upstream model cards are payload too, not scaffold documentation.
 artifacts/models/
+# Training checkpoints contain generated model cards as well as private payloads.
+# Public experiment summaries belong in docs/, not in run directories.
+artifacts/phase3/
 reports/**
 !reports/**/
 !reports/**/.gitkeep

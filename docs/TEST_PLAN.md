@@ -52,4 +52,18 @@ Chỉ thêm test khi bảo vệ một hợp đồng, rủi ro thực hoặc regr
 
 OCR 100 dev, frozen 511-request plan, hash rerun và payload validation có evidence ở [PHASE2_RESULTS](PHASE2_RESULTS.md). Live pilot và bốn baselines đã hoàn tất; 511 cache replays không phát sinh calls/spend; metric/CI/role freeze/G2 report từ dữ liệu thật. Batch upload chưa chạy vì grant không bao gồm Batch; offline edge cases không chứng nhận live Batch.
 
-[test_teacher_credentials.py](../tests/unit/test_teacher_credentials.py) có 8 cases về nạp `.env` tường minh, malformed/duplicate/missing values, không eval hoặc log secret; chỉ dùng fake keys. [test_phase2_finalization.py](../tests/unit/test_phase2_finalization.py) có 4 cases về chất lượng/cost tie-break, biên fallback 2pp và từ chối run chưa hoàn tất. Full suite mới nhất: Windows 289 passed/7 skipped, WSL 296 passed; logs/check hashes được dẫn trong STATUS. G2 đạt không chứng nhận training, cascade hoặc serving readiness.
+[test_teacher_credentials.py](../tests/unit/test_teacher_credentials.py) có 8 cases về nạp `.env` tường minh, malformed/duplicate/missing values, không eval hoặc log secret; chỉ dùng fake keys. [test_phase2_finalization.py](../tests/unit/test_phase2_finalization.py) có 4 cases về chất lượng/cost tie-break, biên fallback 2pp và từ chối run chưa hoàn tất. Full suite tại mốc G2: Windows 289 passed/7 skipped, WSL 296 passed; logs/check hashes được dẫn trong STATUS. G2 đạt không chứng nhận training, cascade hoặc serving readiness.
+
+## Phase 3 — student
+
+[test_student.py](../tests/unit/test_student.py) kiểm mask prefix/image/EOS, từ chối truncation/template drift, causal CE và gradient tương đương full masked CE trên Torch, seed/order/partial batch, chặn gold trong inference/dev trong training, checksum/path checkpoint, RNG roundtrip, atomic progress và checkpoint selection/Numeric EM policy. Các fixture không là số đo accuracy hoặc training feasibility.
+
+Actual processor preflight phải phủ toàn G10/dev đã chọn; smoke52 và resume50→52 chạy trên GPU thật, so adapters với tolerance đã khóa và greedy token IDs khi reload ở process mới. L2 cần toàn 3.053 QA/191 updates cho từng seed 17/42/2026, cả hai checkpoint dev được chấm, giữ cả ba seed và các lỗi trong báo cáo. Xem [workflow Phase 3](PHASE3_WORKFLOW.md); STATUS phân biệt phần đã đo và chưa hoàn tất.
+
+Phase 3 hiện có 24 student unit cases; full suite trên code hash của [checks v2](../artifacts/phase3/checks_v2.json): Windows 311 passed/9 skipped, WSL 320 passed. WSL unit suite tắt CUDA để tách khỏi GPU campaign; smoke/resume/reload có [bằng chứng GPU riêng](../artifacts/phase3/resume_verification_v2.json). V2 buộc deterministic math attention và giữ đọc được protocol v1 lịch sử.
+
+## Phase 3 continuation audit
+
+`tests/unit/test_phase3_continuation.py`: fixture adoption giữ failed parent, chỉ tiếp tục missing evaluations; reject path escape, log/script/run checksum drift, cross-plan/missing seed, thay completed parent, partial/new run lỗi, execution lỗi, source/profile drift. Các fixtures không là evidence model. G3 audit còn phải replay raw predictions và kiểm đủ checkpoints trên artifacts thật.
+
+Mốc G3 cuối ngày03/11/2026: continuation20 cases; full Windows331 passed/9 skipped, WSL340 passed; Ruff125 files,40 schemas và file policy239 candidates đạt. `checks_v3.json` bind source hashes. Audit thật `g3_report_v1.json` đạt9/9, đã replay đủ7 metrics từ raw predictions, kiểm6 checkpoint và3 training curves. CLI doctor vẫn model_not_configured; không nhận CI/Docker/serving đã đạt.

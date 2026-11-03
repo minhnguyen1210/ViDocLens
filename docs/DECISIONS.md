@@ -71,6 +71,30 @@ Bằng chứng ADR-022: Linux **223 passed**, Windows **216 passed/7 skipped**, 
 - **Thay đổi:** cấu hình role, SOT §10/22, STATUS/results/workflow/access register/budget/CHANGELOG khớp report SHA `7c0462bce5ffc7b888b4293376b06573c1e1926f72f080438217ef2116347e21`. Snapshot plan/prompt/policy và artifacts cũ giữ nguyên; không mở test/OOD/dev_calibrate/audit để chọn teacher.
 - **Tiếp theo:** Phase 3 student training smoke/save/reload/resume và gold-only baselines. Model/giá/prompt/dữ liệu thay đổi phải lập campaign/ADR mới theo ảnh hưởng, không sửa lịch sử hoặc tự tái dùng grant.
 
+## ADR-026 — Protocol student gold-only Phase 3 (03/11/2026)
+
+- **Trạng thái:** chấp nhận protocol trước dev predictions; G3 còn phải chạy thực tế. Chủ dự án yêu cầu hoàn thành Phase 3; không cấp thêm paid API hoặc quyền publish.
+- **Dữ liệu:** toàn G10 containment v1, 454 ảnh/405 nhóm/3.053 QA; dev cùng 100 nhóm/666 QA Phase 2. Train loader chỉ nhận gold G10; inference dev không nhận gold. Không dùng API output, test/OOD/audit/dev_calibrate.
+- **Budget:** một epoch hoàn chỉnh, 191 updates × ba seed 17/42/2026; microbatch1, accumulation16 (cuối13), LR1e-4, AdamW weight_decay0.01, cosine/warmup ceil(3%), clip1.0, rank8/alpha16/dropout0.05. Khóa trước khi biết L1/L2 quality; không giảm còn vài bước rồi gọi là baseline. k5/k25/k100 và model phụ là extensions theo SOT.
+- **Input:** Qwen3-VL-2B revision đã tải, NF4 double quant, BF16 autocast, SDPA, pixel cap262144/context2048/output128. Prompt concise v1 cố định, giữ raw answers/digits; mỗi QA một example. Processor không truncate; tokenization/prefix mismatch phải fail.
+- **Loss:** chỉ assistant answer + EOS; dùng supported `logits_to_keep` ở source Transformers4.57.1 để tính CE tại đúng causal positions, test loss/gradient so full masked CE. Không đổi training objective để giảm memory. Vision/base frozen; LoRA language attention names phải enumerate từ model thật.
+- **Selection:** checkpoint giữa/cuối epoch trên dev subset; EM → Numeric EM (gold có digit, không alpha) → p50 latency → step sớm. Freeze numeric membership trước inference. Báo mean/sample-std cả ba seed, group bootstrap riêng; không cherry-pick seed hoặc tune test.
+- **Smoke/resume:** 52 updates/64 train QA gồm longest answers; độc lập với L2. Checkpoint50→resume52, optimizer/scheduler/Python/NumPy/CPU/CUDA RNG đầy đủ. Tensor tolerance rtol1e-4/atol1e-5; greedy output token IDs phải trùng; nếu không đạt ghi fail và sửa nguyên nhân.
+- **Amendment trước dev predictions:** smoke v2 trên protocol v1 hoàn tất 52 updates nhưng resume khác greedy IDs; adapter max abs diff `8.498318493366241e-09`, nằm trong tolerance. Reload từng adapter khớp chính probe của nó; sai khác số học backward là giả thuyết cần kiểm, chưa khẳng định nguyên nhân. Protocol `phase3_gold_v2` buộc SDPA math, deterministic algorithms, CUBLAS `:4096:8`, TF32 off; giữ toàn bộ dữ liệu/prompt/budget/tiêu chí. Smoke v3 và resume mới phải đạt trước campaign. Lỗi progress writer của smoke v1 cũng được lưu riêng; không ghi đè lịch sử.
+- **Vận hành:** Phase 3 dùng các module Python trong runbook, nhận frozen plan và output directory mới; config được bind bằng hash. Nhóm CLI `vidoclens student` vẫn là spec. `save_checkpoint` xuất adapter/processor/state local, chưa tạo release bundle hoặc serving backend.
+- **Nguồn:** [PEFT quantization v0.17](https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/quantization), [PyTorch2.8 checkpoint](https://docs.pytorch.org/docs/2.8/checkpoint.html); đối chiếu trực tiếp source Transformers4.57.1/PEFT0.17.1 đã cài. Không nâng dependency/driver. [Workflow](PHASE3_WORKFLOW.md).
+
+## ADR-027 — Tiếp tục evaluation sau pause, giữ nguyên provenance (03/11/2026)
+
+- **Trạng thái:** chấp nhận; chủ dự án yêu cầu đọc handoff và tiếp tục Phase 3. Không cấp quyền push hoặc mở thêm phạm vi API/data.
+- **Bối cảnh:** cả ba seed train đủ191 updates; L1 và dev seed17/42 hoàn tất. Chủ dự án yêu cầu pause khi seed2026/step96 có238/666 predictions, chưa chạy step191. Parent campaign giữ SIGINT exit-2/fail-fast RuntimeError; không phải lỗi training.
+- **Quyết định:** giữ nguyên parent/partial artifacts; chạy lại toàn bộ666 QA cho step96 và chạy step191 vào `continuation_v1`. Không train lại, không nối phần238 vào run mới, không thay completed runs hoặc lựa theo kết quả.
+- **Contract và audit:** `Phase3Continuation` trong `contracts/phase3.py`, JSON schema được sinh; manifest bind parent/pause/execution/runs bằng checksum. Resolver chỉ chấp nhận evaluation continuation khi toàn bộ training đã hoàn tất, run mới đủ và mọi command thành công. Final audit kiểm source snapshots/profile/config/seed/checkpoints, chấm lại raw predictions, tổng hợp đủ ba seed. Parent `complete=false` giữ nguyên; report G3 thể hiện rõ continuation hash và nguồn từng run.
+- **Tác động:** chỉ orchestration/audit, không sửa code training/inference, data split, prompt, model, hyperparameters, budget hoặc checkpoint rule đã freeze. Vẫn cùng dev_select, không mở test/OOD/audit/dev_calibrate. Không có API spend, downloads, thay hệ thống, commit/push.
+- **SOT:** §12.4, v1.12. Bằng chứng: `pause_event_v1.json`, `campaign_v1/campaign.json`, continuation execution/manifest và G3 report khi hoàn tất; hiện trạng xem STATUS. Kiểm thử negative cases bảo vệ partial/checksum/population/source drift.
+
+- **Kết quả thực thi ADR-027:** continuation hoàn tất hai lượt666 QA, manifest adopt10 completed runs và giữ1 partial. G3 report9/9 pass; cả ba seed chọnstep191, mean EM46,00%, SD0,483 điểm %, paired mean−L1 +11,612pp [8,736;14,467]pp. Parent campaign vẫn failed do pause; source train/infer không đổi. [Kết quả](PHASE3_RESULTS.md).
+
 ## Mẫu ADR tiếp theo
 
 ```text

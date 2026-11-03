@@ -34,8 +34,10 @@ from vidoclens.contracts.models import (
     TeacherInput,
     TeacherLabel,
 )
+from vidoclens.contracts.phase3 import Phase3Continuation
 from vidoclens.contracts.pilot import Phase0PilotManifest
 from vidoclens.contracts.review import OODAnnotation, TranscriptionReview
+from vidoclens.contracts.student import StudentConfig, StudentQuestion, StudentTrainingExample
 from vidoclens.contracts.teacher import (
     TeacherAnswer,
     TeacherOutput,
@@ -49,6 +51,10 @@ from vidoclens.contracts.teacher import (
 )
 
 MODELS = {
+    "phase3_continuation": Phase3Continuation,
+    "student_config": StudentConfig,
+    "student_question": StudentQuestion,
+    "student_training_example": StudentTrainingExample,
     "document": Document,
     "qa_record": QARecord,
     "ocr_result": OCRResult,

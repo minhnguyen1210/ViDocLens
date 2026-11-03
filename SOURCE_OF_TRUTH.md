@@ -1,6 +1,6 @@
 # ViDocLens — Source of Truth
 
-> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.10**, ngày **03/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0, G1 và G2 đạt**. Phase 1 theo phương án AI (ADR-021); Phase 2 có pilot, baseline API, metrics, cache replay và role freeze thực tế (ADR-023–025). Phase 3–7 chưa hoàn tất. Kết quả mới nhất xem STATUS.
+> **Tài liệu điều hành kỹ thuật và nghiên cứu của dự án.** Phiên bản **1.12**, ngày **03/11/2026**, chủ dự án **Nguyễn Hữu Gia Minh**. Trạng thái: **G0, G1, G2 và G3 đạt local**. Phase 1 theo phương án AI (ADR-021); Phase 2 có live evidence (ADR-023–025). Phase 4–7 chưa hoàn tất. Kết quả mới nhất xem STATUS.
 >
 > Ý tưởng gốc được giữ nguyên trong [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md). Từ phiên bản này, mọi quyết định thực thi phải theo tài liệu này. Những câu tự nhận “source of truth” trong bản ý tưởng là bối cảnh lịch sử. Tiến độ thực tế ở [docs/STATUS.md](docs/STATUS.md); quyết định thay đổi ở [docs/DECISIONS.md](docs/DECISIONS.md).
 
@@ -443,6 +443,14 @@ Khi OOM: giảm visual tokens trước, rồi context/sequence packing; kiểm t
 Mỗi checkpoint có adapter, base revision, processor/tokenizer, chat template, optimizer/scheduler/RNG state khi resume, dataset manifest, split hash và config. Chọn checkpoint bằng dev_select EM, tie-break Numeric EM rồi latency; khóa rule trước train.
 
 Không merge LoRA vào 4-bit base rồi coi kết quả đương nhiên tương đương. Serving v1 dùng base + adapter + đúng quantization config; nếu export/merge/quantize lại, coi là model artifact mới và chạy regression. Đo VRAM cả lúc nạp và inference, không chỉ sau warmup.
+
+**Protocol Phase 3 — ADR-026 (khóa trước L1/L2 dev predictions):** dùng toàn bộ G10 đã freeze: 454 ảnh/405 components/3.053 QA; image+question, prompt `student_vqa_v1`, không OCR hoặc teacher output. L2 chạy ba seed 17/42/2026, **một epoch đầy đủ (191 optimizer updates mỗi seed)**, microbatch 1/accumulation 16 (batch cuối 13 QA), LR 1e-4, rank8/alpha16/dropout0.05, AdamW, warmup ceil(3% updates), cosine, clip1.0. Đây là budget primary cụ thể trong giới hạn tối đa hai epoch; Phase 4 phải match budget hoặc version/rerun các arms liên quan. Đánh giá L1 và checkpoint giữa/cuối epoch trên cùng 100 dev components/666 QA Phase 2; không gọi đây là toàn official dev/test. Chọn checkpoint theo strict EM, rồi Numeric EM, rồi p50 latency, rồi step sớm; numeric slice quy định trước là gold có digit và không có chữ cái. Mỗi seed chọn riêng và báo cả ba, mean/std; không chọn seed tốt nhất để thay số trung bình.
+
+Processor không truncate; mask toàn prefix/image/user/padding, chỉ supervise raw assistant answer và EOS. `logits_to_keep` chọn đúng vị trí dự đoán target để giảm bộ nhớ, có test loss/gradient tương đương full masked causal CE. Base/vision frozen, LoRA chỉ trên attention projections language backbone đã enumerate. Smoke 52 updates trên 64 QA train chọn có mẫu dài, tách khỏi baseline; checkpoint50→resume52 so với lượt liên tục, tolerance tensor rtol1e-4/atol1e-5 và greedy token IDs phải trùng. Vẫn phải chứng minh thực tế, không dùng config để đóng G3. [Workflow](docs/PHASE3_WORKFLOW.md).
+
+**Amendment trước dev predictions:** profile `phase3_gold_v2` dùng SDPA math (tắt flash/memory-efficient/cuDNN SDPA), deterministic algorithms bắt buộc, CUBLAS workspace `:4096:8`, TF32 tắt. Smoke v1 với backend tự chọn đạt tolerance adapter nhưng greedy resume khác; không nới tiêu chí hoặc bỏ bằng chứng lỗi. Chỉ triển khai L1/L2 khi smoke/reload/resume của đúng plan v2 đạt; các arms dùng cùng backend. Giữ v1 để đọc đúng lịch sử.
+
+**Tiếp tục sau pause — ADR-027:** khi training ba seed đã hoàn tất và campaign bị người dùng ngắt ở evaluation, giữ nguyên campaign failed/partial. Chỉ chạy lại các evaluation thiếu vào run directory mới, toàn bộ dev population; không ghép partial predictions hoặc train lại. Manifest Pydantic `Phase3Continuation` bind bằng checksum parent campaign, pause event, execution logs, run/profile/predictions/metrics và các source snapshots. Chỉ adopt run cũ đã complete, không thay bằng một run có metric tốt hơn. Final audit kiểm provenance, source/config/checkpoints và replay metric từ raw predictions; G3 có thể đạt trên tập evidence đã hoàn tất dù parent campaign lịch sử vẫn `complete=false`. Không đổi dữ liệu, hyperparameters, selection rule hoặc tiêu chí G3. [Workflow](docs/PHASE3_WORKFLOW.md).
 
 ## 13. Ma trận thí nghiệm khả thi
 
@@ -888,6 +896,8 @@ Theo chỉ dẫn mới của chủ dự án, phần OCR reference/OOD khởi đ�
 
 **G3:** chạy/resume trên 12 GB không OOM ở input profile công bố; base/adapter/processor reload được; đường học và gold-only baseline có số; mọi tuning chỉ dev_select.
 
+**Đã đạt ngày 03/11/2026:** preflight/smoke52/resume/reload đạt trên RTX3060; ba seed train đủ191 updates/G10, L1 và6 checkpoint evaluations đủ666 QA/run. G3 audit9/9 đạt, replay raw metrics và kiểm provenance continuation sau pause (ADR-027). L2 mean strict EM46,00%, sample SD0,483 điểm %, so L134,38%; đây là dev subset, không final test. [Báo cáo](docs/PHASE3_RESULTS.md), [gate local](artifacts/phase3/g3_report_v1.json). Checkpoint/processor/state local đã có; serving/release vẫn thuộc phase sau.
+
 ### Phase 4 — Chưng cất có kiểm chứng
 
 **Phụ thuộc:** G2, G3 và quyền dùng training labels.
@@ -1017,6 +1027,8 @@ Xuất schema: `python scripts/export_schemas.py`. Demo status tùy chọn: cài
 ### 24.2 Teacher CLI đã triển khai và CLI đích
 
 Phase2 đã có `vidoclens teacher plan / estimate / run / evaluate / reconcile / batch-prepare / batch-submit / batch-reconcile`; `run`, `batch-prepare`, `batch-submit` có `--dry-run`. [Runbook](docs/PHASE2_WORKFLOW.md) ghi các đối số thật, approval record và lỗi runtime. Estimate/dry-run không gọi API hoặc đọc key; live cần grant đúng request, budget và credential.
+
+Phase3 triển khai bằng các module `python -m vidoclens.student.data / preflight / train / predict / verify_resume / campaign` và `python -m vidoclens.eval.student / continuation / phase3`; dấu `/` ở đây liệt kê module, không phải cú pháp shell. [Runbook Phase 3](docs/PHASE3_WORKFLOW.md) ghi từng lệnh đầy đủ. Config nằm trong frozen plan; output directory là run ID và phải mới. Checkpoint xuất adapter/processor/state bằng `save_checkpoint`, chưa là release/serving bundle. CLI nhóm `vidoclens student` bên dưới vẫn là spec, không phải điều kiện thay cho bằng chứng G3.
 
 Các lệnh sau còn là **spec**, không quảng bá như lệnh chạy được (Phase1 hiện dùng các module Python trong runbook):
 

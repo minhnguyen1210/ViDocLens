@@ -1,7 +1,10 @@
 schema_version: '1.0'
 model_id: Qwen/Qwen3-VL-2B-Instruct
 revision: 89644892e4d85e24eaac8bacfd4f463576704203
-status: inference_smoke_passed_training_unvalidated
+status: phase3_g3_pass_local_not_serving
+active_config: configs/student/phase3_gold_v2.json
+attention_backend: math
+deterministic_algorithms: true
 trust_remote_code: false
 quantization: nf4
 double_quantization: true
@@ -16,7 +19,6 @@ lora_dropout: 0.05
 learning_rate: 0.0001
 max_sequence_length: 2048
 max_image_pixels: 262144
-epochs: 2
-# NF4/BF16 inference smoke passed on RTX 3060; see docs/PHASE0_ENVIRONMENT.md.
-# Training settings below remain candidates: target modules, loss mask, memory,
-# backward and adapter save/reload still require the Phase 3 training smoke.
+epochs: 1
+# The typed JSON config is the executable Phase 3 profile; this YAML is a summary.
+# G3 requires full smoke/resume and L1/L2 evidence; see docs/PHASE3_WORKFLOW.md.

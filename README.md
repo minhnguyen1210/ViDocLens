@@ -1,5 +1,6 @@
 # ViDocLens
 
+
 Hệ thống hiểu biên lai tiếng Việt bằng VLM nhỏ, chưng cất qua nhãn có kiểm chứng OCR và cascade local → API.
 
 **Tài liệu chuẩn:** [SOURCE_OF_TRUTH.md](SOURCE_OF_TRUTH.md). Tài liệu này chốt phạm vi, kiến trúc, dữ liệu, phương pháp, thí nghiệm, tech stack, API, triển khai và lộ trình 8 phase. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) được giữ nguyên làm ý tưởng gốc.
@@ -8,7 +9,7 @@ Hệ thống hiểu biên lai tiếng Việt bằng VLM nhỏ, chưng cất qua 
 
 Quy trình làm việc: [CONTRIBUTING](CONTRIBUTING.md) · [bảng phase/việc tiếp theo](docs/STATUS.md) · [CHANGELOG](CHANGELOG.md). Chủ dự án tự kết nối GitHub, commit và push thủ công. Các link data/artifacts trong báo cáo là evidence local, không đi kèm GitHub checkout.
 
-**G0, G1 và G2 đạt; Phase 3 là bước tiếp theo.** Phase 2 chạy đủ pilot/baselines API trên 150 ảnh, 511 requests, chi phí theo usage 6,080008/20 USD; replay toàn bộ không thêm calls/spend. Benchmark/fallback chọn GPT-5.4 image+OCR (A3), dev strict EM 76,28%; serving chưa bật. [Kết quả/gates](docs/STATUS.md), [báo cáo Phase 2](docs/PHASE2_RESULTS.md), [workflow](docs/PHASE2_WORKFLOW.md).
+**G0, G1, G2 và G3 đạt local.** Phase3 train đủ ba seed G10, L2 dev mean strict EM46,00% so L134,38%; [kết quả Phase3](docs/PHASE3_RESULTS.md). Phase 2 chạy đủ pilot/baselines API trên 150 ảnh, 511 requests, chi phí theo usage 6,080008/20 USD; replay toàn bộ không thêm calls/spend. Benchmark/fallback chọn GPT-5.4 image+OCR (A3), dev strict EM 76,28%; serving chưa bật. [Kết quả/gates](docs/STATUS.md), [báo cáo Phase 2](docs/PHASE2_RESULTS.md), [workflow](docs/PHASE2_WORKFLOW.md).
 
 Phase 1 ingest đủ 9.500 ảnh; freeze containment 19.496 candidate pairs, giữ 4.527 ảnh train_fit và cách ly 2.873 ảnh. OCR 100/100, 260 parity fixtures và R1 training diagnostic đã có số. Đã kiểm tra chéo 38 dòng OCR và bắt đầu OOD với 3 ảnh có giấy phép/24 QA; AI reference theo ADR-021 không là human gold hoặc final benchmark. [Báo cáo Phase 1](docs/PHASE1_RESULTS.md), [OOD data card](docs/data/COMMONS_OOD_SEED_V1.md).
 
@@ -27,9 +28,10 @@ Phase 1 ingest đủ 9.500 ảnh; freeze containment 19.496 candidate pairs, gi�
 | OCR Phase 1 | 100/100 ảnh G10 train, cache; R1 686 QA (oracle EM 58,02%, không phải student accuracy) |
 | OOD seed / AI review | 3 ảnh/24 QA có rights và cross-source audit; 62 lượt local review/adjudication, human flags false |
 | Teacher Phase 2 | Responses thật, permission gates, cache/ledger/retry, Batch offline, evaluator và role freeze; G2 đạt, API training export vẫn false |
-| Kiểm tra local | Linux 296 passed; Windows 289 passed/7 skipped (NumPy optional); 36 schemas; xem STATUS cho evidence |
+| Student Phase 3 | Gold-only G10/QLoRA, checkpoint/resume/reload, L1 + L2 ba seed; G3 audit9/9 đạt; chưa tích hợp serving |
+| Kiểm tra local | WSL 340 passed; Windows 331 passed/9 skipped; 40 schemas; xem STATUS cho evidence |
 
-Các YAML training/serving vẫn là cấu hình thiết kế; pilot dùng profile được ghi trong artifacts/runbook, không giả định đã nạp YAML này. Python 3.11.14 Linux/WSL2 đã kiểm chứng inference, chưa QLoRA train. Docker, Gradio và API model backend chưa được chạy xác minh trên máy này; readiness vẫn false cho đến khi tích hợp runtime thật.
+Phase 3 dùng config JSON được kiểm bằng Pydantic và đóng băng trong plan; [workflow](docs/PHASE3_WORKFLOW.md) ghi lệnh thực tế. YAML serving vẫn là cấu hình thiết kế. Python 3.11.14 Linux/WSL2 đã chạy backward/smoke; G3 đã đạt đủ resume/reload và baselines ba seed; [model card](docs/MODEL_CARD.md). Docker, Gradio và API model backend chưa được chạy xác minh trên máy này; readiness vẫn false cho đến khi tích hợp runtime thật.
 
 ## Chạy foundation trên Windows
 
@@ -94,4 +96,4 @@ Các điểm bắt đầu: [tiến độ](docs/STATUS.md), [quyết định](doc
 - Dataset, model, output teacher và code có quyền sử dụng/phát hành riêng; chưa chọn license code để public.
 - Thay đổi thiết kế cập nhật SOT và ADR; kết quả thực nghiệm phải có manifest tái lập.
 
-Phase 2 đã hoàn tất **G2** với predictions/metrics/cost/replay/role freeze thật. Runtime hỗ trợ `--env-file .env`; quyền benchmark chỉ theo grant đã duyệt, không cấp API training export hoặc serving external. [Workflow](docs/PHASE2_WORKFLOW.md), [kết quả](docs/PHASE2_RESULTS.md), [STATUS](docs/STATUS.md). Bước kế tiếp là Phase 3 student training; chủ dự án tự commit/push các thay đổi local.
+Phase 2 đã hoàn tất **G2** với predictions/metrics/cost/replay/role freeze thật. Runtime hỗ trợ `--env-file .env`; quyền benchmark chỉ theo grant đã duyệt, không cấp API training export hoặc serving external. [Workflow](docs/PHASE2_WORKFLOW.md), [kết quả](docs/PHASE2_RESULTS.md), [STATUS](docs/STATUS.md). Phase 3 student training đã đạt G3; [workflow](docs/PHASE3_WORKFLOW.md) và [báo cáo](docs/PHASE3_RESULTS.md); chủ dự án tự commit/push các thay đổi local.

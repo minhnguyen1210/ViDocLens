@@ -2,85 +2,78 @@
 
 Cập nhật: **03/11/2026 (Asia/Saigon)** · Owner: **Nguyễn Hữu Gia Minh**.
 
-**G0, G1 và G2 đã đạt. Phase 2 hoàn tất local theo SOT v1.10.** Key trong `.env` đã dùng thành công; pilot và A1/A2/A3/A5 chạy đủ **511 requests / 150 ảnh duy nhất**, tổng chi phí usage × price card **6,080008 USD trong cap 20 USD**. Replay 511/511 cache hits không thêm API calls/spend. [Báo cáo đầy đủ](PHASE2_RESULTS.md) · [gate local](../artifacts/phase2/final_v1/report.json).
+**G0, G1, G2 và G3 đã đạt local. Phase 3 hoàn tất theo SOT v1.12 / ADR-026–027.** [Báo cáo Phase 3](PHASE3_RESULTS.md) · [G3 evidence local](../artifacts/phase3/g3_report_v1.json) · [workflow](PHASE3_WORKFLOW.md). Phase 4–7 chưa triển khai; serving vẫn `inference_ready=false`.
 
-[SOT](../SOURCE_OF_TRUTH.md) quy định gate; [CONTRIBUTING](../CONTRIBUTING.md) quy định Git/task; [history](STATUS_HISTORY.md) giữ các mốc trước; [ADR](DECISIONS.md) ghi quyết định. Không suy phần trăm toàn dự án từ số phase/tests. Hoàn tất Phase 2 không đồng nghĩa đã train student hoặc deploy sản phẩm.
+[SOT](../SOURCE_OF_TRUTH.md) quy định gate; [CONTRIBUTING](../CONTRIBUTING.md) quy định workflow/Git; [history](STATUS_HISTORY.md) giữ lịch sử; [ADR](DECISIONS.md) ghi quyết định. Không suy phần trăm toàn dự án từ số phase/tests. Local done khác commit, push, CI và release.
 
 ## Bảng phase hiện hành
 
 | Phase | Mục tiêu | State | Gate / bằng chứng / bước tiếp |
 |---|---|---|---|
-| 0 | Nền móng, dữ liệu/môi trường | **done** | G0: GPU/OCR pilot thật, locks dựng lại; [runbook](PHASE0_ENVIRONMENT.md), ADR-018 |
-| 1 | Data, OCR, evaluator, OOD khởi đầu | **done** | G1 theo AI protocol ADR-021; [báo cáo](PHASE1_RESULTS.md), [gate local](../artifacts/phase1/g1_ai_gate_v2.json) |
-| 2 | Teacher, ledger/cache và API baselines | **done** | G2: live pilot/baselines, metric/cost, cache replay, role freeze; ADR-025 |
-| 3 | Student training / gold-only | planned | **Bước kế tiếp:** training smoke/save/reload/resume trên 12 GB, L1/L2 dev baselines |
-| 4 | Silver và chưng cất | planned | Cần G3 và gate local label teacher; output API hiện không được dùng train |
-| 5 | Verifier/cascade, calibration, full OOD | planned | Cần model bundles, routing calibration và full OOD validation |
+| 0 | Nền móng, dữ liệu/môi trường | **done** | G0: GPU/OCR thật, hash locks và dựng lại; ADR-018 |
+| 1 | Data, OCR, evaluator, OOD khởi đầu | **done** | G1 theo AI protocol ADR-021; [báo cáo](PHASE1_RESULTS.md), không là human gold/final OOD |
+| 2 | Teacher, ledger/cache và API baselines | **done** | G2 live evidence; [báo cáo](PHASE2_RESULTS.md), ADR-025 |
+| 3 | Student training / gold-only | **done (local)** | G3 **9/9** tiêu chí đạt; smoke/resume/reload, L1 + hai checkpoint × ba seed, raw metric replay và continuation provenance |
+| 4 | Silver và chưng cất | planned | G3 đã gỡ; còn gate local label teacher/quyền labels/quality/VRAM |
+| 5 | Verifier/cascade, calibration, full OOD | planned | Cần G4 model bundles và calibration/full OOD |
 | 6 | API/demo thật, final eval/deploy | planned | Cần G5, runtime/host và release gates |
-| 7 | Báo cáo, release/tái lập | planned | Cần final suite, reproducibility và release evidence |
+| 7 | Báo cáo, release/tái lập | planned | Cần final suite/reproducibility/release evidence |
 
-G1 bằng AI không là human gold/final OOD. Serving vẫn `inference_ready=false`; teacher CLI không đồng nghĩa backend sản phẩm đã triển khai.
+## Công việc Phase 3 đã hoàn thành
 
-## Hàng đợi
-
-| ID | Công việc | State | Kết quả / điều kiện |
+| ID | Công việc | State | Evidence |
 |---|---|---|---|
-| REPO-001/002 | Workflow và push đầu tiên | done | Chủ dự án tự push; history giữ evidence/CI trước Phase 2 |
-| P2-001 | Contract, permissions, prompt, model/price candidates | **done (local)** | Pydantic/schema; no-gold input; scope theo exact request keys; ADR-023 |
-| P2-002 | Provider, cache, budget, retry, Batch, evaluator/CLI | **done (local)** | Offline cases đạt; Responses thật đã chạy; Batch upload chưa thuộc quyền được cấp |
-| P2-004 | OCR dev và manifest pilot/baselines | **done** | OCR 100/100; 50 train + 100 dev, 511 groups; plan tái tạo trùng hashes |
-| P2-003 | Live pilot/baselines, replay, metric và role freeze | **done** | 9/9 criteria của [G2 report](../artifacts/phase2/final_v1/report.json) đạt; cấu hình A3 khóa theo policy định trước |
-| P3-001 | Student training feasibility | planned | Dùng stack ML đã khóa; loss mask/gradient, train smoke, save/reload/resume và số đo VRAM trước full L2 |
+| P3-001 | Training feasibility, loss mask, save/load/resume | **done** | Preflight toàn G10/dev; smoke52 và resume50→52; adapter diff0, greedy/fresh-process reload khớp |
+| P3-002 | L1/L2-k10 ba seed và selection | **done** | Ba seed17/42/2026 train đủ191 updates/3.053 unique QA; L1 + 6 dev runs đủ666 QA mỗi run; chọn step191 cho cả ba seed |
+| P3-003 | Continuation, final audit và bàn giao | **done** | Contract/schema,20 continuation cases; parent/partial giữ nguyên; metric replay; mean/std/paired CI/compute, model card và docs |
 
-## Kết quả Phase 2
+Không train lại sau pause. Seed2026/step96 cũ có238/666 predictions được giữ riêng; chạy mới đủ666 ở `continuation_v1`, rồi step191. Parent `campaign_v1` vẫn `complete=false`/SIGINT exit-2; [manifest continuation](../artifacts/phase3/continuation_manifest_v1.json) bind10 completed runs và1 partial cũ. G3 đạt trên evidence hoàn chỉnh, không sửa lịch sử thành công giả.
 
-Pilot **50 ảnh / 344 QA / 59 groups** đều hợp lệ. Mỗi baseline dùng đúng **100 dev components / 666 QA / 113 groups**; không mở test/OOD/dev_calibrate/audit để chọn teacher. Gold dev chỉ evaluator đọc sau khi đủ predictions.
+## Kết quả dev Phase 3
 
-| Arm | Input/model | Strict EM | Token F1 | ANLS | USD |
-|---|---|---:|---:|---:|---:|
-| A1 | GPT-5.4, OCR text | 57,66% | 68,87% | 80,69% | 1,214753 |
-| A2 | GPT-5.4, ảnh | 73,72% | 85,54% | 89,10% | 1,677962 |
-| A3 | GPT-5.4, ảnh + OCR | **76,28%** | **87,53%** | **90,01%** | 1,750404 |
-| A5 | GPT-5.4 mini, ảnh + OCR | 70,27% | 81,26% | 86,65% | 0,520879 |
+Tập dev cố định100 components/666 QA, numeric379 QA. Chỉ dùng dev_select, không test/OOD/audit/dev_calibrate; training chỉ G10 gold, không API output.
 
-Pilot tốn thêm 0,916010 USD. Đây là chi phí theo usage và price cards, chưa đối soát invoice tài khoản. Một A5 schema error chứa **6 QA** được tính lỗi trong toàn bộ 666 QA, không bỏ mẫu hoặc retry để tăng điểm. Null/error/missing đều giữ denominator. Các metric là dev subset, không phải final test.
+| Arm được chọn | Step | Strict EM | Token F1 | ANLS | Numeric EM |
+|---|---:|---:|---:|---:|---:|
+| L1 zero-shot | — | 34,38% | 41,96% | 54,47% | 47,49% |
+| L2 seed17 | 191 | 45.65% | 53.18% | 64.02% | 61.21% |
+| L2 seed42 | 191 | 45.80% | 53.17% | 63.67% | 61.74% |
+| L2 seed2026 | 191 | 46.55% | 54.21% | 64.24% | 62.01% |
+| **L2 mean (3 seeds)** | — | **46.00%** | **53.52%** | **63.98%** | **61.65%** |
 
-**Benchmark/fallback chọn A3**: `gpt-5.4-2026-03-05`, image+OCR, prompt `teacher_vqa_v2`, detail high, reasoning none, output cap 4096, store false. A3−A2 = +2,55pp EM, paired 95% CI [+0,43; +4,75]pp. A5 rẻ hơn nhưng giảm 6,01pp, vượt ngưỡng fallback 2pp đã khóa. Fallback serving vẫn disabled. [Role freeze](../artifacts/phase2/final_v1/role_freeze.json), ADR-025.
+EM sample SD **0.483 điểm %**. Mean L2−L1 **+11.612 điểm %**, paired95% CI **[8.736; 14.467]** (2.000 group resamples, seed42). Bootstrap không bao gồm training variance; đây là dev selection, không phải final test hoặc ensemble.
 
-## Quyền và điều kiện cho phase sau
-
-| Mục | Hiện trạng | Điều kiện tiếp theo |
-|---|---|---|
-| API budget | 6,080008/20 USD; 511 attempts; reserved/uncertain=0 | Giữ ledger; số dư không mở thêm phạm vi benchmark |
-| External processing | Grant owner đã xác nhận data/terms/retention, bind đúng archive/split/511 keys | Không tự mở sang test/OOD, dữ liệu mới hoặc online serving |
-| Credential | `.env` đã dùng thành công, ignored; runtime không log key | `--env-file .env` sau permission gates; file không đi vào Git |
-| Batch / API training export | **Chưa cấp**, flags false | Không upload Batch hoặc dùng evaluation cache train student |
-| Label teacher | Strategy local open-weight ADR-014; Qwen3-VL-4B còn candidate | License/revision/VRAM/quality pilot phải đạt trước Phase 4; nếu fail giữ gold-only |
-| GitHub/deploy | Thay đổi Phase 2 ở local; CI mới chưa chạy; serving chưa ready | Chủ dự án tự commit/push; deployment thuộc Phase 6 |
-
-Template permission trong Git vẫn deny/cap0; approval thật nằm trong `artifacts/phase2/approval.json` bị ignore. Không có blocker G2 còn mở; điều kiện label/serving thuộc các phase sau theo SOT, không bị coi đã đạt.
+Training peak reserved3,3008GiB trên RTX3060 12GB; max train sequence462/target105,0 truncate. Ba lượt train tổng108,10 phút cho updates; 12 matched runs ước tính7,21 training GPU-hours, chưa gồm label/OCR/eval/load/save/retry. [Chi tiết compute](PHASE0_BUDGET.md). Context2048 là ceiling, chưa stress-test worst-case mọi chuỗi2048.
 
 ## Kiểm tra local mới nhất
 
 | Kiểm tra | Kết quả thực tế |
 |---|---|
-| Windows Python 3.14.9 pytest | **289 passed, 7 skipped**; NumPy cases chạy đủ WSL |
-| WSL ML-repro Python 3.11.14 pytest | **296 passed** |
-| Teacher / credential / finalization fixtures | 61 / 8 / 4 cases trong suite, không thay thế live evidence |
-| Ruff check / format | Đạt; **105 Python files** |
-| Schema drift | **36 schemas match** |
-| File policy / YAML | Đạt **212 candidates** tại lượt kiểm; không là secret/content/license scan |
-| Docs / diff | UTF-8, liên kết local và `git diff --check` đạt; role config khớp report, plan tái tạo sau freeze vẫn trùng hash |
-| Live cache replay | **511/511 hits**, result hashes trùng; 0 calls/spend mới; không cần credential |
-| Doctor | `inference_ready=false`, `model_not_configured` đúng hiện trạng |
-| GitHub CI | CI cũ tại 03ac245 đã đạt ([run](https://github.com/minhnguyen1210/ViDocLens/actions/runs/41479278954)); **chưa có CI cho Phase 2** |
-| GPU/Docker | Không chạy thêm GPU/student/Docker tests; OCR CPU dùng stack đã khóa |
+| Windows Python3.14.9 pytest | **331 passed,9 skipped** |
+| WSL ML-repro Python3.11.14 pytest | **340 passed**, CPU suite, CUDA_VISIBLE_DEVICES rỗng |
+| Student / continuation cases | 24 / 20; mask/causal loss/RNG/checkpoints và provenance/path/partial/config LF-CRLF |
+| Ruff check / format | Đạt;125 Python files |
+| Schema drift | **40 schemas match** |
+| File policy / YAML | Đạt239 candidates tại lượt kiểm; không là secret/license scanner |
+| Runtime lock sau resume | **71/71 packages match**, [environment v2](../artifacts/phase3/environment_v2.json) |
+| GPU / raw metric replay | Smoke/resume/reload,3 full training runs,7 complete dev runs và G3 audit đạt |
+| Doctor / serving | `inference_ready=false`, `model_not_configured`; backend sản phẩm thuộc Phase6 |
+| GitHub CI / Docker | Chưa xác minh CI mới hoặc Docker trong lượt Phase3 |
 
-[Evidence checks](../artifacts/phase2/checks_live_v2/summary.json). Warning Starlette/httpx đã biết còn tồn tại. PowerShell runner đã kiểm AST syntax nhưng chưa chạy interactive; campaign này dùng CLI với `.env`. Không cài dependency, đổi driver, tải thêm model/dataset, reboot hoặc mở hosting.
+[Checks v3](../artifacts/phase3/checks_v3.json) bind source SHA; Starlette/httpx warning đã biết còn tồn tại. Không cài dependency, thay driver, tải model/dataset mới, reboot hoặc mở hosting trong Phase3. Lượt cuối chỉ chỉnh docs sau khi code checks/G3 pass; không chạy thêm inference.
 
-## Bàn giao
+## Quyền và ranh giới còn hiệu lực
 
-- Local branch `codex/phase2-teacher-pipeline`, base `0226b94`; **không stage/commit/push, không thay remote**. GitHub CI/release là trạng thái riêng.
-- SOT v1.10, ADR-025, role config, README/CHANGELOG, access register, workflow/results và budget notes khớp kết quả thực. G0/G1 evidence, frozen split, prompt/plan/policy và `PROJECT_OVERVIEW.md` giữ nguyên.
-- Artifacts local bị ignore: [plan](../artifacts/phase2/api_plan_v1/manifest.json), [G2 report](../artifacts/phase2/final_v1/report.json), [role freeze](../artifacts/phase2/final_v1/role_freeze.json), [checks](../artifacts/phase2/checks_live_v2/summary.json). Report có hashes live/replay manifests; usage/raw/parsed giữ trong cache/ledger.
-- Việc kế tiếp là **Phase 3 / P3-001**, sau đó L1 và L2-k10 trên dev theo SOT. G2 hoàn tất không mở quyền API training export và không tự bắt đầu sinh silver.
+- Phase2:511 requests/150 ảnh,6,080008 USD theo usage trong cap20 USD; replay511/511 cache hits không thêm calls/spend. [G2 report](../artifacts/phase2/final_v1/report.json). Không phát sinh API spend ở Phase3; số dư không mở thêm phạm vi benchmark.
+- Grant external bind đúng data/split/request keys Phase2; không tự mở test/OOD, dữ liệu mới hoặc serving. API output training export và Batch upload vẫn chưa cấp.
+- Label strategy Phase4 là local open-weight có gate riêng; Qwen3-VL-4B còn candidate. Không dùng evaluation cache API để train.
+- G1 AI references giữ provenance; không coi là human gold/final OOD. Base model pretraining contamination chưa audit độc lập.
+
+## Bàn giao và việc kế tiếp
+
+- **Local done:** Phase3/G3 đủ evidence. Nhánh `codex/phase3-student-training`, base`d13360e`; source/docs mới còn local.
+- **Git:** assistant không stage/commit/push, không đổi remote. Chủ dự án tự review, commit và push theo CONTRIBUTING. CI mới/release chưa được xác minh.
+- **Artifacts:** checkpoint/optimizer/processor, raw predictions, data và private reports bị ignore, không nằm trong GitHub checkout. `PROJECT_OVERVIEW.md`, frozen split và G0–G2 evidence giữ nguyên. [Model card](MODEL_CARD.md) chứa checkpoint hashes; [handoff](PHASE3_HANDOFF.md) giữ lịch sử pause, không phải việc còn dang dở.
+- **Tiếp theo:** khi chủ dự án yêu cầu Phase4, mở gate local label teacher: xác minh license/revision/quyền training labels, profile VRAM và quality pilot; rồi triển khai silver/filter/matched P1/P2 theo SOT. Không chạy Phase4 trong lượt này. Không còn blocker G3.
+
+Kiểm tra bàn giao cuối:20/20 source hashes khớp checks_v3;12 tài liệu UTF-8/liên kết local đạt; git diff --check đạt; Git index rỗng; không còn process Phase3 train/predict/campaign/audit trong WSL. Parent campaign checksum vẫn khớp pause event.
