@@ -1,6 +1,6 @@
 # Phase 4 offline — contracts, F0/F1 và audit
 
-Ngày: 03/11/2026. Phạm vi ADR-P4-001; xem [bàn giao PC](PHASE4_OFFLINE_HANDOFF.md).
+Ngày: 03/11/2026. Phạm vi ADR-P4-001–002; xem [bàn giao PC](PHASE4_OFFLINE_HANDOFF.md) và [local teacher/grid/human review/comparison](PHASE4_LOCAL_TOOLS.md).
 Đây là implementation CPU, chưa sinh silver thật, chưa train P1/P2 và chưa đạt G4.
 Không tải model, không gọi provider, không dùng cache benchmark OpenAI để train.
 
@@ -12,7 +12,7 @@ Entry point riêng để hạn chế xung đột CLI với Phase 3:
 .\.venv\Scripts\python.exe -m vidoclens.filtering --help
 ```
 
-Trên WSL thay interpreter bằng Python của môi trường đã kiểm chứng; không cài lại ML lock chỉ để chạy filter. CPU tooling dùng core + `data,teacher` extras; tests thêm `serve,dev`. Không import torch/Paddle trong implementation Phase 4.
+Trên WSL thay interpreter bằng Python của môi trường đã kiểm chứng; không cài lại ML lock chỉ để chạy filter. CPU tooling dùng core + `data,teacher` extras; tests thêm `serve,dev`. Filter/evaluator/planning không import torch/Paddle; chỉ command local teacher `run` mới nạp optional ML stack.
 
 | Contract | Nội dung / boundary |
 |---|---|
@@ -24,7 +24,7 @@ Trên WSL thay interpreter bằng Python của môi trường đã kiểm chứn
 | `SilverApproval` | Attestation của owner cho đúng pool/batch local: quyền dữ liệu/model/training labels và quality pilot; không kế thừa grant Phase 2 |
 | `SilverExperiment` | Chín selections: 3 arms × seeds 17/42/2026; cùng G10/profile/update budget, ratio 1:1, loss weights bằng nhau; luôn `training_executed=false`, `requires_g3_validation=true` |
 
-Nguồn schema là [contracts/silver.py](../src/vidoclens/contracts/silver.py); JSON schema sinh bởi [exporter](../scripts/export_schemas.py). Adapter local teacher trên PC phải tạo `SilverBatch` đúng contract, giữ raw responses trong artifacts ignored. Công cụ này **không tự chạy teacher**, không chuyển `TeacherResult` của API sang local result và không chứng nhận một file tự khai báo provenance là dữ liệu thật.
+Nguồn schema là [contracts/silver.py](../src/vidoclens/contracts/silver.py); JSON schema sinh bởi [exporter](../scripts/export_schemas.py). [Runner local teacher](PHASE4_LOCAL_TOOLS.md) tạo `SilverBatch` và giữ raw responses trong artifacts ignored khi được gọi rõ ràng trên PC qua gates. CLI filtering không chạy teacher, không chuyển `TeacherResult` của API sang local result và không chứng nhận một file tự khai báo provenance là dữ liệu thật.
 
 `whole_answer_v1` giữ cả câu trả lời thành một part. `literal_separator_v1` chỉ tách literal `¡sep¿`; không suy multipart từ newline. Raw serialization luôn là training target, không thay bằng OCR hoặc normalized text. Khai báo part protocol trước generation/evaluation; không chọn lại theo gold để tăng điểm.
 
@@ -54,14 +54,14 @@ $imageInventory = 'data/manifests/receiptvqa/images.jsonl'
 
 `prepare` dùng frozen G10 reader hiện có, kiểm hashes và mapping, giữ nguyên split/quarantine. `audit_holdout` có thể chuẩn bị question-only, nhưng filter/audit của partition này yêu cầu rule đã freeze. Test/OOD/dev_calibrate không có chế độ truy cập ở CLI này.
 
-Sau pilot local teacher và generation được cho phép, adapter trên PC xuất `dev_batch.json`, `train_batch.json` theo `SilverBatch`. OCR input là JSONL, mỗi dòng một `OCRResult`, tối đa một record/document; chỉ gồm documents thuộc pool. Không dùng output teacher làm OCR evidence. Hash ảnh phải trùng pool.
+Sau pilot local teacher và generation được cho phép, dùng `batch.json` từ runner hoặc adapter đúng `SilverBatch` trên PC. Các tên `dev_batch.json`, `train_batch.json` bên dưới chỉ minh họa. OCR input là JSONL, mỗi dòng một `OCRResult`, tối đa một record/document; chỉ gồm documents thuộc pool. Không dùng output teacher làm OCR evidence. Hash ảnh phải trùng pool.
 
 ```powershell
 & $py -m vidoclens.filtering filter --pool artifacts/phase4/dev_pool.json --batch artifacts/phase4/dev_batch.json --ocr artifacts/phase4/dev_ocr.jsonl --config configs/filtering/f1.yaml --output artifacts/phase4/dev_filter_v1
 & $py -m vidoclens.filtering audit --bundle artifacts/phase4/dev_filter_v1 --archive $annotationZip --frozen $frozenSplit --inventory $imageInventory --output artifacts/phase4/dev_audit_v1.json
 ```
 
-Lặp các candidate config trên **cùng dev pool/batch**, ghi đầy đủ các lượt. Sau lựa chọn và review tradeoff precision/recall/retention, đóng băng config đã chọn:
+Cách chạy từng config vẫn hỗ trợ; dùng [grid/grid-select](PHASE4_LOCAL_TOOLS.md#dev-threshold-grid-và-freeze) để tự động chạy đủ bốn ngưỡng trên **cùng dev pool/batch** và giữ selection history. Với run đơn, sau review tradeoff precision/recall/retention, đóng băng config đã chọn:
 
 ```powershell
 & $py -m vidoclens.filtering freeze --config configs/filtering/f1.yaml --dev-report artifacts/phase4/dev_audit_v1.json --output artifacts/phase4/f1_frozen_v1.json
@@ -86,7 +86,7 @@ Audit holdout dùng cùng commands prepare/filter/audit với config frozen. `au
 
 ## Điều kiện tích hợp và những gì chưa có
 
-- Local teacher adapter/pilot, generation silver/OCR thật, lựa chọn threshold thật, human error audit.
+- Qwen adapter đã có code nhưng chưa smoke trên GPU/pilot; còn generation silver/OCR thật, lựa chọn threshold thật và người thực hiện human error audit. Tooling grid/review đã có, xem runbook bổ sung.
 - Trainer đọc selections/targets, kiểm G3 và profile, sampler 1:1, resume, training/evaluation P1-full/P1-size/P2.
 - Semantic verifier, F2/F3/correction, final test/OOD, API/serving/deploy.
 - CPU tests chỉ chứng minh logic/contract bằng synthetic fixtures. Không có metric nghiên cứu hoặc quality claim mới trong lượt này.

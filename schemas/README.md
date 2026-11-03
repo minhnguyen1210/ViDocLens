@@ -31,7 +31,7 @@ assignments cannot expose training gold. Frozen readers verify graph/plan hashes
 `FeatureFingerprint`/`FeatureCandidate` validate rotation/crop/gradient artifacts.
 `TranscriptionReview`/`OODAnnotation` distinguish AI review from human gold, preserve
 evidence provenance and reject AI records claiming human verification. There are
-46 exported root schemas after Phase 4 offline; stored corpus/PII/model payloads
+59 exported root schemas after Phase 4 offline extensions; stored corpus/PII/model payloads
 remain Git ignored.
 
 Phase 4 adds `SilverSample`, `SilverPool`, `SilverLabel`, `SilverBatch`,
@@ -40,3 +40,9 @@ Phase 4 adds `SilverSample`, `SilverPool`, `SilverLabel`, `SilverBatch`,
 scope/permission hashes and fixture provenance separate from training execution.
 They do not certify G3/G4 or grant access to API evaluation caches. See the
 [offline workflow](../docs/PHASE4_OFFLINE_WORKFLOW.md) and PC handoff.
+
+ADR-P4-002 adds eight local teacher config/request/plan/grant/output/snapshot schemas,
+four blind review/item/human annotation schemas, and `SilverTrainingResult`.
+Generation grants and training approvals are distinct; attestation fields and hashes
+do not authenticate licenses, reviewers or actual GPU execution. See the
+[extended tools](../docs/PHASE4_LOCAL_TOOLS.md) for exchange and integration details.

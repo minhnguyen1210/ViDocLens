@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "description": "Exact decoded output, never a fabricated success on inference failure.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "raw_text": {
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "incomplete",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "input_tokens": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Input Tokens",
+      "type": "integer"
+    },
+    "output_tokens": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Output Tokens",
+      "type": "integer"
+    },
+    "generation_seconds": {
+      "default": 0.0,
+      "minimum": 0,
+      "title": "Generation Seconds",
+      "type": "number"
+    },
+    "peak_reserved_bytes": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Peak Reserved Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "raw_text",
+    "status"
+  ],
+  "title": "LocalGeneration",
+  "type": "object"
+}

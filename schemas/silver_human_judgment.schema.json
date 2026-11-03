@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "correctness": {
+      "enum": [
+        "correct",
+        "wrong",
+        "uncertain"
+      ],
+      "title": "Correctness",
+      "type": "string"
+    },
+    "semantic_field": {
+      "enum": [
+        "correct",
+        "wrong",
+        "uncertain"
+      ],
+      "title": "Semantic Field",
+      "type": "string"
+    },
+    "ocr_quality": {
+      "enum": [
+        "good",
+        "partial",
+        "unreadable",
+        "uncertain"
+      ],
+      "title": "Ocr Quality",
+      "type": "string"
+    },
+    "error_tags": {
+      "default": [],
+      "items": {
+        "enum": [
+          "ocr_miss",
+          "wrong_field",
+          "digit_error",
+          "format_difference",
+          "gold_disagreement",
+          "unreadable_image",
+          "other"
+        ],
+        "type": "string"
+      },
+      "title": "Error Tags",
+      "type": "array"
+    },
+    "note": {
+      "default": "",
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qid",
+    "correctness",
+    "semantic_field",
+    "ocr_quality"
+  ],
+  "title": "SilverHumanJudgment",
+  "type": "object"
+}

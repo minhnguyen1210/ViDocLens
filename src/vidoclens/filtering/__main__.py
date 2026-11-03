@@ -15,6 +15,7 @@ from vidoclens.eval.silver import audit_filter
 from vidoclens.filtering.bundle import load_bundle, write_bundle
 from vidoclens.filtering.experiments import select_experiments
 from vidoclens.filtering.io import digest, read_model, write_model
+from vidoclens.filtering.offline_cli import register_offline, run_offline
 from vidoclens.filtering.pool import make_pool
 
 
@@ -31,6 +32,7 @@ def check_frozen_inputs(args, pool):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    register_offline(sub)
     prepare = sub.add_parser("prepare", help="Export question-only pool from frozen G10 inputs")
     prepare.add_argument(
         "--partition", choices=["train_fit", "dev_select", "audit_holdout"], required=True
@@ -57,6 +59,8 @@ def main(argv=None):
     for child in (prepare, run, freeze, audit, select):
         child.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
+    if run_offline(args):
+        return
     if args.command == "prepare":
         write_model(
             args.output, make_pool(args.archive, args.frozen, args.inventory, args.partition)

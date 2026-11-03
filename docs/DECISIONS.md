@@ -83,6 +83,17 @@ Bằng chứng ADR-022: Linux **223 passed**, Windows **216 passed/7 skipped**, 
 - **Gates giữ nguyên:** local teacher pilot/quyền, G3, silver thật, holdout audit/human error review và core training ba seed trước G4. Không API call, không tải weights/dataset, không public hosting. Chủ dự án tự commit/push; không thêm author/co-author.
 - **Bàn giao:** [workflow](PHASE4_OFFLINE_WORKFLOW.md), [PC integration](PHASE4_OFFLINE_HANDOFF.md), [STATUS](STATUS.md). Kết quả tests không là metric nghiên cứu.
 
+## ADR-P4-002 — Hoàn thiện tooling Phase 4 khả thi trên laptop (03/11/2026)
+
+- **Trạng thái:** chấp nhận theo yêu cầu tiếp tục triển khai của chủ dự án; bổ sung ADR-P4-001, SOT v1.12 §11.5. Base bổ sung là commit owner đã push `3ae2c4f` trên `phase4-offline`.
+- **Khoảng thiếu:** package đầu chỉ nhận local labels, chạy từng filter config, liệt kê review qids và xuất selections. Các phần điều phối/review/comparison vẫn làm được bằng CPU dù chưa có PC trainer/weights.
+- **Quyết định:** thêm local teacher plan/parser/SQLite resume và lazy Qwen adapter; dev threshold grid + selection record; blind human audit packet/import; trainer-independent results + fairness/3-seed/paired-bootstrap reports. Tách module mới và CLI riêng, không đổi student, Phase 2 providers, locks, data/splits hoặc root CLI.
+- **Local generation:** candidate image-only, prompt không gold, request split deterministic; snapshot/config/plan hashes và actual image hashes. Data/model/generation grant theo plan, pilot dev-only, silver cần quality pilot; audit_holdout sau freeze. Model chỉ đọc local snapshot, không tải; GPU adapter dùng pattern của Phase 0 và [Qwen docs](https://huggingface.co/docs/transformers/model_doc/qwen3_vl) kiểm ngày 03/11/2026, nhưng **chưa smoke host thật**. Không suy license, nguồn revision hoặc quality từ manifest tự khai báo.
+- **Cache/artifacts:** SQLite transaction lưu raw cả lỗi/retries; bound inputs/environment, checksum/reparse, không replay lỗi thành answered. Complete runs immutable, kể cả failures; crash có thể recompute một request chưa commit, không hứa exactly-once. Single-writer lock cần owner kiểm process trước khi gỡ lock stale. Atomic exclusive file publish trên NTFS/ext4, không overwrite evidence.
+- **Evaluation:** grid giữ mọi candidate; owner chọn bằng tradeoff và rationale, không tự tối ưu retention. Reviewer không thấy gold/outcome trong packet; sampling key giữ riêng. Strict judgments + image attestation, không nâng AI/fixtures thành human evidence hoặc tự sửa gold. Comparison chỉ dev_select, 12 run/9 selections, actual exposure logs kể cả zero; CI theo component, seed variance tách riêng. Manifest checks không chứng minh GPU training đúng.
+- **Bằng chứng:** CPU fixtures và CLI integration ghi tại STATUS; không gọi model/API, không có nhãn/quality metrics thật hoặc G4 mới. F2/F3/correction là extension, semantic gate không bị thêm vào F1.
+- **Bàn giao:** [công cụ mới](PHASE4_LOCAL_TOOLS.md), [hợp nhất PC](PHASE4_OFFLINE_HANDOFF.md). Owner tự commit/push; CI cũ không chứng nhận bổ sung chưa commit.
+
 ## Mẫu ADR tiếp theo
 
 ```text

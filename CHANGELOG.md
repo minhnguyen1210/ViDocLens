@@ -6,6 +6,7 @@ Ghi thay đổi đáng chú ý; tiến độ và evidence ở [STATUS](docs/STAT
 
 ### Added
 
+- Bổ sung Phase 4: local teacher snapshot/config/plan, strict output parser, raw SQLite attempts/resume và lazy Qwen NF4 adapter; dev threshold grid/selection freeze; blind human review export/import; trainer result exchange, fairness/exposure checks và 12-run/3-seed paired component bootstrap comparison. Thêm 13 schemas và CPU fixtures; GPU adapter chưa smoke.
 - Phase 4 offline trên laptop: 10 silver/filter contracts/schema; frozen G10 question-only pools; local result exchange; F0/F1 bounded OCR evidence, numeric guards, raw target preservation; immutable bundles/replay và privileged audit.
 - Nine experiment selections (P1-full/P1-size/P2 × 3 seeds), matched-size strata, exact-batch local label approval gates, shared profile/update budget metadata; synthetic workflow tests và hướng dẫn tích hợp với Phase 3 trên PC.
 
@@ -21,6 +22,7 @@ Ghi thay đổi đáng chú ý; tiến độ và evidence ở [STATUS](docs/STAT
 
 ### Changed
 
+- SOT v1.12 / ADR-P4-002 và runbook cho các công cụ bổ sung; artifact writer publish nguyên tử/exclusive, manifest complete sau cùng. G3/G4 và quyền API/label giữ nguyên.
 - SOT v1.11 / ADR-P4-001 cho phép chuẩn bị CPU Phase 4 độc lập; G3/G4 vẫn cần bằng chứng thật. STATUS phân biệt công việc PC chưa thấy và phần laptop đã kiểm chứng.
 
 - Tách nhật ký thực thi cũ sang `docs/STATUS_HISTORY.md`; `docs/STATUS.md` giữ hiện trạng và bàn giao mới nhất.
@@ -29,5 +31,5 @@ Ghi thay đổi đáng chú ý; tiến độ và evidence ở [STATUS](docs/STAT
 
 ### Known limitations
 
-- Phase 2 hoàn tất, 6,080008 USD theo usage trong cap 20 USD; chưa đối soát invoice. Một A5 schema error giữ đủ 6 QA trong denominator. API training export/Batch upload chưa được cấp, local label teacher 4B chưa pilot trong checkout này. Phase 3 đang dở trên PC theo owner; Phase 4 mới có implementation CPU, chưa local teacher runner/silver thật/calibration/human audit/trainer integration/G4. Serving inference chưa ready; full OOD/deployment chưa hoàn tất.
-- CI cũ tại03ac245 đã được xác minh; CI cho Phase2 và release chưa chạy. Dữ liệu, grants, cache/ledger và artifacts local bị ignore không đi kèm checkout.
+- Phase 2 hoàn tất, 6,080008 USD theo usage trong cap 20 USD; chưa đối soát invoice. Một A5 schema error giữ đủ 6 QA trong denominator. API training export/Batch upload chưa được cấp, local label teacher 4B chưa pilot trong checkout này. Phase 3 đang dở trên PC theo owner; Phase 4 có tooling CPU và code GPU adapter chưa smoke, chưa silver/calibration/human audit/trainer integration/G4 thật. Serving inference chưa ready; full OOD/deployment chưa hoàn tất.
+- CI đã xác minh cho commit owner push `3ae2c4f`; phần bổ sung ADR-P4-002 chưa commit/push/CI/release. Dữ liệu, grants, cache/ledger và artifacts local bị ignore không đi kèm checkout.

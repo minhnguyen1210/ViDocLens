@@ -12,6 +12,10 @@ SHA-pinned upstream parity runs separately against local fixtures/artifacts.
 Phase 2 covers budget reservation/retry accounting and provider/Batch fixtures.
 Phase 4 offline covers F0/F1 numeric/text/multipart evidence, fail-closed scope,
 hash/replay integrity, filter audit denominators and matched experiment selections.
+It also covers local request grouping/parsing, transactional retry/resume with zero-call
+completed replay, snapshot/permission checks, atomic artifacts, dev-only threshold grid,
+blind review coverage/provenance and fairness-checked 12-run paired/seed comparisons.
+The Qwen GPU adapter has not been smoke-tested by these CPU fixtures.
 Synthetic archive-to-CLI tests do not run a model or certify real data quality.
 Later suites include snap ambiguity, deterministic training resume, cascade and GPU load.
 No ML benchmark, accuracy claim or GPU compatibility follows from these smoke tests.

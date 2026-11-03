@@ -26,6 +26,16 @@ from vidoclens.contracts.ingestion import (
     NearDuplicateCandidate,
     SplitDraft,
 )
+from vidoclens.contracts.local_teacher import (
+    LocalGeneration,
+    LocalGenerationGrant,
+    LocalModelSnapshot,
+    LocalTeacherAnswer,
+    LocalTeacherConfig,
+    LocalTeacherOutput,
+    LocalTeacherPlan,
+    LocalTeacherRequest,
+)
 from vidoclens.contracts.models import (
     Document,
     OCRResult,
@@ -48,6 +58,13 @@ from vidoclens.contracts.silver import (
     SilverPool,
     SilverSample,
 )
+from vidoclens.contracts.silver_results import SilverTrainingResult
+from vidoclens.contracts.silver_review import (
+    SilverHumanJudgment,
+    SilverHumanReview,
+    SilverReviewItem,
+    SilverReviewPacket,
+)
 from vidoclens.contracts.teacher import (
     TeacherAnswer,
     TeacherOutput,
@@ -61,6 +78,19 @@ from vidoclens.contracts.teacher import (
 )
 
 MODELS = {
+    "local_teacher_config": LocalTeacherConfig,
+    "local_teacher_request": LocalTeacherRequest,
+    "local_teacher_plan": LocalTeacherPlan,
+    "local_generation_grant": LocalGenerationGrant,
+    "local_teacher_answer": LocalTeacherAnswer,
+    "local_teacher_output": LocalTeacherOutput,
+    "local_generation": LocalGeneration,
+    "local_model_snapshot": LocalModelSnapshot,
+    "silver_review_item": SilverReviewItem,
+    "silver_review_packet": SilverReviewPacket,
+    "silver_human_judgment": SilverHumanJudgment,
+    "silver_human_review": SilverHumanReview,
+    "silver_training_result": SilverTrainingResult,
     "silver_sample": SilverSample,
     "silver_pool": SilverPool,
     "silver_label": SilverLabel,

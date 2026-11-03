@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "model_id": {
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "model_revision": {
+      "pattern": "^[a-f0-9]{40,64}$",
+      "title": "Model Revision",
+      "type": "string"
+    },
+    "files": {
+      "additionalProperties": {
+        "pattern": "^[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Files",
+      "type": "object"
+    }
+  },
+  "required": [
+    "model_id",
+    "model_revision",
+    "files"
+  ],
+  "title": "LocalModelSnapshot",
+  "type": "object"
+}

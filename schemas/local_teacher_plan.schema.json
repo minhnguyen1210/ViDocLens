@@ -1,0 +1,310 @@
+{
+  "$defs": {
+    "LocalTeacherConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "protocol": {
+          "const": "local_labels_image_only_v1",
+          "default": "local_labels_image_only_v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "model_id": {
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_revision": {
+          "pattern": "^[a-f0-9]{40,64}$",
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "snapshot_manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Snapshot Manifest Sha256",
+          "type": "string"
+        },
+        "max_questions": {
+          "default": 8,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Questions",
+          "type": "integer"
+        },
+        "max_question_characters": {
+          "default": 12000,
+          "maximum": 32000,
+          "minimum": 128,
+          "title": "Max Question Characters",
+          "type": "integer"
+        },
+        "max_new_tokens": {
+          "default": 2048,
+          "maximum": 8192,
+          "minimum": 64,
+          "title": "Max New Tokens",
+          "type": "integer"
+        },
+        "max_input_tokens": {
+          "default": 8192,
+          "maximum": 32768,
+          "minimum": 256,
+          "title": "Max Input Tokens",
+          "type": "integer"
+        },
+        "min_image_pixels": {
+          "default": 4096,
+          "minimum": 1024,
+          "title": "Min Image Pixels",
+          "type": "integer"
+        },
+        "max_image_pixels": {
+          "default": 262144,
+          "maximum": 1048576,
+          "minimum": 4096,
+          "title": "Max Image Pixels",
+          "type": "integer"
+        },
+        "seed": {
+          "default": 42,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "do_sample": {
+          "const": false,
+          "default": false,
+          "title": "Do Sample",
+          "type": "boolean"
+        },
+        "quantization": {
+          "const": "nf4_double_bfloat16",
+          "default": "nf4_double_bfloat16",
+          "title": "Quantization",
+          "type": "string"
+        },
+        "attention": {
+          "const": "sdpa",
+          "default": "sdpa",
+          "title": "Attention",
+          "type": "string"
+        },
+        "part_protocol": {
+          "default": "whole_answer_v1",
+          "enum": [
+            "whole_answer_v1",
+            "literal_separator_v1"
+          ],
+          "title": "Part Protocol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "model_revision",
+        "snapshot_manifest_sha256"
+      ],
+      "title": "LocalTeacherConfig",
+      "type": "object"
+    },
+    "LocalTeacherRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "document_id": {
+          "minLength": 1,
+          "title": "Document Id",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/ReceiptQuestion"
+          },
+          "minItems": 1,
+          "title": "Questions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "document_id",
+        "image_sha256",
+        "questions"
+      ],
+      "title": "LocalTeacherRequest",
+      "type": "object"
+    },
+    "ReceiptQuestion": {
+      "additionalProperties": false,
+      "description": "Safe output for question-only consumers; has no label-related fields.",
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "source_split": {
+          "enum": [
+            "train",
+            "dev",
+            "test"
+          ],
+          "title": "Source Split",
+          "type": "string"
+        },
+        "source_image_id": {
+          "minimum": 0,
+          "title": "Source Image Id",
+          "type": "integer"
+        },
+        "source_question_id": {
+          "minimum": 0,
+          "title": "Source Question Id",
+          "type": "integer"
+        },
+        "source_row_index": {
+          "minimum": 0,
+          "title": "Source Row Index",
+          "type": "integer"
+        },
+        "filename": {
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "document_id": {
+          "minLength": 1,
+          "title": "Document Id",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "question_raw": {
+          "minLength": 1,
+          "title": "Question Raw",
+          "type": "string"
+        },
+        "question_nfc": {
+          "minLength": 1,
+          "title": "Question Nfc",
+          "type": "string"
+        }
+      },
+      "required": [
+        "archive_sha256",
+        "source_split",
+        "source_image_id",
+        "source_question_id",
+        "source_row_index",
+        "filename",
+        "document_id",
+        "qid",
+        "question_raw",
+        "question_nfc"
+      ],
+      "title": "ReceiptQuestion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "local_label_plan_v1",
+      "default": "local_label_plan_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "access_plan_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Access Plan Sha256",
+      "type": "string"
+    },
+    "partition": {
+      "enum": [
+        "train_fit",
+        "dev_select",
+        "audit_holdout"
+      ],
+      "title": "Partition",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "config": {
+      "$ref": "#/$defs/LocalTeacherConfig"
+    },
+    "prompt_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Prompt Sha256",
+      "type": "string"
+    },
+    "output_schema_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Output Schema Sha256",
+      "type": "string"
+    },
+    "implementation_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementation Sha256",
+      "type": "string"
+    },
+    "requests": {
+      "items": {
+        "$ref": "#/$defs/LocalTeacherRequest"
+      },
+      "minItems": 1,
+      "title": "Requests",
+      "type": "array"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "access_plan_sha256",
+    "partition",
+    "fixture_only",
+    "config",
+    "prompt_sha256",
+    "output_schema_sha256",
+    "implementation_sha256",
+    "requests"
+  ],
+  "title": "LocalTeacherPlan",
+  "type": "object"
+}

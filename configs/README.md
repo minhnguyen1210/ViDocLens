@@ -6,6 +6,11 @@ and validates profile, prices and request-scoped permission artifacts. Phase 4
 its defaults are **not calibrated**. Freeze binds dev evidence and access-plan
 identity before holdout audit or training selection. Keep immutable run copies.
 
+`python -m vidoclens.teacher.local_labels config --snapshot ... --output ...` creates
+candidate `LocalTeacherConfig` defaults bound to an existing snapshot manifest.
+It does not download/approve a model or validate GPU compatibility. No permission
+template grants generation/training by default. See [local tools](../docs/PHASE4_LOCAL_TOOLS.md).
+
 Student/serving experiment candidates in this checkout are not proof of training
 or deployment. Integrate the PC Phase 3 consumer separately. Never invent resolved
 revisions, rights, prices or successful gate values to make a config load.
