@@ -1,0 +1,77 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "verifier_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Verifier Profile Sha256",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "thresholds": {
+      "default": [
+        0.0,
+        0.85,
+        0.9,
+        0.95,
+        1.0
+      ],
+      "items": {
+        "maximum": 1,
+        "minimum": 0,
+        "type": "number"
+      },
+      "title": "Thresholds",
+      "type": "array"
+    },
+    "external_eligible_qids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "External Eligible Qids",
+      "type": "array"
+    },
+    "target_local_coverage": {
+      "default": 0.7,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Target Local Coverage",
+      "type": "number"
+    },
+    "target_cost_ratio": {
+      "default": 0.4,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Target Cost Ratio",
+      "type": "number"
+    },
+    "max_em_gap_to_teacher": {
+      "default": 0.02,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Max Em Gap To Teacher",
+      "type": "number"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "verifier_profile_sha256",
+    "fixture_only",
+    "external_eligible_qids"
+  ],
+  "title": "RoutingGridPlan",
+  "type": "object"
+}

@@ -31,7 +31,7 @@ assignments cannot expose training gold. Frozen readers verify graph/plan hashes
 `FeatureFingerprint`/`FeatureCandidate` validate rotation/crop/gradient artifacts.
 `TranscriptionReview`/`OODAnnotation` distinguish AI review from human gold, preserve
 evidence provenance and reject AI records claiming human verification. There are
-59 exported root schemas after Phase 4 offline extensions; stored corpus/PII/model payloads
+81 exported root schemas after Phase 5 offline extensions; stored corpus/PII/model payloads
 remain Git ignored.
 
 Phase 4 adds `SilverSample`, `SilverPool`, `SilverLabel`, `SilverBatch`,
@@ -46,3 +46,12 @@ four blind review/item/human annotation schemas, and `SilverTrainingResult`.
 Generation grants and training approvals are distinct; attestation fields and hashes
 do not authenticate licenses, reviewers or actual GPU execution. See the
 [extended tools](../docs/PHASE4_LOCAL_TOOLS.md) for exchange and integration details.
+
+ADR-P5-001 adds 22 root schemas in `verification.py`, `cascade.py`, `calibration.py`,
+`ood_review.py` and `final_suite.py`. They separate question-only dev pools, raw predictions,
+before/after evidence, fixture identity, code-bound profiles/policies, explicit fallback gates,
+recorded usage and human OOD review. Rule scores are not probabilities; missing measurements
+remain null. New calibration access does not change Phase 4 pools or Phase 2 grants.
+Preregistration has execution and G5 certification disabled; human attestations and hashes
+do not authenticate reviewers or certify licenses/GPU execution. See the
+[Phase 5 workflow](../docs/PHASE5_OFFLINE_WORKFLOW.md).

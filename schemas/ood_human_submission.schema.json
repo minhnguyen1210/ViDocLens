@@ -1,0 +1,137 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    },
+    "OODHumanLabel": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "title": "Qid",
+          "type": "string"
+        },
+        "answerable": {
+          "title": "Answerable",
+          "type": "boolean"
+        },
+        "full_answers": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Full Answers",
+          "type": "array"
+        },
+        "evidence_boxes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Box"
+          },
+          "title": "Evidence Boxes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "qid",
+        "answerable"
+      ],
+      "title": "OODHumanLabel",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "packet_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Packet Sha256",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "reviewer": {
+      "minLength": 1,
+      "title": "Reviewer",
+      "type": "string"
+    },
+    "reviewer_type": {
+      "const": "human",
+      "default": "human",
+      "title": "Reviewer Type",
+      "type": "string"
+    },
+    "reviewed_at": {
+      "format": "date-time",
+      "title": "Reviewed At",
+      "type": "string"
+    },
+    "blind_image_review_attested": {
+      "title": "Blind Image Review Attested",
+      "type": "boolean"
+    },
+    "labels": {
+      "items": {
+        "$ref": "#/$defs/OODHumanLabel"
+      },
+      "title": "Labels",
+      "type": "array"
+    }
+  },
+  "required": [
+    "packet_sha256",
+    "fixture_only",
+    "reviewer",
+    "reviewed_at",
+    "blind_image_review_attested",
+    "labels"
+  ],
+  "title": "OODHumanSubmission",
+  "type": "object"
+}

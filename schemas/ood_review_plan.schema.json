@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "OODReviewTask": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "title": "Qid",
+          "type": "string"
+        },
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        },
+        "canonical_pixel_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Canonical Pixel Sha256",
+          "type": "string"
+        },
+        "source_domain": {
+          "minLength": 1,
+          "title": "Source Domain",
+          "type": "string"
+        },
+        "shift_axes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Shift Axes",
+          "type": "array"
+        },
+        "rights_evidence_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Rights Evidence Sha256",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "question_type": {
+          "minLength": 1,
+          "title": "Question Type",
+          "type": "string"
+        },
+        "previously_model_reviewed": {
+          "const": false,
+          "default": false,
+          "title": "Previously Model Reviewed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "qid",
+        "document_id",
+        "image_sha256",
+        "canonical_pixel_sha256",
+        "source_domain",
+        "shift_axes",
+        "rights_evidence_sha256",
+        "question",
+        "question_type"
+      ],
+      "title": "OODReviewTask",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "human_ood_plan_v1",
+      "default": "human_ood_plan_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "protected_inventory_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Protected Inventory Sha256",
+      "type": "string"
+    },
+    "dedup_evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Dedup Evidence Sha256",
+      "type": "string"
+    },
+    "unresolved_near_duplicates": {
+      "const": 0,
+      "default": 0,
+      "title": "Unresolved Near Duplicates",
+      "type": "integer"
+    },
+    "local_research_rights_attested": {
+      "default": false,
+      "title": "Local Research Rights Attested",
+      "type": "boolean"
+    },
+    "seed": {
+      "default": 42,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "second_review_fraction": {
+      "default": 0.2,
+      "maximum": 1,
+      "minimum": 0.2,
+      "title": "Second Review Fraction",
+      "type": "number"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/OODReviewTask"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "fixture_only",
+    "protected_inventory_sha256",
+    "dedup_evidence_sha256",
+    "tasks"
+  ],
+  "title": "OODReviewPlan",
+  "type": "object"
+}

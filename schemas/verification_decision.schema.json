@@ -1,0 +1,286 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    },
+    "VerifierCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "span_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Span Ids",
+          "type": "array"
+        },
+        "boxes": {
+          "items": {
+            "$ref": "#/$defs/Box"
+          },
+          "minItems": 1,
+          "title": "Boxes",
+          "type": "array"
+        },
+        "token_start": {
+          "minimum": 0,
+          "title": "Token Start",
+          "type": "integer"
+        },
+        "token_end": {
+          "exclusiveMinimum": 0,
+          "title": "Token End",
+          "type": "integer"
+        },
+        "distance": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Distance",
+          "type": "number"
+        },
+        "field_status": {
+          "enum": [
+            "pass",
+            "fail",
+            "unknown"
+          ],
+          "title": "Field Status",
+          "type": "string"
+        },
+        "field_label_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Field Label Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "span_ids",
+        "boxes",
+        "token_start",
+        "token_end",
+        "distance",
+        "field_status"
+      ],
+      "title": "VerifierCandidate",
+      "type": "object"
+    },
+    "VerifierPart": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "before": {
+          "title": "Before",
+          "type": "string"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "selected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VerifierCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "alternatives": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/VerifierCandidate"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "before",
+        "reason"
+      ],
+      "title": "VerifierPart",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "title": "Qid",
+      "type": "string"
+    },
+    "input_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Input Sha256",
+      "type": "string"
+    },
+    "config_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "implementation_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementation Sha256",
+      "type": "string"
+    },
+    "variant": {
+      "enum": [
+        "P3-check",
+        "P3-snap"
+      ],
+      "title": "Variant",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "answered",
+        "abstained"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "answer_before": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Answer Before"
+    },
+    "answer_after": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer After"
+    },
+    "question_field": {
+      "title": "Question Field",
+      "type": "string"
+    },
+    "parts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/VerifierPart"
+      },
+      "title": "Parts",
+      "type": "array"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "snap_applied": {
+      "default": false,
+      "title": "Snap Applied",
+      "type": "boolean"
+    },
+    "rule_score": {
+      "default": 0.0,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Rule Score",
+      "type": "number"
+    },
+    "calibrated_confidence": {
+      "default": null,
+      "title": "Calibrated Confidence",
+      "type": "null"
+    }
+  },
+  "required": [
+    "qid",
+    "input_sha256",
+    "config_sha256",
+    "implementation_sha256",
+    "variant",
+    "status",
+    "answer_before",
+    "question_field",
+    "reason"
+  ],
+  "title": "VerificationDecision",
+  "type": "object"
+}

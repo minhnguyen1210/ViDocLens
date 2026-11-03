@@ -10,6 +10,8 @@ Quy trình làm việc: [CONTRIBUTING](CONTRIBUTING.md) · [bảng phase/việc 
 
 **G0, G1 và G2 đạt.** Chủ dự án đang làm Phase 3 trên PC; nhánh laptop `phase4-offline` có F0/F1, local teacher orchestration, dev grid, human review tooling và comparison bằng CPU fixtures. Qwen adapter chưa smoke GPU, G3/G4 chưa được xác nhận tại checkout này. [Bàn giao PC](docs/PHASE4_OFFLINE_HANDOFF.md), [workflow Phase 4](docs/PHASE4_OFFLINE_WORKFLOW.md), [công cụ bổ sung](docs/PHASE4_LOCAL_TOOLS.md).
 
+Nhánh **`phase5-offline`**, kế thừa Phase 4 tại `2fa55cd`, bổ sung P3-check/P3-snap, cascade library với injected backend, routing replay/freeze, human OOD exchange và preregistration. Chỉ kiểm CPU synthetic; **chưa có calibration/teacher calls/OOD human gold thật, chưa đạt G5**. [Workflow Phase 5](docs/PHASE5_OFFLINE_WORKFLOW.md), [hướng dẫn merge PC](docs/PHASE5_OFFLINE_HANDOFF.md).
+
 Phase 2 chạy đủ pilot/baselines API trên 150 ảnh, 511 requests, chi phí theo usage 6,080008/20 USD; replay toàn bộ không thêm calls/spend. Benchmark/fallback chọn GPT-5.4 image+OCR (A3), dev strict EM 76,28%; serving chưa bật. [Kết quả/gates](docs/STATUS.md), [báo cáo Phase 2](docs/PHASE2_RESULTS.md), [workflow](docs/PHASE2_WORKFLOW.md).
 
 Phase 1 ingest đủ 9.500 ảnh; freeze containment 19.496 candidate pairs, giữ 4.527 ảnh train_fit và cách ly 2.873 ảnh. OCR 100/100, 260 parity fixtures và R1 training diagnostic đã có số. Đã kiểm tra chéo 38 dòng OCR và bắt đầu OOD với 3 ảnh có giấy phép/24 QA; AI reference theo ADR-021 không là human gold hoặc final benchmark. [Báo cáo Phase 1](docs/PHASE1_RESULTS.md), [OOD data card](docs/data/COMMONS_OOD_SEED_V1.md).
@@ -30,7 +32,8 @@ Phase 1 ingest đủ 9.500 ảnh; freeze containment 19.496 candidate pairs, gi�
 | OOD seed / AI review | 3 ảnh/24 QA có rights và cross-source audit; 62 lượt local review/adjudication, human flags false |
 | Teacher Phase 2 | Responses thật, permission gates, cache/ledger/retry, Batch offline, evaluator và role freeze; G2 đạt, API training export vẫn false |
 | Phase 4 offline | `python -m vidoclens.filtering --help` và `python -m vidoclens.teacher.local_labels --help`; plans/cache, F0/F1, grid, review, selections và 12-run comparison; chưa chạy teacher/training thật |
-| Kiểm tra local | 59 schemas; kết quả CPU hiện tại và giới hạn môi trường ở STATUS; số Phase 2 được giữ trong báo cáo lịch sử |
+| Phase 5 offline | `python -m vidoclens.verify --help`; verifier/eval/routing/OOD/preregister từ artifacts; không gọi model/API, không mở final gold |
+| Kiểm tra local | 81 schemas; kết quả CPU hiện tại và giới hạn môi trường ở STATUS; số Phase 2 được giữ trong báo cáo lịch sử |
 
 Các YAML training/serving vẫn là cấu hình thiết kế; pilot dùng profile được ghi trong artifacts/runbook, không giả định đã nạp YAML này. Python 3.11.14 Linux/WSL2 đã kiểm chứng inference, chưa QLoRA train. Docker, Gradio và API model backend chưa được chạy xác minh trên máy này; readiness vẫn false cho đến khi tích hợp runtime thật.
 
@@ -97,4 +100,4 @@ Các điểm bắt đầu: [tiến độ](docs/STATUS.md), [quyết định](doc
 - Dataset, model, output teacher và code có quyền sử dụng/phát hành riêng; chưa chọn license code để public.
 - Thay đổi thiết kế cập nhật SOT và ADR; kết quả thực nghiệm phải có manifest tái lập.
 
-Phase 2 đã hoàn tất **G2** với predictions/metrics/cost/replay/role freeze thật. Runtime hỗ trợ `--env-file .env`; quyền benchmark chỉ theo grant đã duyệt, không cấp API training export hoặc serving external. [Workflow](docs/PHASE2_WORKFLOW.md), [kết quả](docs/PHASE2_RESULTS.md), [STATUS](docs/STATUS.md). Bước trên PC là hoàn tất Phase 3, review/merge phần Phase 4 offline rồi nối trainer và thực hiện các gates thật. Chủ dự án tự commit/push các thay đổi local.
+Phase 2 đã hoàn tất **G2** với predictions/metrics/cost/replay/role freeze thật. Runtime hỗ trợ `--env-file .env`; quyền benchmark chỉ theo grant đã duyệt, không cấp API training export hoặc serving external. [Workflow](docs/PHASE2_WORKFLOW.md), [kết quả](docs/PHASE2_RESULTS.md), [STATUS](docs/STATUS.md). Bước trên PC là bảo toàn Phase 3, review/merge Phase 4 rồi Phase 5 offline, nối adapters và thực hiện các gates thật theo handoff. Chủ dự án tự commit/push các thay đổi local.

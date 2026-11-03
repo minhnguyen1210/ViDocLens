@@ -94,6 +94,19 @@ Bằng chứng ADR-022: Linux **223 passed**, Windows **216 passed/7 skipped**, 
 - **Bằng chứng:** CPU fixtures và CLI integration ghi tại STATUS; không gọi model/API, không có nhãn/quality metrics thật hoặc G4 mới. F2/F3/correction là extension, semantic gate không bị thêm vào F1.
 - **Bàn giao:** [công cụ mới](PHASE4_LOCAL_TOOLS.md), [hợp nhất PC](PHASE4_OFFLINE_HANDOFF.md). Owner tự commit/push; CI cũ không chứng nhận bổ sung chưa commit.
 
+## ADR-P5-001 — Phase 5 CPU offline tách khỏi trainer/API trên PC (03/11/2026)
+
+- **Trạng thái:** chấp nhận theo yêu cầu triển khai của chủ dự án; SOT v1.13 §15.4. Branch `phase5-offline` tạo từ `phase4-offline` tại `2fa55cd`; không stage/commit/push hoặc thêm author/co-author.
+- **Bối cảnh:** không có Phase 3 source/checkpoint/G3/G4, dataset/OCR payload hoặc fallback grant mới trên laptop. Có thể chuẩn bị verifier, orchestration, evaluators và exchange contracts bằng CPU fixtures; chưa thể chạy nghiên cứu/calibration thật.
+- **Quyết định:** P3-check/P3-snap với numeric/occurrence/field rules; code-bound profiles và immutable replay; rule-based routing grid/selection trên dev_calibrate sau freeze; injected fallback + riêng SQLite budget/cache + circuit/timeout; blind human OOD packets/reconciliation; final-suite preregistration không mở gold. CLI riêng `vidoclens.verify`, 22 root schemas mới.
+- **Tách scope:** đọc lại helper matching/io/metrics/frozen loaders của Phase 4/1 nhưng không sửa chúng, F0/F1, trainer, Phase 2 provider/grant/ledger, API/root CLI hoặc ML locks. New verification pool mở calibration đúng phase, không nới `SilverPool` hay teacher request cũ. Raw outputs giữ riêng; rule confidence không là probability.
+- **Tradeoff:** heuristic label/geometry cố ý abstain khi field unknown; chỉ text không protected content được snap, có thể giảm coverage. Không gọi support là semantic truth. Ngưỡng default chưa calibrated; so P3check/snap và đo cả harm/abstention trước freeze. Grid counterfactual không đo live queue/budget contention, latency hay provider reliability.
+- **Runtime:** interface nhận backend do PC triển khai; không code HTTP/provider mới hoặc key access trong lượt này. Exact-request permission và health vẫn kiểm khi replay. Một transport attempt, không retry; unknown spend được giữ. Timeout cần backend hợp tác; cap cần price upper bound được kiểm thật. Overrun ghi chi phí thật và trả failure, không che billing bằng clamp. Không dùng ledger này làm nguồn budget chung với Phase 2.
+- **OOD:** unseen sources và ≥20% QA human review; cùng người ≥24h delayed blind theo protocol v1, ghi hạn chế. Rights/near-duplicate/human fields là attestation, không authentication. Chỉ check raw/pixel overlap với inventory supplied; không tự đóng full OOD/G5 từ form hợp lệ hoặc đổi seed AI thành gold.
+- **Final freeze:** cấu hình + comparison registrations có đủ hashes, fixture flag, `execution_enabled=false`/`g5_certified=false`. Không mở test CSV, không sửa evaluation lịch sử. Phase 6 vẫn cần final inference/evaluator/deployment thật.
+- **Bằng chứng và điều kiện xem lại:** CPU tests/checks và limitations tại [STATUS](STATUS.md); PC phải review merge/interface, hoàn tất G3/G4, đo dev thật, bổ sung backend/price/permission/timeout integration và human OOD. Rule/code thay đổi sau freeze làm profile/policy cũ bị từ chối; version run mới và đánh giá lại trên split cho phép.
+- **Bàn giao:** [workflow](PHASE5_OFFLINE_WORKFLOW.md), [merge checklist](PHASE5_OFFLINE_HANDOFF.md). Không tuyên bố merge sạch khi chưa đọc source PC, không dùng CI Phase 4 làm CI Phase 5.
+
 ## Mẫu ADR tiếp theo
 
 ```text

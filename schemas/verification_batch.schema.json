@@ -1,0 +1,224 @@
+{
+  "$defs": {
+    "AnswerPrediction": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "answered",
+            "abstained",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "answer_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer Raw"
+        }
+      },
+      "required": [
+        "qid",
+        "status"
+      ],
+      "title": "AnswerPrediction",
+      "type": "object"
+    },
+    "PipelineBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "student_bundle_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Student Bundle Sha256",
+          "type": "string"
+        },
+        "student_protocol_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Student Protocol Sha256",
+          "type": "string"
+        },
+        "filter_config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Filter Config Sha256",
+          "type": "string"
+        },
+        "fallback_profile_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fallback Profile Sha256",
+          "type": "string"
+        },
+        "g4_evidence_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "G4 Evidence Sha256",
+          "type": "string"
+        },
+        "fixture_only": {
+          "title": "Fixture Only",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "student_bundle_sha256",
+        "student_protocol_sha256",
+        "filter_config_sha256",
+        "fallback_profile_sha256",
+        "g4_evidence_sha256",
+        "fixture_only"
+      ],
+      "title": "PipelineBinding",
+      "type": "object"
+    },
+    "PredictionObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "prediction": {
+          "$ref": "#/$defs/AnswerPrediction"
+        },
+        "cost_micro_usd": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Micro Usd"
+        },
+        "latency_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Ms"
+        },
+        "external_requests": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Requests"
+        },
+        "image_transmissions": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Transmissions"
+        }
+      },
+      "required": [
+        "prediction"
+      ],
+      "title": "PredictionObservation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "verification_predictions_v1",
+      "default": "verification_predictions_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "binding": {
+      "$ref": "#/$defs/PipelineBinding"
+    },
+    "source": {
+      "enum": [
+        "student",
+        "fallback_teacher"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "cache_regime": {
+      "enum": [
+        "cache_miss",
+        "cache_hit",
+        "synthetic"
+      ],
+      "title": "Cache Regime",
+      "type": "string"
+    },
+    "observations": {
+      "items": {
+        "$ref": "#/$defs/PredictionObservation"
+      },
+      "title": "Observations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "binding",
+    "source",
+    "cache_regime",
+    "observations"
+  ],
+  "title": "VerificationBatch",
+  "type": "object"
+}

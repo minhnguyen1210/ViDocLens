@@ -17,7 +17,12 @@ completed replay, snapshot/permission checks, atomic artifacts, dev-only thresho
 blind review coverage/provenance and fairness-checked 12-run paired/seed comparisons.
 The Qwen GPU adapter has not been smoke-tested by these CPU fixtures.
 Synthetic archive-to-CLI tests do not run a model or certify real data quality.
-Later suites include snap ambiguity, deterministic training resume, cascade and GPU load.
+Phase 5 adds spatial/numeric/text snap guards and harm counts, frozen dev access/replay,
+injected cascade gates/teacher verification, budget concurrency/unknown cost/cache integrity,
+deadline/circuit behavior, routing Pareto/denominators, blind OOD human exchange and
+archive-to-preregistration CLI tests that refuse final gold access. All new fixtures explicitly
+remain synthetic; no live backend, human annotation or calibration claim follows.
+Later suites include deterministic training resume, real fallback integration and GPU load.
 No ML benchmark, accuracy claim or GPU compatibility follows from these smoke tests.
 
 Repository workflow tests use synthetic fixtures and an isolated temporary Git

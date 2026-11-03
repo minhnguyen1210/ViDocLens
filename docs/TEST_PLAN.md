@@ -66,3 +66,12 @@ ADR-P4-002 thêm **46 cases** trong [test_local_labels.py](../tests/unit/test_lo
 Full suite laptop **400 passed**, **59 schemas**; kết quả kiểm tra mới nhất và logs ở STATUS. Các checks chỉ xác nhận CPU code, không chứng nhận quality teacher/filter/student, GPU adapter, G3/G4, human audit thật, pipeline training hoặc deployment.
 
 Sau merge PC: kiểm contracts/schema cả hai nhánh; chạy lại CPU suite; validate profile/G3 và gold/silver adapter; GPU train smoke/save/reload/resume; chỉ sau local label pilot và dev rule freeze mới chạy silver/core P1/P2. Không chạy test/OOD để chọn rule.
+
+## Phase 5 offline đã hiện thực
+
+- [test_verifier.py](../tests/unit/test_verifier.py): numeric substring/digit/sign/unit guards, raw và snap traces, field sai/unknown, geometry, repeated candidates/margin ngoài threshold, multipart/reuse, OCR limits/identity/NFC, checksum/replay, missing denominator, correction/harm/abstention và code-bound freeze.
+- [test_cascade.py](../tests/unit/test_cascade.py): local default, từng external gate trước call/cache, exact request identity, một fallback rồi teacher verify, OCR/OOM không gọi ngoài, timeout/circuit, concurrent SQLite reservations, unknown/crash holds, immutable cap, overspend accounting và failure replay.
+- [test_ood_review.py](../tests/unit/test_ood_review.py): reference-free packets, ceil ≥20%, blank templates chưa hợp lệ, rights/unseen/raw/pixel/near-duplicate boundaries, exact coverage, AI/fixture không thành human evidence thật, delayed same-person review và adjudication bind cả hai labels.
+- [test_phase5_workflow.py](../tests/unit/test_phase5_workflow.py): synthetic archive → prepare/profile → verify/audit → dev_select freeze → dev_calibrate grid/selection → OOD exchange → final preregistration; monkeypatch chặn test CSV. Cost unknown/zero denominator, missing predictions, Pareto/paired groups, provenance/cache regime và immutable artifacts.
+
+Các checks này không đo model accuracy, live API cost/deadline, workload latency, quality human gold hoặc G5. PC cần adapter exporter/backend thực, approved price/request grants, dev calibration/human error review và OOD nguồn mới. Counterfactual stage times không là p95 end-to-end. Counts/logs mới nhất ở [STATUS](STATUS.md), cùng [merge checklist](PHASE5_OFFLINE_HANDOFF.md).

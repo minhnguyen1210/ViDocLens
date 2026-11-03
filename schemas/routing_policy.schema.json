@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "rule_routing_v1",
+      "default": "rule_routing_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "min_local_score": {
+      "default": 1.0,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Min Local Score",
+      "type": "number"
+    },
+    "request_timeout_seconds": {
+      "default": 45,
+      "exclusiveMinimum": 0,
+      "maximum": 120,
+      "title": "Request Timeout Seconds",
+      "type": "number"
+    },
+    "fallback_limit": {
+      "const": 1,
+      "default": 1,
+      "title": "Fallback Limit",
+      "type": "integer"
+    },
+    "transport_retries": {
+      "const": 0,
+      "default": 0,
+      "title": "Transport Retries",
+      "type": "integer"
+    },
+    "status": {
+      "default": "candidate",
+      "enum": [
+        "candidate",
+        "frozen_dev_calibrate"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "verifier_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Verifier Profile Sha256",
+      "type": "string"
+    },
+    "implementation_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementation Sha256",
+      "type": "string"
+    },
+    "selection_evidence_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selection Evidence Sha256"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "verifier_profile_sha256",
+    "implementation_sha256",
+    "fixture_only"
+  ],
+  "title": "RoutingPolicy",
+  "type": "object"
+}

@@ -1,0 +1,363 @@
+{
+  "$defs": {
+    "Box": {
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "Box",
+      "type": "object"
+    },
+    "OCRResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "engine": {
+          "title": "Engine",
+          "type": "string"
+        },
+        "engine_revision": {
+          "title": "Engine Revision",
+          "type": "string"
+        },
+        "preprocessing_hash": {
+          "title": "Preprocessing Hash",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "empty",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "spans": {
+          "items": {
+            "$ref": "#/$defs/OCRSpan"
+          },
+          "title": "Spans",
+          "type": "array"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        }
+      },
+      "required": [
+        "document_id",
+        "engine",
+        "engine_revision",
+        "preprocessing_hash",
+        "image_sha256",
+        "status"
+      ],
+      "title": "OCRResult",
+      "type": "object"
+    },
+    "OCRSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "span_id": {
+          "minLength": 1,
+          "title": "Span Id",
+          "type": "string"
+        },
+        "text_raw": {
+          "title": "Text Raw",
+          "type": "string"
+        },
+        "text_nfc": {
+          "title": "Text Nfc",
+          "type": "string"
+        },
+        "box": {
+          "$ref": "#/$defs/Box"
+        },
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "reading_order": {
+          "minimum": 0,
+          "title": "Reading Order",
+          "type": "integer"
+        },
+        "engine_score": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Engine Score"
+        }
+      },
+      "required": [
+        "span_id",
+        "text_raw",
+        "text_nfc",
+        "box",
+        "line_id",
+        "reading_order"
+      ],
+      "title": "OCRSpan",
+      "type": "object"
+    },
+    "PipelineBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "student_bundle_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Student Bundle Sha256",
+          "type": "string"
+        },
+        "student_protocol_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Student Protocol Sha256",
+          "type": "string"
+        },
+        "filter_config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Filter Config Sha256",
+          "type": "string"
+        },
+        "fallback_profile_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fallback Profile Sha256",
+          "type": "string"
+        },
+        "g4_evidence_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "G4 Evidence Sha256",
+          "type": "string"
+        },
+        "fixture_only": {
+          "title": "Fixture Only",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "student_bundle_sha256",
+        "student_protocol_sha256",
+        "filter_config_sha256",
+        "fallback_profile_sha256",
+        "g4_evidence_sha256",
+        "fixture_only"
+      ],
+      "title": "PipelineBinding",
+      "type": "object"
+    },
+    "ReceiptQuestion": {
+      "additionalProperties": false,
+      "description": "Safe output for question-only consumers; has no label-related fields.",
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "source_split": {
+          "enum": [
+            "train",
+            "dev",
+            "test"
+          ],
+          "title": "Source Split",
+          "type": "string"
+        },
+        "source_image_id": {
+          "minimum": 0,
+          "title": "Source Image Id",
+          "type": "integer"
+        },
+        "source_question_id": {
+          "minimum": 0,
+          "title": "Source Question Id",
+          "type": "integer"
+        },
+        "source_row_index": {
+          "minimum": 0,
+          "title": "Source Row Index",
+          "type": "integer"
+        },
+        "filename": {
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "document_id": {
+          "minLength": 1,
+          "title": "Document Id",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "question_raw": {
+          "minLength": 1,
+          "title": "Question Raw",
+          "type": "string"
+        },
+        "question_nfc": {
+          "minLength": 1,
+          "title": "Question Nfc",
+          "type": "string"
+        }
+      },
+      "required": [
+        "archive_sha256",
+        "source_split",
+        "source_image_id",
+        "source_question_id",
+        "source_row_index",
+        "filename",
+        "document_id",
+        "qid",
+        "question_raw",
+        "question_nfc"
+      ],
+      "title": "ReceiptQuestion",
+      "type": "object"
+    },
+    "SilverSample": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "question": {
+          "$ref": "#/$defs/ReceiptQuestion"
+        },
+        "duplicate_group_id": {
+          "minLength": 1,
+          "title": "Duplicate Group Id",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "duplicate_group_id",
+        "image_sha256"
+      ],
+      "title": "SilverSample",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "verified_fallback_request_v1",
+      "default": "verified_fallback_request_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "sample": {
+      "$ref": "#/$defs/SilverSample"
+    },
+    "ocr": {
+      "$ref": "#/$defs/OCRResult"
+    },
+    "binding": {
+      "$ref": "#/$defs/PipelineBinding"
+    },
+    "max_transport_attempts": {
+      "const": 1,
+      "default": 1,
+      "title": "Max Transport Attempts",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "sample",
+    "ocr",
+    "binding"
+  ],
+  "title": "FallbackRequest",
+  "type": "object"
+}

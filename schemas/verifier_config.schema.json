@@ -1,0 +1,107 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "field_lexical_verifier_v1",
+      "default": "field_lexical_verifier_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "text_threshold": {
+      "default": 0.1,
+      "enum": [
+        0.0,
+        0.05,
+        0.1,
+        0.15
+      ],
+      "title": "Text Threshold",
+      "type": "number"
+    },
+    "min_text_length": {
+      "default": 6,
+      "maximum": 100,
+      "minimum": 2,
+      "title": "Min Text Length",
+      "type": "integer"
+    },
+    "candidate_margin": {
+      "default": 0.05,
+      "exclusiveMinimum": 0,
+      "maximum": 1,
+      "title": "Candidate Margin",
+      "type": "number"
+    },
+    "max_label_gap": {
+      "default": 0.08,
+      "exclusiveMinimum": 0,
+      "maximum": 0.25,
+      "title": "Max Label Gap",
+      "type": "number"
+    },
+    "max_span_line_gap": {
+      "default": 0.08,
+      "exclusiveMinimum": 0,
+      "maximum": 0.25,
+      "title": "Max Span Line Gap",
+      "type": "number"
+    },
+    "max_document_tokens": {
+      "default": 4096,
+      "maximum": 16384,
+      "minimum": 1,
+      "title": "Max Document Tokens",
+      "type": "integer"
+    },
+    "max_span_tokens": {
+      "default": 24,
+      "maximum": 64,
+      "minimum": 1,
+      "title": "Max Span Tokens",
+      "type": "integer"
+    },
+    "max_lines": {
+      "default": 4,
+      "maximum": 8,
+      "minimum": 1,
+      "title": "Max Lines",
+      "type": "integer"
+    },
+    "max_answer_characters": {
+      "default": 1024,
+      "maximum": 4096,
+      "minimum": 1,
+      "title": "Max Answer Characters",
+      "type": "integer"
+    },
+    "part_protocol": {
+      "default": "whole_answer_v1",
+      "enum": [
+        "whole_answer_v1",
+        "literal_separator_v1"
+      ],
+      "title": "Part Protocol",
+      "type": "string"
+    },
+    "require_field_support": {
+      "const": true,
+      "default": true,
+      "title": "Require Field Support",
+      "type": "boolean"
+    },
+    "numeric_edits_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Numeric Edits Allowed",
+      "type": "boolean"
+    }
+  },
+  "title": "VerifierConfig",
+  "type": "object"
+}

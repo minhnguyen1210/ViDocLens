@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "server_external_enabled": {
+      "default": false,
+      "title": "Server External Enabled",
+      "type": "boolean"
+    },
+    "request_allow_external": {
+      "default": false,
+      "title": "Request Allow External",
+      "type": "boolean"
+    },
+    "document_may_external_process": {
+      "default": false,
+      "title": "Document May External Process",
+      "type": "boolean"
+    },
+    "provider_healthy": {
+      "default": false,
+      "title": "Provider Healthy",
+      "type": "boolean"
+    },
+    "permission_evidence_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Permission Evidence Sha256"
+    },
+    "allowed_request_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allowed Request Sha256"
+    },
+    "reserve_micro_usd": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Reserve Micro Usd",
+      "type": "integer"
+    }
+  },
+  "title": "ExternalGate",
+  "type": "object"
+}

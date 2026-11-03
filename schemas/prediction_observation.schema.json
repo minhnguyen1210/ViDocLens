@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "AnswerPrediction": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "answered",
+            "abstained",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "answer_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer Raw"
+        }
+      },
+      "required": [
+        "qid",
+        "status"
+      ],
+      "title": "AnswerPrediction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "prediction": {
+      "$ref": "#/$defs/AnswerPrediction"
+    },
+    "cost_micro_usd": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Micro Usd"
+    },
+    "latency_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency Ms"
+    },
+    "external_requests": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "External Requests"
+    },
+    "image_transmissions": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Image Transmissions"
+    }
+  },
+  "required": [
+    "prediction"
+  ],
+  "title": "PredictionObservation",
+  "type": "object"
+}

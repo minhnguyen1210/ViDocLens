@@ -11,6 +11,13 @@ from vidoclens.contracts.ai_review import (
     OODSeedDocument,
     OODSeedQA,
 )
+from vidoclens.contracts.calibration import RoutingGridPlan
+from vidoclens.contracts.cascade import (
+    CascadeOutcome,
+    ExternalGate,
+    FallbackReply,
+    FallbackRequest,
+)
 from vidoclens.contracts.dataset import (
     GoldReference,
     ReceiptAccessPlan,
@@ -18,6 +25,7 @@ from vidoclens.contracts.dataset import (
     SupervisedReceiptExample,
 )
 from vidoclens.contracts.evaluation import AnswerPrediction, AnswerScores, EvaluationSummary
+from vidoclens.contracts.final_suite import FinalSuitePlan
 from vidoclens.contracts.ingestion import (
     CorpusImage,
     DuplicateGroup,
@@ -43,6 +51,13 @@ from vidoclens.contracts.models import (
     QARecord,
     TeacherInput,
     TeacherLabel,
+)
+from vidoclens.contracts.ood_review import (
+    OODHumanLabel,
+    OODHumanSubmission,
+    OODResolution,
+    OODReviewPlan,
+    OODReviewTask,
 )
 from vidoclens.contracts.pilot import Phase0PilotManifest
 from vidoclens.contracts.review import OODAnnotation, TranscriptionReview
@@ -76,8 +91,43 @@ from vidoclens.contracts.teacher import (
     TeacherResult,
     TeacherUsage,
 )
+from vidoclens.contracts.verification import (
+    PipelineBinding,
+    PredictionObservation,
+    RoutingPolicy,
+    VerificationBatch,
+    VerificationDecision,
+    VerificationPool,
+    VerifierCandidate,
+    VerifierConfig,
+    VerifierInput,
+    VerifierPart,
+    VerifierProfile,
+)
 
 MODELS = {
+    "pipeline_binding": PipelineBinding,
+    "verification_pool": VerificationPool,
+    "verifier_config": VerifierConfig,
+    "verifier_profile": VerifierProfile,
+    "verifier_input": VerifierInput,
+    "verifier_candidate": VerifierCandidate,
+    "verifier_part": VerifierPart,
+    "verification_decision": VerificationDecision,
+    "prediction_observation": PredictionObservation,
+    "verification_batch": VerificationBatch,
+    "routing_policy": RoutingPolicy,
+    "fallback_request": FallbackRequest,
+    "external_gate": ExternalGate,
+    "fallback_reply": FallbackReply,
+    "cascade_outcome": CascadeOutcome,
+    "routing_grid_plan": RoutingGridPlan,
+    "ood_review_task": OODReviewTask,
+    "ood_review_plan": OODReviewPlan,
+    "ood_human_label": OODHumanLabel,
+    "ood_human_submission": OODHumanSubmission,
+    "ood_resolution": OODResolution,
+    "final_suite_plan": FinalSuitePlan,
     "local_teacher_config": LocalTeacherConfig,
     "local_teacher_request": LocalTeacherRequest,
     "local_teacher_plan": LocalTeacherPlan,

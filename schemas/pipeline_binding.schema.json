@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "student_bundle_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Student Bundle Sha256",
+      "type": "string"
+    },
+    "student_protocol_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Student Protocol Sha256",
+      "type": "string"
+    },
+    "filter_config_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Filter Config Sha256",
+      "type": "string"
+    },
+    "fallback_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fallback Profile Sha256",
+      "type": "string"
+    },
+    "g4_evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "G4 Evidence Sha256",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "student_bundle_sha256",
+    "student_protocol_sha256",
+    "filter_config_sha256",
+    "fallback_profile_sha256",
+    "g4_evidence_sha256",
+    "fixture_only"
+  ],
+  "title": "PipelineBinding",
+  "type": "object"
+}
