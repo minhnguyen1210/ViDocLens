@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "phase3_preserved": {
+      "title": "Phase3 Preserved",
+      "type": "boolean"
+    },
+    "local_teacher_pilot": {
+      "title": "Local Teacher Pilot",
+      "type": "boolean"
+    },
+    "full_silver_provenance": {
+      "title": "Full Silver Provenance",
+      "type": "boolean"
+    },
+    "frozen_filter_and_holdout_replay": {
+      "title": "Frozen Filter And Holdout Replay",
+      "type": "boolean"
+    },
+    "human_error_review": {
+      "title": "Human Error Review",
+      "type": "boolean"
+    },
+    "matched_three_seed_training": {
+      "title": "Matched Three Seed Training",
+      "type": "boolean"
+    },
+    "mixed_sampler_resume": {
+      "title": "Mixed Sampler Resume",
+      "type": "boolean"
+    },
+    "twelve_result_comparison": {
+      "title": "Twelve Result Comparison",
+      "type": "boolean"
+    },
+    "code_checks": {
+      "title": "Code Checks",
+      "type": "boolean"
+    },
+    "restricted_data_boundaries": {
+      "title": "Restricted Data Boundaries",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "phase3_preserved",
+    "local_teacher_pilot",
+    "full_silver_provenance",
+    "frozen_filter_and_holdout_replay",
+    "human_error_review",
+    "matched_three_seed_training",
+    "mixed_sampler_resume",
+    "twelve_result_comparison",
+    "code_checks",
+    "restricted_data_boundaries"
+  ],
+  "title": "Phase4Criteria",
+  "type": "object"
+}

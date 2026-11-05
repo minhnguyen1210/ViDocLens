@@ -67,3 +67,37 @@ Phase 3 hiện có 24 student unit cases; full suite trên code hash của [chec
 `tests/unit/test_phase3_continuation.py`: fixture adoption giữ failed parent, chỉ tiếp tục missing evaluations; reject path escape, log/script/run checksum drift, cross-plan/missing seed, thay completed parent, partial/new run lỗi, execution lỗi, source/profile drift. Các fixtures không là evidence model. G3 audit còn phải replay raw predictions và kiểm đủ checkpoints trên artifacts thật.
 
 Mốc G3 cuối ngày03/11/2026: continuation20 cases; full Windows331 passed/9 skipped, WSL340 passed; Ruff125 files,40 schemas và file policy239 candidates đạt. `checks_v3.json` bind source hashes. Audit thật `g3_report_v1.json` đạt9/9, đã replay đủ7 metrics từ raw predictions, kiểm6 checkpoint và3 training curves. CLI doctor vẫn model_not_configured; không nhận CI/Docker/serving đã đạt.
+
+## Phase 4 offline đã hiện thực
+
+[test_silver.py](../tests/unit/test_silver.py) và [test_silver_workflow.py](../tests/unit/test_silver_workflow.py) thêm **58 cases**: raw/NFC, numeric substring/sign/unit/Unicode guards, fuzzy minimum/margin và biên float, literal multipart/newline, repeated/reused evidence, missing/error denominators, scope/hash/gold separation, immutable checksum/replay, exact-batch approvals, matched-size strata, synthetic freeze không mở real run và freeze không chuyển sang split khác.
+
+Workflow test tạo ZIP/manifest/OCR/teacher fixtures trong thư mục tạm rồi chạy prepare → filter → dev audit → freeze → train selection qua CLI; không dùng ảnh/nhãn thật, API hoặc GPU.
+
+ADR-P4-002 thêm **46 cases** trong [test_local_labels.py](../tests/unit/test_local_labels.py), [test_phase4_analysis.py](../tests/unit/test_phase4_analysis.py), [test_phase4_cli.py](../tests/unit/test_phase4_cli.py): no-gold requests/chunking, malformed/duplicate JSON/qids, raw/null/truncation, exact-plan permissions, holdout freeze, fixture identity, crash resume, completed zero-call replay kể cả failures, retry cap, corrupted cache/metadata/image/snapshot, concurrent lock, atomic publish; dev-only grid/replay/freeze, blind four-stratum sampling và review import, 12-run fairness/exposure/profile checks, missing denominator, paired group CI/seed std và <2-group null CI. CLI workflow bao phủ config/plan không import ML, grid → freeze → review → full comparison.
+
+Full suite laptop **400 passed**, **59 schemas**; kết quả kiểm tra mới nhất và logs ở STATUS. Các checks chỉ xác nhận CPU code, không chứng nhận quality teacher/filter/student, GPU adapter, G3/G4, human audit thật, pipeline training hoặc deployment.
+
+Sau merge PC: kiểm contracts/schema cả hai nhánh; chạy lại CPU suite; validate profile/G3 và gold/silver adapter; GPU train smoke/save/reload/resume; chỉ sau local label pilot và dev rule freeze mới chạy silver/core P1/P2. Không chạy test/OOD để chọn rule.
+
+## Phase4 integration trên main G3
+
+[test_distillation.py](../tests/unit/test_distillation.py) kiểm cyclic sampler:1:1, cùnggoldorder giữaarm, khácseed, resume prefix/zero exposures; compact qid lossless và unknown IDs; cohort group/scope. Regression Transformers thực chạy CPU trên WSL kiểm model defaults không bật sampling.
+
+[test_distillation_data.py](../tests/unit/test_distillation_data.py) chạy prepare/load 9 plans bằng G3 stubs tường minh trong temp fixtures; kiểm raw target, G10/dev isolation và từ chối đổi nhãn/group/source/approval dù đã hash lại file nội bộ. G4 contract cho phép H2 âm nhưng không pass khi thiếu human review. Không phải GPU training evidence.
+
+[test_silver_reparse.py](../tests/unit/test_silver_reparse.py) kiểm strict-item parsing và cache provenance: sibling hợp lệ được giữ, envelope/qid mơ hồ bị chặn, không sửa null/digit/answer. [test_raw_teacher.py](../tests/unit/test_raw_teacher.py) kiểm raw text nguyên byte, sentinel, token cap và zero-call replay; cache mất entry phải lỗi. [test_label_teacher_selection.py](../tests/unit/test_label_teacher_selection.py) kiểm gate trước ranking, thứ tự tie-break, cohort đủ 666 QA và checksum reports trước execution. Shard OCR phải tách rời và hợp lại đúng full pool.
+
+Integration checks v6: Windows 475 passed/10 skipped; WSL CPU 485 passed; 71 schemas. Các số này không chứng minh teacher pilot hoặc training Phase 4 đã đạt; xem STATUS và logs thực thi.
+
+Smoke evidence audit kiểm preflight đủ population, run hash, sampler/exposure,
+checkpoint bytes và proof reload/resume. Bốn cases mới sửa trajectory, checkpoint,
+preflight coverage hoặc proof flag sau success đều phải bị từ chối.
+
+[test_phase4_report.py](../tests/unit/test_phase4_report.py) kiểm báo cáo từ evidence đã bind: thiếu machine gate, checksum đổi, input ngoài gate và fixture đều bị từ chối; formatter không nâng gate incomplete thành human-complete và không ghi đè báo cáo cũ.
+
+## Phase 4 final execution evidence — 05/11/2026
+
+Final WSL code checks are bound at artifacts/phase4/checks_final_wsl_v1/checks.json: pytest 485 passed (one Starlette/httpx deprecation warning), Ruff pass, format pass (188 files), doctor pass with inference_not_ready, 71 schemas match, and repository policy pass (334 candidates). No new Windows run or GitHub CI was performed after this final check set.
+
+Separate GPU/evaluation evidence includes all nine matched 191-update runs, predictions/evaluations at checkpoints 96 and 191 over 666 dev questions each, 12-result comparison/replay, completed human review, and Phase3 preservation replay. G4 passed 10/10. CPU tests alone do not establish these execution results; see [STATUS](STATUS.md), [Phase4 report](PHASE4_RESULTS.md), and [G4 report](../artifacts/phase4/g4_report_reviewed_v2.json).

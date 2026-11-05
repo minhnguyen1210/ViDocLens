@@ -1,7 +1,17 @@
 schema_version: '1.0'
 filter: F1
 status: pilot_defaults_not_calibrated
+algorithm: lexical_f1_v1
+freeze_evidence_sha256: null
+freeze_access_plan_sha256: null
+freeze_fixture_only: null
 text_max_normalized_edit_distance: 0.10
+min_fuzzy_characters: 6
+min_candidate_margin: 0.05
+max_consecutive_lines: 3
+max_span_tokens: 24
+max_document_tokens: 4096
+max_answer_characters: 1024
 require_unique_candidate: true
 allow_digit_edits: false
 require_numeric_token_boundaries: true

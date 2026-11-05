@@ -1,0 +1,118 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "local_labels_single_raw_v1",
+      "default": "local_labels_single_raw_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "model_id": {
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "model_revision": {
+      "pattern": "^[a-f0-9]{40,64}$",
+      "title": "Model Revision",
+      "type": "string"
+    },
+    "snapshot_manifest_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Snapshot Manifest Sha256",
+      "type": "string"
+    },
+    "max_questions": {
+      "const": 1,
+      "default": 1,
+      "title": "Max Questions",
+      "type": "integer"
+    },
+    "max_question_characters": {
+      "default": 12000,
+      "maximum": 32000,
+      "minimum": 128,
+      "title": "Max Question Characters",
+      "type": "integer"
+    },
+    "max_new_tokens": {
+      "default": 128,
+      "maximum": 256,
+      "minimum": 32,
+      "title": "Max New Tokens",
+      "type": "integer"
+    },
+    "max_input_tokens": {
+      "default": 8192,
+      "maximum": 32768,
+      "minimum": 256,
+      "title": "Max Input Tokens",
+      "type": "integer"
+    },
+    "min_image_pixels": {
+      "default": 4096,
+      "minimum": 1024,
+      "title": "Min Image Pixels",
+      "type": "integer"
+    },
+    "max_image_pixels": {
+      "default": 262144,
+      "maximum": 1048576,
+      "minimum": 4096,
+      "title": "Max Image Pixels",
+      "type": "integer"
+    },
+    "seed": {
+      "default": 42,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "qid_format": {
+      "const": "canonical",
+      "default": "canonical",
+      "title": "Qid Format",
+      "type": "string"
+    },
+    "do_sample": {
+      "const": false,
+      "default": false,
+      "title": "Do Sample",
+      "type": "boolean"
+    },
+    "quantization": {
+      "const": "nf4_double_bfloat16",
+      "default": "nf4_double_bfloat16",
+      "title": "Quantization",
+      "type": "string"
+    },
+    "attention": {
+      "const": "sdpa",
+      "default": "sdpa",
+      "title": "Attention",
+      "type": "string"
+    },
+    "part_protocol": {
+      "default": "whole_answer_v1",
+      "enum": [
+        "whole_answer_v1",
+        "literal_separator_v1"
+      ],
+      "title": "Part Protocol",
+      "type": "string"
+    }
+  },
+  "required": [
+    "model_id",
+    "model_revision",
+    "snapshot_manifest_sha256"
+  ],
+  "title": "RawTeacherConfig",
+  "type": "object"
+}

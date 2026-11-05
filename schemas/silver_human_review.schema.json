@@ -1,0 +1,133 @@
+{
+  "$defs": {
+    "SilverHumanJudgment": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "correctness": {
+          "enum": [
+            "correct",
+            "wrong",
+            "uncertain"
+          ],
+          "title": "Correctness",
+          "type": "string"
+        },
+        "semantic_field": {
+          "enum": [
+            "correct",
+            "wrong",
+            "uncertain"
+          ],
+          "title": "Semantic Field",
+          "type": "string"
+        },
+        "ocr_quality": {
+          "enum": [
+            "good",
+            "partial",
+            "unreadable",
+            "uncertain"
+          ],
+          "title": "Ocr Quality",
+          "type": "string"
+        },
+        "error_tags": {
+          "default": [],
+          "items": {
+            "enum": [
+              "ocr_miss",
+              "wrong_field",
+              "digit_error",
+              "format_difference",
+              "gold_disagreement",
+              "unreadable_image",
+              "other"
+            ],
+            "type": "string"
+          },
+          "title": "Error Tags",
+          "type": "array"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "qid",
+        "correctness",
+        "semantic_field",
+        "ocr_quality"
+      ],
+      "title": "SilverHumanJudgment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "silver_human_review_v1",
+      "default": "silver_human_review_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "packet_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Packet Sha256",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "annotator_kind": {
+      "const": "human",
+      "default": "human",
+      "title": "Annotator Kind",
+      "type": "string"
+    },
+    "reviewer": {
+      "minLength": 1,
+      "title": "Reviewer",
+      "type": "string"
+    },
+    "image_inspection_attested": {
+      "title": "Image Inspection Attested",
+      "type": "boolean"
+    },
+    "judgments": {
+      "items": {
+        "$ref": "#/$defs/SilverHumanJudgment"
+      },
+      "title": "Judgments",
+      "type": "array"
+    }
+  },
+  "required": [
+    "packet_sha256",
+    "fixture_only",
+    "reviewer",
+    "image_inspection_attested",
+    "judgments"
+  ],
+  "title": "SilverHumanReview",
+  "type": "object"
+}

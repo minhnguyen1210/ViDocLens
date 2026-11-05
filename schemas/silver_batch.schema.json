@@ -1,0 +1,170 @@
+{
+  "$defs": {
+    "SilverLabel": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "answered",
+            "unanswerable",
+            "refused",
+            "incomplete",
+            "parse_error",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "answer_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer Raw"
+        },
+        "evidence_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Text"
+        },
+        "raw_response_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Raw Response Sha256",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "qid",
+        "status",
+        "raw_response_sha256"
+      ],
+      "title": "SilverLabel",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Local runner result import only. API evaluation caches are not this format.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "local_silver_batch_v1",
+      "default": "local_silver_batch_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "provider": {
+      "const": "local_open_weight",
+      "default": "local_open_weight",
+      "title": "Provider",
+      "type": "string"
+    },
+    "fixture_only": {
+      "default": false,
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "model_id": {
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "model_revision": {
+      "pattern": "^[a-f0-9]{40,64}$",
+      "title": "Model Revision",
+      "type": "string"
+    },
+    "prompt_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Prompt Sha256",
+      "type": "string"
+    },
+    "generation_config_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Generation Config Sha256",
+      "type": "string"
+    },
+    "environment_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Environment Sha256",
+      "type": "string"
+    },
+    "part_protocol": {
+      "default": "whole_answer_v1",
+      "enum": [
+        "whole_answer_v1",
+        "literal_separator_v1"
+      ],
+      "title": "Part Protocol",
+      "type": "string"
+    },
+    "labels": {
+      "items": {
+        "$ref": "#/$defs/SilverLabel"
+      },
+      "title": "Labels",
+      "type": "array"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "run_id",
+    "model_id",
+    "model_revision",
+    "prompt_sha256",
+    "generation_config_sha256",
+    "environment_sha256",
+    "labels"
+  ],
+  "title": "SilverBatch",
+  "type": "object"
+}

@@ -1,0 +1,96 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "strict_item_reparse_v1",
+      "default": "strict_item_reparse_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "complete": {
+      "const": true,
+      "default": true,
+      "title": "Complete",
+      "type": "boolean"
+    },
+    "source_run": {
+      "minLength": 1,
+      "title": "Source Run",
+      "type": "string"
+    },
+    "source_manifest_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Manifest Sha256",
+      "type": "string"
+    },
+    "source_plan_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Plan Sha256",
+      "type": "string"
+    },
+    "source_batch_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Batch Sha256",
+      "type": "string"
+    },
+    "parsed_batch_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Parsed Batch Sha256",
+      "type": "string"
+    },
+    "parser_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Parser Sha256",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "raw_answers_modified": {
+      "const": false,
+      "default": false,
+      "title": "Raw Answers Modified",
+      "type": "boolean"
+    },
+    "new_model_calls": {
+      "const": 0,
+      "default": 0,
+      "title": "New Model Calls",
+      "type": "integer"
+    },
+    "source_status_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Source Status Counts",
+      "type": "object"
+    },
+    "parsed_status_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Parsed Status Counts",
+      "type": "object"
+    }
+  },
+  "required": [
+    "source_run",
+    "source_manifest_sha256",
+    "source_plan_sha256",
+    "source_batch_sha256",
+    "parsed_batch_sha256",
+    "parser_sha256",
+    "fixture_only",
+    "source_status_counts",
+    "parsed_status_counts"
+  ],
+  "title": "SilverReparseManifest",
+  "type": "object"
+}

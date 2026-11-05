@@ -35,6 +35,13 @@ def select_pilot(images, plan, count=100, partition="train_fit"):
     return [selected[g] for g in ranked[:count]]
 
 
+def select_shard(selected, index, count):
+    """Contiguous cache warming shards preserve the exact validated document population."""
+    if not 1 <= count <= len(selected) or not 0 <= index < count:
+        raise ValueError("OCR shard index/count must describe a nonempty authorized subset")
+    return selected[len(selected) * index // count : len(selected) * (index + 1) // count]
+
+
 def render_review(output: Path, items):
     rows = []
     for item in items:
@@ -69,6 +76,10 @@ def run(
     output: Path,
     partition: str = "train_fit",
     count: int = 100,
+    pool_path: Path | None = None,
+    evaluation_cohort: Path | None = None,
+    shard_index: int = 0,
+    shard_count: int = 1,
 ):
     os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
     import numpy as np
@@ -84,7 +95,33 @@ def run(
     images = [
         CorpusImage.model_validate_json(line) for line in inventory_file.read_text().splitlines()
     ]
-    selected = select_pilot(images, plan, count=count, partition=partition)
+    if pool_path is None:
+        selected = select_pilot(images, plan, count=count, partition=partition)
+        selection_policy = f"{count} distinct frozen {partition} components, seed42:ocr-quality"
+    else:
+        from vidoclens.contracts.silver import SilverPool
+        from vidoclens.filtering.io import digest, read_model
+        from vidoclens.filtering.pool import make_pool
+
+        pool = read_model(pool_path, SilverPool)
+        expected = make_pool(
+            root / "data/raw/receiptvqa/ReceiptVQA_annotations.zip",
+            split_dir,
+            inventory_file,
+            pool.partition,
+            evaluation_cohort,
+        )
+        if digest(pool) != digest(expected) or partition != pool.partition:
+            raise ValueError("OCR pool differs from authorized frozen inputs")
+        documents = {s.question.document_id for s in pool.samples}
+        selected = [r for r in images if r.document_id in documents]
+        selection_policy = "all unique documents of frozen silver pool:" + digest(pool)
+    population_count = len(selected)
+    if shard_count != 1 or shard_index != 0:
+        if pool_path is None:
+            raise ValueError("cache warming shards require an explicit frozen pool")
+        selected = select_shard(selected, shard_index, shard_count)
+        selection_policy += f"; contiguous shard {shard_index}/{shard_count}"
     if {r.image_archive_sha256 for r in selected} != {sha256(archive)}:
         raise ValueError("image archive changed")
     models = root / "artifacts/models/paddleocr"
@@ -118,10 +155,13 @@ def run(
     write_json(
         output / "selection.json",
         {
-            "policy": f"{count} distinct frozen {partition} components, seed42:ocr-quality",
+            "policy": selection_policy,
             "partition": partition,
             "split_summary_sha256": sha256(split_dir / "summary.json"),
             "gold_budget": 10,
+            "shard_index": shard_index,
+            "shard_count": shard_count,
+            "full_pool_images": population_count,
             "images": [r.model_dump() for r in selected],
         },
     )
@@ -252,6 +292,8 @@ def run(
     report = {
         "status": "pass",
         "images": len(results),
+        "full_pool_images": population_count,
+        "complete_pool": len(results) == population_count,
         "spans": sum(r["spans"] for r in results),
         "cache_hits": sum(r["cache_hit"] for r in results),
         "empty_images": sum(r["status"] == "empty" for r in results),
@@ -271,8 +313,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("root", "split-dir", "inventory-dir", "archive", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
-    parser.add_argument("--partition", choices=("train_fit", "dev_select"), default="train_fit")
+    parser.add_argument(
+        "--partition", choices=("train_fit", "dev_select", "audit_holdout"), default="train_fit"
+    )
+    parser.add_argument("--pool-path", type=Path)
+    parser.add_argument("--evaluation-cohort", type=Path)
     parser.add_argument("--count", type=int, default=100)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
     run(**vars(parser.parse_args()))
 
 

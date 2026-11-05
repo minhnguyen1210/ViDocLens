@@ -1,0 +1,198 @@
+{
+  "$defs": {
+    "ReceiptQuestion": {
+      "additionalProperties": false,
+      "description": "Safe output for question-only consumers; has no label-related fields.",
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "source_split": {
+          "enum": [
+            "train",
+            "dev",
+            "test"
+          ],
+          "title": "Source Split",
+          "type": "string"
+        },
+        "source_image_id": {
+          "minimum": 0,
+          "title": "Source Image Id",
+          "type": "integer"
+        },
+        "source_question_id": {
+          "minimum": 0,
+          "title": "Source Question Id",
+          "type": "integer"
+        },
+        "source_row_index": {
+          "minimum": 0,
+          "title": "Source Row Index",
+          "type": "integer"
+        },
+        "filename": {
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "document_id": {
+          "minLength": 1,
+          "title": "Document Id",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "question_raw": {
+          "minLength": 1,
+          "title": "Question Raw",
+          "type": "string"
+        },
+        "question_nfc": {
+          "minLength": 1,
+          "title": "Question Nfc",
+          "type": "string"
+        }
+      },
+      "required": [
+        "archive_sha256",
+        "source_split",
+        "source_image_id",
+        "source_question_id",
+        "source_row_index",
+        "filename",
+        "document_id",
+        "qid",
+        "question_raw",
+        "question_nfc"
+      ],
+      "title": "ReceiptQuestion",
+      "type": "object"
+    },
+    "SilverSample": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "question": {
+          "$ref": "#/$defs/ReceiptQuestion"
+        },
+        "duplicate_group_id": {
+          "minLength": 1,
+          "title": "Duplicate Group Id",
+          "type": "string"
+        },
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "duplicate_group_id",
+        "image_sha256"
+      ],
+      "title": "SilverSample",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "silver_pool_v1",
+      "default": "silver_pool_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "partition": {
+      "enum": [
+        "train_fit",
+        "dev_select",
+        "audit_holdout"
+      ],
+      "title": "Partition",
+      "type": "string"
+    },
+    "archive_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Archive Sha256",
+      "type": "string"
+    },
+    "access_plan_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Access Plan Sha256",
+      "type": "string"
+    },
+    "inventory_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Inventory Sha256",
+      "type": "string"
+    },
+    "evaluation_cohort_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evaluation Cohort Sha256"
+    },
+    "gold_budget": {
+      "const": 10,
+      "default": 10,
+      "title": "Gold Budget",
+      "type": "integer"
+    },
+    "samples": {
+      "items": {
+        "$ref": "#/$defs/SilverSample"
+      },
+      "minItems": 1,
+      "title": "Samples",
+      "type": "array"
+    },
+    "gold_samples": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SilverSample"
+      },
+      "title": "Gold Samples",
+      "type": "array"
+    }
+  },
+  "required": [
+    "partition",
+    "archive_sha256",
+    "access_plan_sha256",
+    "inventory_sha256",
+    "samples"
+  ],
+  "title": "SilverPool",
+  "type": "object"
+}

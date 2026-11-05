@@ -1,0 +1,66 @@
+{
+  "additionalProperties": false,
+  "description": "Owner attestation for this exact local result, never inherited from Phase 2.",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "provider": {
+      "const": "local_open_weight",
+      "default": "local_open_weight",
+      "title": "Provider",
+      "type": "string"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "batch_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Batch Sha256",
+      "type": "string"
+    },
+    "training_labels_allowed": {
+      "default": false,
+      "title": "Training Labels Allowed",
+      "type": "boolean"
+    },
+    "data_rights_verified": {
+      "default": false,
+      "title": "Data Rights Verified",
+      "type": "boolean"
+    },
+    "model_license_verified": {
+      "default": false,
+      "title": "Model License Verified",
+      "type": "boolean"
+    },
+    "quality_pilot_passed": {
+      "default": false,
+      "title": "Quality Pilot Passed",
+      "type": "boolean"
+    },
+    "approved_by": {
+      "minLength": 1,
+      "title": "Approved By",
+      "type": "string"
+    },
+    "evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evidence Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "batch_sha256",
+    "approved_by",
+    "evidence_sha256"
+  ],
+  "title": "SilverApproval",
+  "type": "object"
+}

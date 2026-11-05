@@ -1,5 +1,4 @@
-"""F0-F3 silver-label decisions, reason codes and label audit statistics. Hidden gold is
-available only to evaluation, never filter logic.
+"""Offline F0/F1 decisions and experiment selections. Gold is evaluator-only.
 
-Planned module; implementation begins in its assigned project phase.
+Local teacher execution, trainer integration and F2/F3 remain separate work.
 """

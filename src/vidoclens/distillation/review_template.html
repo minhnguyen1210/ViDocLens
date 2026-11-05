@@ -1,0 +1,46 @@
+<!doctype html><html lang="vi"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>ViDocLens — kiểm tra nhãn</title>
+<style>body{font:17px system-ui;max-width:1350px;margin:24px auto;padding:0 20px;color:#17242c}
+header{position:sticky;top:0;background:#fff;padding:12px 0;border-bottom:1px solid #ccc;z-index:2}
+button,input,select,textarea{font:inherit;padding:8px}button{cursor:pointer;background:#155d77;color:white;border:0;border-radius:6px}
+article{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:30px 0;border-bottom:1px solid #aaa}
+img{max-width:100%;max-height:1100px;object-fit:contain;cursor:zoom-in}label{display:block;margin:14px 0}
+select,textarea{display:block;width:100%;box-sizing:border-box}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.answer{background:#edf4f6;padding:14px;white-space:pre-wrap}#notice{color:#9c241d}
+@media(max-width:800px){article{grid-template-columns:1fr}}</style>
+<h1>Đối chiếu nhãn silver với ảnh</h1>
+<p>Đọc ảnh, câu hỏi và đáp án. Đánh giá đúng nghĩa trường được hỏi; chữ số trùng nhau chưa đủ.
+Chọn “Chưa xác định” khi không đọc được. Mẫu này che gold và quyết định của bộ lọc.</p>
+<header><label>Tên người kiểm tra <input id="reviewer" autocomplete="name"></label>
+<label><input type="checkbox" id="attest"> Tôi đã trực tiếp xem ảnh và tự điền các đánh giá.</label>
+<button id="export">Lưu bản đánh giá JSON</button> <span id="progress"></span><div id="notice" role="status"></div></header>
+<main id="items"></main><script type="application/json" id="data">__DATA__</script>
+<script>
+const payload=JSON.parse(document.querySelector('#data').textContent), review=payload.review;
+const fields={correctness:[['correct','Đúng'],['wrong','Sai'],['uncertain','Chưa xác định']],
+ semantic_field:[['correct','Đúng trường được hỏi'],['wrong','Nhầm trường'],['uncertain','Chưa xác định']],
+ ocr_quality:[['good','Tốt'],['partial','Thiếu / sai một phần'],['unreadable','Không đọc được'],['uncertain','Chưa xác định']]};
+const titles={correctness:'Đáp án có đúng theo ảnh?',semantic_field:'Đáp án có đúng trường được hỏi?',ocr_quality:'Chất lượng OCR so với ảnh'};
+function progress(){const n=review.judgments.filter(j=>Object.keys(fields).every(k=>j[k])).length;
+document.querySelector('#progress').textContent=n+' / '+review.judgments.length+' mẫu đã điền';}
+payload.records.forEach((record,i)=>{const a=document.createElement('article'), visual=document.createElement('div'), form=document.createElement('div');
+const img=document.createElement('img');img.src=record.image;img.alt='Ảnh hóa đơn mẫu '+(i+1);img.loading='lazy';
+img.onclick=()=>window.open(record.image,'_blank','noopener');visual.append(img);
+const title=document.createElement('h2');title.textContent=(i+1)+'. '+record.question;form.append(title);
+const answer=document.createElement('div');answer.className='answer';answer.textContent=record.answer;form.append(answer);
+Object.entries(fields).forEach(([name,options])=>{const label=document.createElement('label'),select=document.createElement('select');
+label.textContent=titles[name];select.add(new Option('— Chưa điền —',''));options.forEach(([v,t])=>select.add(new Option(t,v)));
+select.onchange=()=>{review.judgments[i][name]=select.value||null;progress()};label.append(select);form.append(label)});
+const details=document.createElement('details'), summary=document.createElement('summary'),ocr=document.createElement('pre');
+summary.textContent='Xem OCR (có thể sai)';ocr.textContent=record.ocr;details.append(summary,ocr);form.append(details);
+const noteLabel=document.createElement('label'),note=document.createElement('textarea');noteLabel.textContent='Ghi chú lỗi / bằng chứng nhìn thấy';
+note.oninput=()=>review.judgments[i].note=note.value;noteLabel.append(note);form.append(noteLabel);
+const tags={ocr_miss:'OCR bỏ sót',wrong_field:'Nhầm trường',digit_error:'Sai chữ số',format_difference:'Khác định dạng',unreadable_image:'Ảnh không đọc được',other:'Lỗi khác'};
+Object.entries(tags).forEach(([tag,text])=>{const l=document.createElement('label'),c=document.createElement('input');c.type='checkbox';
+c.onchange=()=>{const current=new Set(review.judgments[i].error_tags);c.checked?current.add(tag):current.delete(tag);review.judgments[i].error_tags=[...current]};l.append(c,document.createTextNode(' '+text));form.append(l)});
+a.append(visual,form);document.querySelector('#items').append(a)});progress();
+document.querySelector('#export').onclick=()=>{review.reviewer=document.querySelector('#reviewer').value.trim();review.image_inspection_attested=document.querySelector('#attest').checked;
+if(!review.reviewer||!review.image_inspection_attested||review.judgments.some(j=>Object.keys(fields).some(k=>!j[k]))){document.querySelector('#notice').textContent='Cần điền tên, xác nhận đã xem ảnh và đánh giá đủ các mẫu trước khi lưu.';return}
+const url=URL.createObjectURL(new Blob([JSON.stringify(review,null,2)+'\n'],{type:'application/json;charset=utf-8'})),a=document.createElement('a');
+a.href=url;a.download='phase4-human-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.querySelector('#notice').textContent='Đã tạo bản đánh giá để bạn lưu trên máy.'};
+</script></html>

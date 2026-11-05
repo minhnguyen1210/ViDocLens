@@ -1,0 +1,434 @@
+{
+  "$defs": {
+    "FilterConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "filter": {
+          "const": "F1",
+          "default": "F1",
+          "title": "Filter",
+          "type": "string"
+        },
+        "algorithm": {
+          "const": "lexical_f1_v1",
+          "default": "lexical_f1_v1",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "status": {
+          "default": "pilot_defaults_not_calibrated",
+          "enum": [
+            "pilot_defaults_not_calibrated",
+            "frozen_dev_select"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "freeze_evidence_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freeze Evidence Sha256"
+        },
+        "freeze_access_plan_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freeze Access Plan Sha256"
+        },
+        "freeze_fixture_only": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freeze Fixture Only"
+        },
+        "text_max_normalized_edit_distance": {
+          "default": 0.1,
+          "enum": [
+            0.0,
+            0.05,
+            0.1,
+            0.15
+          ],
+          "title": "Text Max Normalized Edit Distance",
+          "type": "number"
+        },
+        "min_fuzzy_characters": {
+          "default": 6,
+          "maximum": 100,
+          "minimum": 2,
+          "title": "Min Fuzzy Characters",
+          "type": "integer"
+        },
+        "min_candidate_margin": {
+          "default": 0.05,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Min Candidate Margin",
+          "type": "number"
+        },
+        "max_consecutive_lines": {
+          "default": 3,
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Max Consecutive Lines",
+          "type": "integer"
+        },
+        "max_span_tokens": {
+          "default": 24,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Max Span Tokens",
+          "type": "integer"
+        },
+        "max_document_tokens": {
+          "default": 4096,
+          "maximum": 16384,
+          "minimum": 1,
+          "title": "Max Document Tokens",
+          "type": "integer"
+        },
+        "max_answer_characters": {
+          "default": 1024,
+          "maximum": 4096,
+          "minimum": 1,
+          "title": "Max Answer Characters",
+          "type": "integer"
+        },
+        "require_unique_candidate": {
+          "const": true,
+          "default": true,
+          "title": "Require Unique Candidate",
+          "type": "boolean"
+        },
+        "allow_digit_edits": {
+          "const": false,
+          "default": false,
+          "title": "Allow Digit Edits",
+          "type": "boolean"
+        },
+        "require_numeric_token_boundaries": {
+          "const": true,
+          "default": true,
+          "title": "Require Numeric Token Boundaries",
+          "type": "boolean"
+        },
+        "use_question_field_compatibility": {
+          "const": false,
+          "default": false,
+          "title": "Use Question Field Compatibility",
+          "type": "boolean"
+        },
+        "keep_raw_answer": {
+          "const": true,
+          "default": true,
+          "title": "Keep Raw Answer",
+          "type": "boolean"
+        },
+        "fallback_on_ocr_failure": {
+          "const": "reject_with_reason",
+          "default": "reject_with_reason",
+          "title": "Fallback On Ocr Failure",
+          "type": "string"
+        }
+      },
+      "title": "FilterConfig",
+      "type": "object"
+    },
+    "FilterDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "title": "Qid",
+          "type": "string"
+        },
+        "sample_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sample Sha256",
+          "type": "string"
+        },
+        "label_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Label Sha256"
+        },
+        "answer_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Answer Raw"
+        },
+        "answer_normalized": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Answer Normalized"
+        },
+        "answer_type": {
+          "enum": [
+            "numeric",
+            "text",
+            "hybrid",
+            "unknown"
+          ],
+          "title": "Answer Type",
+          "type": "string"
+        },
+        "question_type": {
+          "title": "Question Type",
+          "type": "string"
+        },
+        "f0_keep": {
+          "title": "F0 Keep",
+          "type": "boolean"
+        },
+        "f1_keep": {
+          "title": "F1 Keep",
+          "type": "boolean"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "parts": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PartSupport"
+          },
+          "title": "Parts",
+          "type": "array"
+        },
+        "semantic_check": {
+          "default": "unknown",
+          "enum": [
+            "pass",
+            "fail",
+            "unknown"
+          ],
+          "title": "Semantic Check",
+          "type": "string"
+        },
+        "semantic_reason": {
+          "default": "semantic_checker_not_implemented",
+          "title": "Semantic Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "qid",
+        "sample_sha256",
+        "label_sha256",
+        "answer_raw",
+        "answer_normalized",
+        "answer_type",
+        "question_type",
+        "f0_keep",
+        "f1_keep",
+        "reason"
+      ],
+      "title": "FilterDecision",
+      "type": "object"
+    },
+    "PartSupport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "text_raw": {
+          "minLength": 1,
+          "title": "Text Raw",
+          "type": "string"
+        },
+        "text_normalized": {
+          "minLength": 1,
+          "title": "Text Normalized",
+          "type": "string"
+        },
+        "support": {
+          "enum": [
+            "exact",
+            "fuzzy",
+            "none"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "span_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Span Ids",
+          "type": "array"
+        },
+        "token_start": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token Start"
+        },
+        "token_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token End"
+        },
+        "distance": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distance"
+        },
+        "candidate_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Candidate Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "text_raw",
+        "text_normalized",
+        "support",
+        "reason"
+      ],
+      "title": "PartSupport",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "silver_filter_run_v1",
+      "default": "silver_filter_run_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Pool Sha256",
+      "type": "string"
+    },
+    "batch_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Batch Sha256",
+      "type": "string"
+    },
+    "ocr_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Ocr Sha256",
+      "type": "string"
+    },
+    "implementation_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementation Sha256",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/$defs/FilterConfig"
+    },
+    "decisions": {
+      "items": {
+        "$ref": "#/$defs/FilterDecision"
+      },
+      "title": "Decisions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "pool_sha256",
+    "batch_sha256",
+    "ocr_sha256",
+    "implementation_sha256",
+    "config",
+    "decisions"
+  ],
+  "title": "FilterRun",
+  "type": "object"
+}

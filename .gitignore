@@ -31,6 +31,7 @@ artifacts/models/
 # Training checkpoints contain generated model cards as well as private payloads.
 # Public experiment summaries belong in docs/, not in run directories.
 artifacts/phase3/
+artifacts/phase4/
 reports/**
 !reports/**/
 !reports/**/.gitkeep

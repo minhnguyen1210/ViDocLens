@@ -17,6 +17,13 @@ from vidoclens.contracts.dataset import (
     ReceiptQuestion,
     SupervisedReceiptExample,
 )
+from vidoclens.contracts.distillation import (
+    DistillationConfig,
+    DistillationExample,
+    DistillationPlan,
+    Phase4Criteria,
+    Phase4GateReport,
+)
 from vidoclens.contracts.evaluation import AnswerPrediction, AnswerScores, EvaluationSummary
 from vidoclens.contracts.ingestion import (
     CorpusImage,
@@ -25,6 +32,16 @@ from vidoclens.contracts.ingestion import (
     FeatureFingerprint,
     NearDuplicateCandidate,
     SplitDraft,
+)
+from vidoclens.contracts.local_teacher import (
+    LocalGeneration,
+    LocalGenerationGrant,
+    LocalModelSnapshot,
+    LocalTeacherAnswer,
+    LocalTeacherConfig,
+    LocalTeacherOutput,
+    LocalTeacherPlan,
+    LocalTeacherRequest,
 )
 from vidoclens.contracts.models import (
     Document,
@@ -36,7 +53,28 @@ from vidoclens.contracts.models import (
 )
 from vidoclens.contracts.phase3 import Phase3Continuation
 from vidoclens.contracts.pilot import Phase0PilotManifest
+from vidoclens.contracts.raw_teacher import RawTeacherConfig, RawTeacherPlan
 from vidoclens.contracts.review import OODAnnotation, TranscriptionReview
+from vidoclens.contracts.silver import (
+    FilterConfig,
+    FilterDecision,
+    FilterRun,
+    PartSupport,
+    SilverApproval,
+    SilverBatch,
+    SilverExperiment,
+    SilverLabel,
+    SilverPool,
+    SilverSample,
+)
+from vidoclens.contracts.silver_reparse import SilverReparseManifest
+from vidoclens.contracts.silver_results import SilverTrainingResult
+from vidoclens.contracts.silver_review import (
+    SilverHumanJudgment,
+    SilverHumanReview,
+    SilverReviewItem,
+    SilverReviewPacket,
+)
 from vidoclens.contracts.student import StudentConfig, StudentQuestion, StudentTrainingExample
 from vidoclens.contracts.teacher import (
     TeacherAnswer,
@@ -51,6 +89,37 @@ from vidoclens.contracts.teacher import (
 )
 
 MODELS = {
+    "raw_teacher_config": RawTeacherConfig,
+    "raw_teacher_plan": RawTeacherPlan,
+    "silver_reparse_manifest": SilverReparseManifest,
+    "phase4_criteria": Phase4Criteria,
+    "phase4_gate_report": Phase4GateReport,
+    "distillation_config": DistillationConfig,
+    "distillation_example": DistillationExample,
+    "distillation_plan": DistillationPlan,
+    "local_teacher_config": LocalTeacherConfig,
+    "local_teacher_request": LocalTeacherRequest,
+    "local_teacher_plan": LocalTeacherPlan,
+    "local_generation_grant": LocalGenerationGrant,
+    "local_teacher_answer": LocalTeacherAnswer,
+    "local_teacher_output": LocalTeacherOutput,
+    "local_generation": LocalGeneration,
+    "local_model_snapshot": LocalModelSnapshot,
+    "silver_review_item": SilverReviewItem,
+    "silver_review_packet": SilverReviewPacket,
+    "silver_human_judgment": SilverHumanJudgment,
+    "silver_human_review": SilverHumanReview,
+    "silver_training_result": SilverTrainingResult,
+    "silver_sample": SilverSample,
+    "silver_pool": SilverPool,
+    "silver_label": SilverLabel,
+    "silver_batch": SilverBatch,
+    "filter_config": FilterConfig,
+    "part_support": PartSupport,
+    "filter_decision": FilterDecision,
+    "filter_run": FilterRun,
+    "silver_approval": SilverApproval,
+    "silver_experiment": SilverExperiment,
     "phase3_continuation": Phase3Continuation,
     "student_config": StudentConfig,
     "student_question": StudentQuestion,

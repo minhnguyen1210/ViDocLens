@@ -1,0 +1,216 @@
+{
+  "$defs": {
+    "PartSupport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "text_raw": {
+          "minLength": 1,
+          "title": "Text Raw",
+          "type": "string"
+        },
+        "text_normalized": {
+          "minLength": 1,
+          "title": "Text Normalized",
+          "type": "string"
+        },
+        "support": {
+          "enum": [
+            "exact",
+            "fuzzy",
+            "none"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "span_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Span Ids",
+          "type": "array"
+        },
+        "token_start": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token Start"
+        },
+        "token_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token End"
+        },
+        "distance": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distance"
+        },
+        "candidate_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Candidate Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "text_raw",
+        "text_normalized",
+        "support",
+        "reason"
+      ],
+      "title": "PartSupport",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "title": "Qid",
+      "type": "string"
+    },
+    "sample_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Sample Sha256",
+      "type": "string"
+    },
+    "label_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Label Sha256"
+    },
+    "answer_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Answer Raw"
+    },
+    "answer_normalized": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Answer Normalized"
+    },
+    "answer_type": {
+      "enum": [
+        "numeric",
+        "text",
+        "hybrid",
+        "unknown"
+      ],
+      "title": "Answer Type",
+      "type": "string"
+    },
+    "question_type": {
+      "title": "Question Type",
+      "type": "string"
+    },
+    "f0_keep": {
+      "title": "F0 Keep",
+      "type": "boolean"
+    },
+    "f1_keep": {
+      "title": "F1 Keep",
+      "type": "boolean"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "parts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PartSupport"
+      },
+      "title": "Parts",
+      "type": "array"
+    },
+    "semantic_check": {
+      "default": "unknown",
+      "enum": [
+        "pass",
+        "fail",
+        "unknown"
+      ],
+      "title": "Semantic Check",
+      "type": "string"
+    },
+    "semantic_reason": {
+      "default": "semantic_checker_not_implemented",
+      "title": "Semantic Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "qid",
+    "sample_sha256",
+    "label_sha256",
+    "answer_raw",
+    "answer_normalized",
+    "answer_type",
+    "question_type",
+    "f0_keep",
+    "f1_keep",
+    "reason"
+  ],
+  "title": "FilterDecision",
+  "type": "object"
+}

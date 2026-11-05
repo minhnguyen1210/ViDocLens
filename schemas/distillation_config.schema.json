@@ -1,0 +1,247 @@
+{
+  "$defs": {
+    "StudentConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "protocol": {
+          "default": "phase3_gold_v1",
+          "enum": [
+            "phase3_gold_v1",
+            "phase3_gold_v2"
+          ],
+          "title": "Protocol",
+          "type": "string"
+        },
+        "attention_backend": {
+          "default": "auto",
+          "enum": [
+            "auto",
+            "math"
+          ],
+          "title": "Attention Backend",
+          "type": "string"
+        },
+        "deterministic_algorithms": {
+          "default": false,
+          "title": "Deterministic Algorithms",
+          "type": "boolean"
+        },
+        "model_id": {
+          "const": "Qwen/Qwen3-VL-2B-Instruct",
+          "default": "Qwen/Qwen3-VL-2B-Instruct",
+          "title": "Model Id",
+          "type": "string"
+        },
+        "revision": {
+          "const": "89644892e4d85e24eaac8bacfd4f463576704203",
+          "default": "89644892e4d85e24eaac8bacfd4f463576704203",
+          "title": "Revision",
+          "type": "string"
+        },
+        "weights_sha256": {
+          "default": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Weights Sha256",
+          "type": "string"
+        },
+        "max_image_pixels": {
+          "default": 262144,
+          "maximum": 589824,
+          "minimum": 4096,
+          "title": "Max Image Pixels",
+          "type": "integer"
+        },
+        "min_image_pixels": {
+          "default": 4096,
+          "minimum": 1024,
+          "title": "Min Image Pixels",
+          "type": "integer"
+        },
+        "max_sequence_length": {
+          "default": 2048,
+          "maximum": 4096,
+          "minimum": 256,
+          "title": "Max Sequence Length",
+          "type": "integer"
+        },
+        "max_new_tokens": {
+          "default": 128,
+          "maximum": 256,
+          "minimum": 32,
+          "title": "Max New Tokens",
+          "type": "integer"
+        },
+        "lora_rank": {
+          "default": 8,
+          "maximum": 16,
+          "minimum": 1,
+          "title": "Lora Rank",
+          "type": "integer"
+        },
+        "lora_alpha": {
+          "default": 16,
+          "minimum": 1,
+          "title": "Lora Alpha",
+          "type": "integer"
+        },
+        "lora_dropout": {
+          "default": 0.05,
+          "exclusiveMaximum": 1,
+          "minimum": 0,
+          "title": "Lora Dropout",
+          "type": "number"
+        },
+        "learning_rate": {
+          "default": 0.0001,
+          "exclusiveMinimum": 0,
+          "maximum": 0.001,
+          "title": "Learning Rate",
+          "type": "number"
+        },
+        "weight_decay": {
+          "default": 0.01,
+          "minimum": 0,
+          "title": "Weight Decay",
+          "type": "number"
+        },
+        "warmup_ratio": {
+          "default": 0.03,
+          "exclusiveMaximum": 1,
+          "minimum": 0,
+          "title": "Warmup Ratio",
+          "type": "number"
+        },
+        "gradient_accumulation": {
+          "default": 16,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Gradient Accumulation",
+          "type": "integer"
+        },
+        "epochs": {
+          "default": 1,
+          "maximum": 2,
+          "minimum": 1,
+          "title": "Epochs",
+          "type": "integer"
+        },
+        "seeds": {
+          "default": [
+            17,
+            42,
+            2026
+          ],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Seeds",
+          "type": "array"
+        },
+        "prompt_path": {
+          "default": "prompts/student_vqa_v1.txt",
+          "title": "Prompt Path",
+          "type": "string"
+        },
+        "environment_lock": {
+          "default": "infra/requirements/phase0-ml-linux-py311.lock",
+          "title": "Environment Lock",
+          "type": "string"
+        },
+        "checkpoint_rule": {
+          "const": "dev_em_numeric_em_latency_earlier",
+          "default": "dev_em_numeric_em_latency_earlier",
+          "title": "Checkpoint Rule",
+          "type": "string"
+        }
+      },
+      "title": "StudentConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "phase4_matched_v1",
+      "default": "phase4_matched_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "student": {
+      "$ref": "#/$defs/StudentConfig"
+    },
+    "optimizer_updates": {
+      "const": 191,
+      "default": 191,
+      "title": "Optimizer Updates",
+      "type": "integer"
+    },
+    "checkpoint_steps": {
+      "default": [
+        96,
+        191
+      ],
+      "items": {
+        "enum": [
+          96,
+          191
+        ],
+        "type": "integer"
+      },
+      "title": "Checkpoint Steps",
+      "type": "array"
+    },
+    "gold_silver_ratio": {
+      "const": "1:1",
+      "default": "1:1",
+      "title": "Gold Silver Ratio",
+      "type": "string"
+    },
+    "sampler": {
+      "const": "independent_cyclic_shuffle_alternating_v1",
+      "default": "independent_cyclic_shuffle_alternating_v1",
+      "title": "Sampler",
+      "type": "string"
+    },
+    "examples_per_source": {
+      "const": 1528,
+      "default": 1528,
+      "title": "Examples Per Source",
+      "type": "integer"
+    },
+    "historical_l2_examples": {
+      "const": 3053,
+      "default": 3053,
+      "title": "Historical L2 Examples",
+      "type": "integer"
+    },
+    "evaluation_cohort_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evaluation Cohort Sha256",
+      "type": "string"
+    },
+    "g3_evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "G3 Evidence Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "student",
+    "evaluation_cohort_sha256",
+    "g3_evidence_sha256"
+  ],
+  "title": "DistillationConfig",
+  "type": "object"
+}

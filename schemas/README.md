@@ -12,7 +12,8 @@ ReceiptVQA `¡sep¿` serialization until official parser/evaluator parity is ver
 the scaffold does not implement that parser. `TeacherInput` deliberately has no
 answer fields and rejects extra keys, including nested answer keys. Do not serialize
 a gold `QARecord` directly into a teacher prompt. `TeacherLabel` matches the draft
-prompt's five canonical fields; provider strict-schema integration remains pending.
+prompt's five canonical fields; Phase 2 uses separate strict `TeacherAnswer` and
+`TeacherOutput` provider contracts.
 
 `Phase0PilotManifest` is a label-free feasibility input. It rejects unknown fields,
 duplicate document/qid/image hashes and requires exclusion from future audit holdout.
@@ -30,4 +31,23 @@ assignments cannot expose training gold. Frozen readers verify graph/plan hashes
 `FeatureFingerprint`/`FeatureCandidate` validate rotation/crop/gradient artifacts.
 `TranscriptionReview`/`OODAnnotation` distinguish AI review from human gold, preserve
 evidence provenance and reject AI records claiming human verification. There are
-22 exported root schemas; stored corpus/PII/model payloads remain Git ignored.
+71 exported root schemas after Phase 4 integration; stored corpus/PII/model payloads
+remain Git ignored.
+
+Phase 4 adds `SilverSample`, `SilverPool`, `SilverLabel`, `SilverBatch`,
+`FilterConfig`, `PartSupport`, `FilterDecision`, `FilterRun`, `SilverApproval` and
+`SilverExperiment`. These keep local teacher results, raw targets, OCR evidence,
+scope/permission hashes and fixture provenance separate from training execution.
+They do not certify G3/G4 or grant access to API evaluation caches. See the
+[offline workflow](../docs/PHASE4_OFFLINE_WORKFLOW.md) and PC handoff.
+
+ADR-P4-002 adds eight local teacher config/request/plan/grant/output/snapshot schemas,
+four blind review/item/human annotation schemas, and `SilverTrainingResult`.
+Generation grants and training approvals are distinct; attestation fields and hashes
+do not authenticate licenses, reviewers or actual GPU execution. See the
+[extended tools](../docs/PHASE4_LOCAL_TOOLS.md) for exchange and integration details.
+
+Integration adds typed distillation config/example/plan, G4 criteria/report,
+strict-item reparse provenance and the single-question raw teacher config/plan.
+Raw and structured generation have different protocol identifiers; no schema or
+fixture result certifies an actual model, human review or completed G4.

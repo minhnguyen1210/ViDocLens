@@ -1,0 +1,259 @@
+{
+  "$defs": {
+    "AnswerPrediction": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "qid": {
+          "minLength": 1,
+          "title": "Qid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "answered",
+            "abstained",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "answer_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer Raw"
+        }
+      },
+      "required": [
+        "qid",
+        "status"
+      ],
+      "title": "AnswerPrediction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "silver_training_result_v1",
+      "default": "silver_training_result_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "arm": {
+      "enum": [
+        "L2",
+        "P1-full",
+        "P1-size",
+        "P2"
+      ],
+      "title": "Arm",
+      "type": "string"
+    },
+    "seed": {
+      "enum": [
+        17,
+        42,
+        2026
+      ],
+      "title": "Seed",
+      "type": "integer"
+    },
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "fixture_only": {
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "training_pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Training Pool Sha256",
+      "type": "string"
+    },
+    "evaluation_pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evaluation Pool Sha256",
+      "type": "string"
+    },
+    "selection_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Selection Sha256"
+    },
+    "training_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Training Profile Sha256",
+      "type": "string"
+    },
+    "evaluation_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evaluation Profile Sha256",
+      "type": "string"
+    },
+    "g3_evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "G3 Evidence Sha256",
+      "type": "string"
+    },
+    "checkpoint_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Checkpoint Sha256",
+      "type": "string"
+    },
+    "optimizer_updates_completed": {
+      "exclusiveMinimum": 0,
+      "title": "Optimizer Updates Completed",
+      "type": "integer"
+    },
+    "selected_checkpoint_step": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Checkpoint Step"
+    },
+    "selected_gold_exposure_counts": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Gold Exposure Counts"
+    },
+    "selected_silver_exposure_counts": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Silver Exposure Counts"
+    },
+    "gold_qids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Gold Qids",
+      "type": "array"
+    },
+    "silver_qids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Silver Qids",
+      "type": "array"
+    },
+    "gold_exposure_counts": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "title": "Gold Exposure Counts",
+      "type": "object"
+    },
+    "silver_exposure_counts": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "title": "Silver Exposure Counts",
+      "type": "object"
+    },
+    "equal_loss_weights": {
+      "const": true,
+      "default": true,
+      "title": "Equal Loss Weights",
+      "type": "boolean"
+    },
+    "training_seconds": {
+      "exclusiveMinimum": 0,
+      "title": "Training Seconds",
+      "type": "number"
+    },
+    "peak_reserved_bytes": {
+      "exclusiveMinimum": 0,
+      "title": "Peak Reserved Bytes",
+      "type": "integer"
+    },
+    "predictions": {
+      "items": {
+        "$ref": "#/$defs/AnswerPrediction"
+      },
+      "title": "Predictions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "arm",
+    "seed",
+    "run_id",
+    "fixture_only",
+    "training_pool_sha256",
+    "evaluation_pool_sha256",
+    "selection_sha256",
+    "training_profile_sha256",
+    "evaluation_profile_sha256",
+    "g3_evidence_sha256",
+    "checkpoint_sha256",
+    "optimizer_updates_completed",
+    "gold_qids",
+    "gold_exposure_counts",
+    "silver_exposure_counts",
+    "training_seconds",
+    "peak_reserved_bytes",
+    "predictions"
+  ],
+  "title": "SilverTrainingResult",
+  "type": "object"
+}

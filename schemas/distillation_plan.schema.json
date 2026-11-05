@@ -1,0 +1,161 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "protocol": {
+      "const": "phase4_training_plan_v1",
+      "default": "phase4_training_plan_v1",
+      "title": "Protocol",
+      "type": "string"
+    },
+    "arm": {
+      "enum": [
+        "P1-full",
+        "P1-size",
+        "P2"
+      ],
+      "title": "Arm",
+      "type": "string"
+    },
+    "seed": {
+      "enum": [
+        17,
+        42,
+        2026
+      ],
+      "title": "Seed",
+      "type": "integer"
+    },
+    "complete": {
+      "const": true,
+      "default": true,
+      "title": "Complete",
+      "type": "boolean"
+    },
+    "fixture_only": {
+      "const": false,
+      "default": false,
+      "title": "Fixture Only",
+      "type": "boolean"
+    },
+    "split_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Split Sha256",
+      "type": "string"
+    },
+    "environment_lock_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Environment Lock Sha256",
+      "type": "string"
+    },
+    "g3_evidence_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "G3 Evidence Sha256",
+      "type": "string"
+    },
+    "selection_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Selection Sha256",
+      "type": "string"
+    },
+    "training_profile_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Training Profile Sha256",
+      "type": "string"
+    },
+    "evaluation_pool_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Evaluation Pool Sha256",
+      "type": "string"
+    },
+    "bundle_path": {
+      "minLength": 1,
+      "title": "Bundle Path",
+      "type": "string"
+    },
+    "approval_path": {
+      "minLength": 1,
+      "title": "Approval Path",
+      "type": "string"
+    },
+    "files": {
+      "additionalProperties": {
+        "pattern": "^[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Files",
+      "type": "object"
+    },
+    "dependencies": {
+      "additionalProperties": {
+        "pattern": "^[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Dependencies",
+      "type": "object"
+    },
+    "source_hashes": {
+      "additionalProperties": {
+        "pattern": "^[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "title": "Source Hashes",
+      "type": "object"
+    },
+    "gold_qa": {
+      "exclusiveMinimum": 0,
+      "title": "Gold Qa",
+      "type": "integer"
+    },
+    "silver_qa": {
+      "exclusiveMinimum": 0,
+      "title": "Silver Qa",
+      "type": "integer"
+    },
+    "dev_qa": {
+      "exclusiveMinimum": 0,
+      "title": "Dev Qa",
+      "type": "integer"
+    },
+    "gold_in_teacher_input": {
+      "const": false,
+      "default": false,
+      "title": "Gold In Teacher Input",
+      "type": "boolean"
+    },
+    "test_ood_calibrate_audit_used_for_training": {
+      "const": false,
+      "default": false,
+      "title": "Test Ood Calibrate Audit Used For Training",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "arm",
+    "seed",
+    "split_sha256",
+    "environment_lock_sha256",
+    "g3_evidence_sha256",
+    "selection_sha256",
+    "training_profile_sha256",
+    "evaluation_pool_sha256",
+    "bundle_path",
+    "approval_path",
+    "files",
+    "dependencies",
+    "source_hashes",
+    "gold_qa",
+    "silver_qa",
+    "dev_qa"
+  ],
+  "title": "DistillationPlan",
+  "type": "object"
+}

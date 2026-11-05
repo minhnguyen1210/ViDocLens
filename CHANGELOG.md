@@ -5,6 +5,14 @@ Ghi thay đổi đáng chú ý; tiến độ và evidence ở [STATUS](docs/STAT
 
 ## Unreleased
 
+### Phase 4 complete — local (05/11/2026)
+
+- G4 pass 10/10; 9 matched runs × 191 updates, predictions/evaluations at step96/191, 12-result comparison and actual human review.
+- H2 primary P2−P1-size +2.40 EM percentage points on dev; paired group-bootstrap 95% CI [+0.72,+4.17] pp, conditional on three seeds, not final test confirmation.
+- Final WSL checks pass: 485 tests, Ruff/format/doctor/repository policy and 71 schemas. Serving remains inference_not_ready.
+- [Results](docs/PHASE4_RESULTS.md) · [STATUS](docs/STATUS.md) · [G4 evidence](artifacts/phase4/g4_report_reviewed_v2.json). Local only; no new CI or release; owner reviews and commits/pushes manually.
+
+
 ### Added
 
 - Phase 3 hoàn tất local: contracts/plan G10, assistant-only collator, QLoRA language attention, checkpoint/optimizer/RNG resume, local inference/evaluator và campaign ba seed; G3 audit9/9 đạt; L2 ba seed mean strict EM46,00% trên dev666 QA.
@@ -29,5 +37,15 @@ Ghi thay đổi đáng chú ý; tiến độ và evidence ở [STATUS](docs/STAT
 
 ### Known limitations
 
-- Phase 2 hoàn tất local, 6,080008 USD theo usage trong cap 20 USD; chưa đối soát invoice. Một A5 schema error giữ đủ 6 QA trong denominator. API training export/Batch upload chưa được cấp, local label teacher 4B chưa pilot. Phase 3/G3 đã đạt local; Phase 4–7 chưa triển khai, serving inference chưa ready; chưa full OOD/deployment.
-- CI cũ tại03ac245 đã được xác minh; Phase 2 đã tích hợp main; CI mới cho Phase 3 chưa xác minh, chưa release. Dữ liệu, grants, cache/ledger và artifacts local bị ignore không đi kèm checkout.
+- Phase 2 hoàn tất local, 6,080008 USD theo usage trong cap 20 USD; chưa đối soát invoice. Một A5 schema error giữ đủ 6 QA trong denominator. API training export/Batch upload chưa được cấp. Phase 3/G3 và Phase 4/G4 đã đạt local; Phase 5–7 chưa triển khai; serving inference chưa ready, chưa full OOD/deployment.
+- CI main0060c32 run41628624494 đã được xác minh success khi audit; chưa có CI cho thay đổi Phase 4 chưa commit, chưa release. Dữ liệu, grants, cache/ledger và artifacts local bị ignore không đi kèm checkout.
+
+## Phase 4 integration — local (03/11/2026)
+
+- Hợp nhất tooling `phase4-offline` trên nền main G3; giữ nguyên trainer/artifacts Phase3.
+- SOT v1.13/ADR-P4-003 khóa cohort, pilot, filter selection và matched-compute sampler trước run thật.
+
+- Thêm cohort bind Phase3, mixed gold–silver trainer/resume/exposure,12-result exporter và G4 audit, human review form local.
+- Chặn Transformers override greedy bằng model defaults; strict per-item reparse giữ raw responses và valid siblings, không sửa nhãn.
+- Báo cáo Markdown bind evidence G4 và checksum, gồm chi phí sinh nhãn toàn train/holdout và kết luận H2 theo CI; giữ trạng thái incomplete khi thiếu human review, từ chối fixture hoặc file đã đổi.
+- Integration check v6 đạt 475 Windows/485 WSL tests và 71 schemas. Tại mốc này pilot raw đã đạt 5/5 và F1 đã freeze; teacher holdout đủ3.454 QA, OCR còn chạy, chưa G4.

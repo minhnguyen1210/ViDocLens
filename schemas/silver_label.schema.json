@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "qid": {
+      "minLength": 1,
+      "title": "Qid",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "answered",
+        "unanswerable",
+        "refused",
+        "incomplete",
+        "parse_error",
+        "error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "answer_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer Raw"
+    },
+    "evidence_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Text"
+    },
+    "raw_response_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Raw Response Sha256",
+      "type": "string"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "qid",
+    "status",
+    "raw_response_sha256"
+  ],
+  "title": "SilverLabel",
+  "type": "object"
+}
